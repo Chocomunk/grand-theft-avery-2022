@@ -2,7 +2,7 @@
 
 ### Todo
 
-- [ ] Separate shell control from entrypoint
+- [x] Separate shell control from entrypoint
   - Better practice, especially if we will move to a server later
 - [ ] Implement logging to handle and track printouts
   - Also makes it easier to send shell log to user clients
