@@ -4,7 +4,7 @@
 
 - [x] Separate shell control from entrypoint
   - Better practice, especially if we will move to a server later
-- [ ] Implement logging to handle and track printouts
+- [x] Implement logging to handle and track printouts
   - Also makes it easier to send shell log to user clients
 - [ ] Add global/system state
   - Can be used to solve puzzles (e.g. total explored nodes, was a file opened, etc...)
