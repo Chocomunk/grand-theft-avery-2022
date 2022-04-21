@@ -1,9 +1,7 @@
-import sys
 import shlex
 import argparse
 
 from typing import Callable
-from multiprocessing import AuthenticationError
 
 from logger import Logger
 from filesystem import Node
@@ -20,6 +18,7 @@ CHDIR_CMD = "cd"
 LISTF_CMD = "lsf"
 LISTD_CMD = "lsd"
 SHOWLOG_CMD = "showlog"
+UNLOCK_PASSWD_CMD = "passwd-unlock"
 
 
 # TODO: Validate arg[i] values for every shell command
@@ -41,14 +40,41 @@ class Shell:
             return
 
         dirname = args[1]
-        new_node = self.curr_node.navigate(dirname)
+        new_node = self.curr_node.find_neighbor(dirname)
 
         if not new_node:
             pwd = self.curr_node.directory.name
             self.logerr("Error: no directory named {0} connected to {1}!".format(dirname, pwd))
             return
 
-        self.curr_node = new_node
+        if not new_node.locked(new_node, self):
+            self.curr_node = new_node
+            new_node.call_entry_callbacks(new_node, self)
+        else:
+            self.logerr("Error: {0} is locked!".format(dirname))
+            return
+
+    def unlock_passwd(self, args):
+        if len(args) != 3:
+            self.logerr("Error: {0} must take 2 arguments!".format(UNLOCK_PASSWD_CMD))
+            return
+
+        dirname = args[1]
+        new_node = self.curr_node.find_neighbor(dirname)
+
+        if not new_node:
+            pwd = self.curr_node.directory.name
+            self.logerr("Error: no directory named {0} connected to {1}!".format(dirname, pwd))
+            return
+        
+        if not new_node.passlocked:
+            self.logerr("Error: directory {0} is not password-locked (something else?)".format(dirname))
+            return
+
+        if new_node.try_password(args[2]):
+            self.log("Success! {0} is unlocked.".format(dirname))
+        else:
+            self.log("Incorrect password for {0}".format(dirname))
 
     def list_files(self, args):
         if len(args) != 1:
@@ -91,6 +117,8 @@ class Shell:
             self.list_dirs(args)
         elif args[0] == SHOWLOG_CMD:
             self.print_log(args)
+        elif args[0] == UNLOCK_PASSWD_CMD:
+            self.unlock_passwd(args)
         else:
             self.logerr("Error: unknown command/program '{0}'".format(args[0]))
         return True
