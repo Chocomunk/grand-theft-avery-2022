@@ -1,15 +1,13 @@
 import shlex
 import argparse
 
-from filesystem import test_filesystem1
+from filesystem import Node
 
 
 # ENVs
 PROMPT_BASE = "[{pwd}]> "
 
 # TODO: Automate command-name -> resolving command/program
-# TODO: Organize code structure
-# TODO: Consider program support
 
 # OS Commands
 EXIT_CMD = "exit"
@@ -18,58 +16,54 @@ LISTF_CMD = "lsf"
 LISTD_CMD = "lsd"
 
 
-def chdir(args, curr_node):
-    if len(args) != 2:
-        print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD))
-        return curr_node
+class Shell:
 
-    dirname = args[1]
-    new_node = curr_node.navigate(dirname)
+    def __init__(self, root: Node):
+        self.root = root
+        self.curr_node = root
 
-    if not new_node:
-        pwd = curr_node.directory.name
-        print("Error: no directory named {0} connected to {1}!".format(dirname, pwd))
-        return curr_node
-    return new_node
+    def chdir(self, args):
+        if len(args) != 2:
+            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD))
+            return self.curr_node
 
+        dirname = args[1]
+        new_node = self.curr_node.navigate(dirname)
 
-def list_files(args, curr_node):
-    if len(args) != 1:
-        print("Error: {0} does not take any arguments".format(LISTF_CMD))
-        return
-    print(curr_node.directory.list_dir())
+        if not new_node:
+            pwd = self.curr_node.directory.name
+            print("Error: no directory named {0} connected to {1}!".format(dirname, pwd))
+            return self.curr_node
+        return new_node
 
+    def list_files(self, args):
+        if len(args) != 1:
+            print("Error: {0} does not take any arguments".format(LISTF_CMD))
+            return
+        print(self.curr_node.directory.list_dir())
 
-def list_dirs(args, curr_node):
-    if len(args) != 1:
-        print("Error: {0} does not take any arguments".format(LISTD_CMD))
-        return
-    print(curr_node.list_children())
+    def list_dirs(self, args):
+        if len(args) != 1:
+            print("Error: {0} does not take any arguments".format(LISTD_CMD))
+            return
+        print(self.curr_node.list_children())
 
-
-def main():
-    root = test_filesystem1()
-    curr_node = root
-    while True:
-        pwd = curr_node.directory.name
-        prompt = PROMPT_BASE.format(pwd=pwd)
-        args = shlex.split(input(prompt))
+    def handle_input(self, inp):
+        args = shlex.split(inp)
         
         # Parse commands
-        if len(args) == 0:      # Nothing entered
-            continue
-        elif args[0] == EXIT_CMD:
-            break
+        if args[0] == EXIT_CMD:
+            return False
         elif args[0] == CHDIR_CMD:
-            curr_node = chdir(args, curr_node)
+            self.curr_node = self.chdir(args)
         elif args[0] == LISTF_CMD:
-            list_files(args, curr_node)
+            self.list_files(args)
         elif args[0] == LISTD_CMD:
-            list_dirs(args, curr_node)
-        else:
+            self.list_dirs(args)
+        elif len(args) > 0:
             print("Error: unknown command/program '{0}'".format(args[0]))
+        return True
 
-
-if __name__ == '__main__':
-    main()
+    def prompt(self):
+        return PROMPT_BASE.format(pwd=self.curr_node.directory.name)
 
