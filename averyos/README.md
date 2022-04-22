@@ -1,5 +1,15 @@
 # Avery OS
 
+## Usage
+
+To run locally, simply call `python main.py`, and a shell instance and example
+file system will be started.
+
+You can define your own filesystem setup (`filesystem_gen.py`) and run a shell 
+on it as shown in `main.py`
+
+## Development
+
 ### General coding philosophy
 
 Try to separate the OS design and the puzzle design/solutions. Ideally link

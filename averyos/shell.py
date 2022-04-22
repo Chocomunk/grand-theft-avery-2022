@@ -1,5 +1,4 @@
 import shlex
-import argparse
 
 from typing import Callable
 
