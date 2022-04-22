@@ -23,9 +23,6 @@ NOTE: ^ the above won't always be possible, but we can try our best.
   - [x] Add locks for accessing nodes
     - For puzzle solving
   - (add other needed callbacks here)
-- [ ] Add users and user states
-  - User specific puzzles (e.g. current path length)
-  - User's shell instance (logging in and out)
 - [ ] Programs
   - [ ] Define an abstract program
     - Make an abstract class which defines a function as the entrypoint
