@@ -26,9 +26,16 @@ def always_false(*args, **kwargs): return False
 
 class Node:
 
+    # Static variables
+    next_id = 0         # Keeps track of the next available unique-id
+
     def __init__(self, parents=[], dirname="New Folder", directory: Directory=None):
+        # Set unique id
+        self.id = Node.next_id
+        Node.next_id += 1
+
+        # Assign or create new directory
         self.directory = Directory(dirname) if not directory else directory
-        self.children = []
 
         # Callbacks
         self.entry_callbacks: List[Callable] = []
@@ -39,8 +46,10 @@ class Node:
         self.passlocked = False
         self.password = None
 
+        # Node connections (children/parents)
         # Point to both children and parents for navigating.
         self.navref = {}
+        self.children = []
         for parent in parents:
             parent.add_child(self)
 
@@ -57,7 +66,7 @@ class Node:
     def locked(self, *args, **kwargs):
         return self.passlocked or self.lockfunc(*args, **kwargs)
 
-    def set_lock(self, lockfunc: Callable[..., bool]):
+    def set_lock_func(self, lockfunc: Callable[..., bool]):
         self.lockfunc = lockfunc
 
     def set_password(self, password):

@@ -16,6 +16,8 @@ class SystemState1:
 def new_node(state, parents=[], dirname="New Folder", directory: Directory=None):
     """ Wraps Node creation for state manipulation """
     n = Node(parents=parents, dirname=dirname, directory=directory)
+    # TODO: remove prints
+    print("Created Node {0} (id {1})".format(n.directory.name, n.id))
     state.nodes.append(n)
     return n
 
@@ -61,6 +63,6 @@ def test_filesystem1():
 
     # Set locks
     e.set_password("gugma")
-    f.set_lock(f_lock)
+    f.set_lock_func(f_lock)
 
     return root
