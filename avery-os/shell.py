@@ -18,7 +18,7 @@ CHDIR_CMD = "cd"
 LISTF_CMD = "lsf"
 LISTD_CMD = "lsd"
 SHOWLOG_CMD = "showlog"
-UNLOCK_PASSWD_CMD = "passwd-unlock"
+UNLOCK_PASSWD_CMD = "passwd"
 
 
 # TODO: Validate arg[i] values for every shell command

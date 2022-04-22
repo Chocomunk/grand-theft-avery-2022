@@ -2,15 +2,6 @@ from __future__ import annotations
 from typing import Callable, List, Optional
 
 
-# TODO: add state trackers for puzzles that need them
-class SystemState:
-    """ Keeps track of global system variables """
-    nodes = []
-
-    # EXAMPLE:
-    c_trigger = False       # Should be set to True when we step on 'c'
-
-
 class File:
 
     def __init__(self, filename, data):
@@ -35,7 +26,7 @@ def always_false(*args, **kwargs): return False
 
 class Node:
 
-    def __init__(self, parents=[], directory=None, dirname="New Folder"):
+    def __init__(self, parents=[], dirname="New Folder", directory: Directory=None):
         self.directory = Directory(dirname) if not directory else directory
         self.children = []
 
@@ -52,7 +43,6 @@ class Node:
         self.navref = {}
         for parent in parents:
             parent.add_child(self)
-        SystemState.nodes.append(self)
 
     # TODO: consider defining event/state objects to pass into callbacks
     def call_entry_callbacks(self, *args, **kwargs):
