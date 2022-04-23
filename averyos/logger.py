@@ -1,23 +1,51 @@
-import os
 import sys
 
 from enum import Enum
-from typing import IO, List
+from typing import IO
 
 
 class LogType(Enum):
-    OUT="out"
-    ERR="err"
+    OUT = "out"
+    ERR = "err"
+    IN  = "in"
 
 
-STDOUT = sys.stdout         # Save stdout before we mess with it
-STDERR = sys.stderr         # Save stdout before we mess with it
+STDOUT = sys.__stdout__         # Save stdout before we mess with it
+STDERR = sys.__stderr__         # Save stdout before we mess with it
+STDIN  = sys.__stdin__          # Save stdin before we mess with it
 
 
-def make_stdout_stderr():
-    stdout_log = Logger(STDOUT)
-    stderr_log = Logger(STDERR, logarr=stdout_log._log, logtype=LogType.ERR)
-    return stdout_log, stderr_log
+def get_stdio_loggers():
+    data = LogData()
+    stdout_log = Logger(STDOUT, logdata=data, logtype=LogType.OUT)
+    stderr_log = Logger(STDERR, logdata=data, logtype=LogType.ERR)
+    stdin_log = Logger(STDIN, logdata=data, logtype=LogType.IN)
+    return stdout_log, stderr_log, stdin_log
+
+
+class LogData:
+
+    def __init__(self, lines=[]):
+        self.lines = lines
+        self.curr_line = ""
+
+    def write(self, msg, logtype):
+        self.curr_line += msg
+        if self.curr_line.endswith('\n'):
+            self.lines.append((self.curr_line[:-1], logtype))
+            self.curr_line = ""
+
+    def get(self, start_i):
+        """ Returns all logs starting from `start_i` onwards """
+        return self.lines[start_i:]
+
+    def get_latest(self):
+        """ Returns the latest log entry """
+        return self.get(-1)
+
+    def get_curr_line(self):
+        """ Returns the text in the current line """
+        return self.curr_line
 
 
 class Logger(object):
@@ -27,33 +55,21 @@ class Logger(object):
     Setting `file=None` will save messages without writing to a file.
     """
 
-    def __init__(self, file, logarr=[], logtype=LogType.OUT):
+    def __init__(self, file, logdata: LogData=LogData(), logtype=LogType.OUT):
         # Stores tuples of (msg, log_type)
-        self._log: List = logarr
+        self.log = logdata
         self.logtype: LogType = logtype
         self.file: IO = file
 
     def write(self, msg):
         if self.file:
             self.file.write(msg)
-        if msg != '\n':             # Newlines are written by themselves.
-            self._log.append((str(msg), self.logtype))
+        self.log.write(msg, self.logtype)
+
+    def readline(self):
+        inp = self.file.readline()
+        self.log.write(inp, self.logtype)
+        return inp
 
     def flush(self):
         self.file.flush()
-
-    def log_cli(self, msg):
-        """ Logs a cli command.
-        
-        Calling `input(s)` will print "s" first without waiting for the input.
-        We should overwrite that first print to include the input
-        """
-        self._log[-1] = ((str(msg), self.logtype))
-
-    def get(self, start_i):
-        """ Returns all logs starting from `start_i` onwards """
-        return self._log[start_i:]
-
-    def get_latest(self):
-        """ Returns the latest log entry """
-        return self.get(-1)

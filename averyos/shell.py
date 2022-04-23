@@ -4,7 +4,7 @@ import shlex
 from enum import Enum
 from typing import Callable, Dict, List
 
-from logger import Logger, make_stdout_stderr
+from logger import Logger, get_stdio_loggers
 from filesystem import File, Node
 
 
@@ -91,6 +91,8 @@ class ENV:
         self.prompt_base = "[{pwd}]> "
         self.path: Dict[str, File] = {}
 
+        self.log = None
+
         self.curr_node: Node = None
         self.node_history: List[Node] = []
 
@@ -101,27 +103,27 @@ class Shell:
 
     def __init__(self, root: Node):
         # Setup logger. NOTE: If other shells become active, they will take over output
-        self.stdout, self.stderr = make_stdout_stderr()
+        # All stdio loggers write to the same LogData instance
+        self.stdout, self.stderr, self.stdin = get_stdio_loggers()
         sys.stdout = self.stdout
         sys.stderr = self.stderr
+        sys.stdin  = self.stdin
 
         # Initialize FS and ENV
         self.root = root
         self.env = ENV()
         self.env.curr_node = root
+        self.env.log = self.stdout.log      # Same LogData as stdin and stderr
 
     def print_log(self, env, args):
         if len(args) > 2:
             print("Error: {0} takes up to 1 argument".format(SHOWLOG_CMD), file=sys.stderr)
             return EXIT_CODES.ERROR
         start_i = 0 if len(args) == 1 else args[1]
-        print(self.stdout.get(start_i))
+        print(self.stdout.log.get(start_i))
         return EXIT_CODES.OK
 
     def handle_input(self, inp):
-        # Log CLI input
-        self.stdout.log_cli(self.prompt() + inp)
-
         # Split and check input
         args = shlex.split(inp)
         if len(args) == 0:
