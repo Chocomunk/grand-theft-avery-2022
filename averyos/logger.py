@@ -2,6 +2,7 @@ import os
 import sys
 
 from enum import Enum
+from typing import IO, List
 
 
 class LogType(Enum):
@@ -13,14 +14,12 @@ STDOUT = sys.stdout         # Save stdout before we mess with it
 STDERR = sys.stderr         # Save stdout before we mess with it
 
 
-# TODO: test that the array stays alive
 def make_stdout_stderr():
     stdout_log = Logger(STDOUT)
     stderr_log = Logger(STDERR, logarr=stdout_log._log, logtype=LogType.ERR)
     return stdout_log, stderr_log
 
 
-# TODO: Handle detached newlines
 class Logger(object):
     """ 
     Creates a logger that writes to a file and saves the messages on memory
@@ -30,14 +29,15 @@ class Logger(object):
 
     def __init__(self, file, logarr=[], logtype=LogType.OUT):
         # Stores tuples of (msg, log_type)
-        self._log = logarr
-        self.logtype = logtype
-        self.file = file
+        self._log: List = logarr
+        self.logtype: LogType = logtype
+        self.file: IO = file
 
     def write(self, msg):
         if self.file:
             self.file.write(msg)
-        self._log.append((str(msg), self.logtype))
+        if msg != '\n':             # Newlines are written by themselves.
+            self._log.append((str(msg), self.logtype))
 
     def flush(self):
         self.file.flush()

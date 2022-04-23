@@ -30,16 +30,15 @@ def test_filesystem1():
     # Define callback functions
     # TODO: consider defining event/state objects to pass into callbacks
     # This function unlocks F when C is stepped on 
-    def f_lock(n: Node, shell: Shell):
+    def f_lock(n: Node):
         locked = not state.c_trigger
-        shell.log("Checking func-lock on {0}... Locked: {1}".format(
-            n.directory.name, locked))
+        print("Checking func-lock on {0}... Locked: {1}".format(n.directory.name, locked))
         return locked
     
     # This function signals that C is stepped on 
-    def c_trig(n: Node, shell: Shell):
+    def c_trig(n: Node):
         state.c_trigger = True
-        shell.log("Stepped on {0}!".format(n.directory.name))
+        print("Stepped on {0}!".format(n.directory.name))
         
     # Build FS graph
     root = new_node(state, dirname="root")
