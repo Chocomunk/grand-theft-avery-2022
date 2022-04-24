@@ -1,34 +1,29 @@
-from shell import Shell
-from filesystem import File, Directory, Node
+"""
+An example puzzle design
+"""
+from os.filesystem import File, Directory, Node
 
 
-# NOTE: Seeing if I can keep all the state stuff in one place (here) and just
-#       manipulate them using callbacks.
-# TODO: add state trackers for puzzles that need them
-class SystemState1:
-    """ Keeps track of global system variables """
+class PuzzleState:
+    """ Keeps track of global puzzle variables """
     nodes = []
 
-    # EXAMPLE:
     c_trigger = False       # Should be set to True when we step on 'c'
 
 
 def new_node(state, parents=[], dirname="New Folder", directory: Directory=None):
     """ Wraps Node creation for state manipulation """
     n = Node(parents=parents, dirname=dirname, directory=directory)
-    # TODO: remove prints
     print("Created Node {0} (id {1})".format(n.directory.name, n.id))
     state.nodes.append(n)
     return n
 
 
-# Example filesystem with locks
-def test_filesystem1():
+def test_puzzle1():
     # Define state tracker
-    state = SystemState1
+    state = PuzzleState
 
     # Define callback functions
-    # TODO: consider defining event/state objects to pass into callbacks
     # This function unlocks F when C is stepped on 
     def f_lock(n: Node):
         locked = not state.c_trigger

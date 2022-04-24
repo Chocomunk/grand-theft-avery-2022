@@ -1,6 +1,6 @@
 import sys
 
-from env import ENV
+from shell.env import ENV
 from program import ExitCode, ProgramBase, CLIProgramBase
 
 
@@ -40,7 +40,7 @@ class Chdir(CLIProgramBase):
             return ExitCode.ERROR
 
         dirname = args[1]
-        new_node = ENV.curr_node.find_neighbor(dirname)
+        new_node, locked = ENV.curr_node.find_neighbor(dirname)
 
         if not new_node:
             pwd = ENV.curr_node.directory.name
@@ -48,10 +48,10 @@ class Chdir(CLIProgramBase):
                 dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
-        if not new_node.locked(new_node):
+        if locked:
             ENV.curr_node = new_node
             ENV.node_history.append(ENV.curr_node)
-            new_node.call_entry_callbacks(new_node)
+            new_node.call_entry_callbacks()
         else:
             print("Error: {0} is locked!".format(dirname))
             return ExitCode.ERROR

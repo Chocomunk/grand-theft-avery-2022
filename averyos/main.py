@@ -1,9 +1,9 @@
-from shell import Shell
-from filesystem_gen import test_filesystem1
+from shell.shell import Shell
+from puzzle.test_puzzle1 import test_puzzle1
 
 
 if __name__ == '__main__':
-    root = test_filesystem1()
+    root = test_puzzle1()
     shell = Shell(root)
 
     running = True

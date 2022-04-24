@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, List, Optional
+from typing import Callable, Dict, List, Optional
 
 
 class File:
@@ -29,7 +29,7 @@ class Node:
     # Static variables
     next_id = 0         # Keeps track of the next available unique-id
 
-    def __init__(self, parents=[], dirname="New Folder", directory: Directory=None):
+    def __init__(self, parents: List[Node]=[], dirname="New Folder", directory: Directory=None):
         # Set unique id
         self.id = Node.next_id
         Node.next_id += 1
@@ -38,33 +38,32 @@ class Node:
         self.directory = Directory(dirname) if not directory else directory
 
         # Callbacks
-        self.entry_callbacks: List[Callable] = []
+        self.entry_callbacks: List[Callable[[Node]]] = []
 
         # Locking
         # lockfunc should be called on the current node and the calling shell
-        self.lockfunc: Callable[..., bool] = always_false
+        self.lockfunc: Callable[[Node], bool] = always_false
         self.passlocked = False
         self.password = None
 
         # Node connections (children/parents)
         # Point to both children and parents for navigating.
-        self.navref = {}
-        self.children = []
+        self.navref: Dict[str, Node] = {}
+        self.children: List[Node] = []
+        self.parents: List[Node] = parents
         for parent in parents:
             parent.add_child(self)
 
-    # TODO: consider defining event/state objects to pass into callbacks
-    def call_entry_callbacks(self, *args, **kwargs):
+    def call_entry_callbacks(self):
         """ Must be called when entering this node """
         for cb in self.entry_callbacks:
-            cb(*args, **kwargs)
+            cb(self)
     
     def add_entry_callback(self, callback: Callable):
         self.entry_callbacks.append(callback)
 
-    # TODO: consider defining event/state objects to pass into callbacks
-    def locked(self, *args, **kwargs):
-        return self.passlocked or self.lockfunc(*args, **kwargs)
+    def locked(self):
+        return self.passlocked or self.lockfunc(self)
 
     def set_lock_func(self, lockfunc: Callable[..., bool]):
         self.lockfunc = lockfunc
@@ -86,8 +85,9 @@ class Node:
 
     def find_neighbor(self, dirname) -> Optional[Node]:
         if dirname in self.navref:
-            return self.navref[dirname]
-        return None
+            n = self.navref[dirname]
+            return n, n.locked()
+        return None, False
 
     def list_children(self):
         return [c.directory.name for c in self.children]

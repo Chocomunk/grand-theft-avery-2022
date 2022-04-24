@@ -2,10 +2,10 @@ import sys
 import shlex
 
 from env import ENV
-from filesystem import Node
+from os.filesystem import Node
 from logger import get_stdio_loggers
-from usrbin_programs import usrbin_progs
-from program import ExitCode, CLIProgramBase
+from os.usrbin_programs import usrbin_progs
+from os.program import ExitCode, CLIProgramBase
 
 
 class UnknownProgram(CLIProgramBase):
