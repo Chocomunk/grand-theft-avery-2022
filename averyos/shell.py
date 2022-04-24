@@ -3,26 +3,35 @@ import shlex
 
 from typing import Dict, List
 
-from filesystem import File, Node
+from filesystem import Node
 from logger import get_stdio_loggers
-from sysprog import ExitCodes, SYSPROG_MAP
+from program import ExitCode, ProgramBase,  CLIProgramBase, usrbin_progs
 
 
 class ENV:
 
-    def __init__(self):
-        self.prompt_base = "[{pwd}]> "
-        self.path: Dict[str, File] = {}
+    prompt_base = "[{pwd}]> "
+    path: Dict[str, ProgramBase] = {}
 
-        self.log = None
+    log = None
 
-        self.curr_node: Node = None
-        self.node_history: List[Node] = []
+    curr_node: Node = None
+    node_history: List[Node] = []
+
+    @classmethod
+    def reset(cls):
+        cls.prompt_base = "[{pwd}]> "
+        cls.path = usrbin_progs()
+        cls.log = None
+        cls.curr_node = None
+        cls.node_history = []
 
 
-def unknown_program(env, args):
-    print("Error: unknown command/program '{0}'".format(args[0]), file=sys.stderr)
-    return ExitCodes.ERROR
+class UnknownProgram(CLIProgramBase):
+
+    def cli_main(args):
+        print("Error: unknown command/program '{0}'".format(args[0]), file=sys.stderr)
+        return ExitCode.ERROR
 
 
 # TODO: Validate arg[i] values for every shell command
@@ -38,10 +47,12 @@ class Shell:
         sys.stdin  = self.stdin
 
         # Initialize FS and ENV
+        ENV.reset()
         self.root = root
-        self.env = ENV()
-        self.env.curr_node = root
-        self.env.log = self.stdout.log      # Same LogData as stdin and stderr
+        ENV.curr_node = root
+        ENV.log = self.stdout.log      # Same LogData as stdin and stderr
+
+        self.unknown_program = UnknownProgram()
 
     def handle_input(self, inp):
         """
@@ -55,19 +66,17 @@ class Shell:
             return True
         
         # Parse commands
-        prog = unknown_program              # Default to unknown
+        prog = self.unknown_program     # Default to unknown
 
         # TODO: handle cwd programs first
-        if args[0] in self.env.path:        # Check path
-            prog = self.env.path[args[0]]
-        elif args[0] in SYSPROG_MAP:
-            prog = SYSPROG_MAP[args[0]]
+        if args[0] in ENV.path:         # Check path
+            prog = ENV.path[args[0]]
 
-        errcode = prog(self.env, args)
-        if errcode == ExitCodes.EXIT:
+        errcode = prog(args)
+        if errcode == ExitCode.EXIT:
             return False
         return True
 
     def prompt(self):
-        return self.env.prompt_base.format(pwd=self.env.curr_node.directory.name)
+        return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)
 
