@@ -1,35 +1,16 @@
 import sys
 import shlex
 
-from typing import Dict, List
-
+from env import ENV
 from filesystem import Node
 from logger import get_stdio_loggers
-from program import ExitCode, ProgramBase,  CLIProgramBase, usrbin_progs
-
-
-class ENV:
-
-    prompt_base = "[{pwd}]> "
-    path: Dict[str, ProgramBase] = {}
-
-    log = None
-
-    curr_node: Node = None
-    node_history: List[Node] = []
-
-    @classmethod
-    def reset(cls):
-        cls.prompt_base = "[{pwd}]> "
-        cls.path = usrbin_progs()
-        cls.log = None
-        cls.curr_node = None
-        cls.node_history = []
+from usrbin_programs import usrbin_progs
+from program import ExitCode, CLIProgramBase
 
 
 class UnknownProgram(CLIProgramBase):
 
-    def cli_main(args):
+    def cli_main(self, args) -> ExitCode:
         print("Error: unknown command/program '{0}'".format(args[0]), file=sys.stderr)
         return ExitCode.ERROR
 
@@ -51,8 +32,12 @@ class Shell:
         self.root = root
         ENV.curr_node = root
         ENV.log = self.stdout.log      # Same LogData as stdin and stderr
+        ENV.path = usrbin_progs()
 
         self.unknown_program = UnknownProgram()
+
+    def prompt(self):
+        return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)
 
     def handle_input(self, inp):
         """
@@ -72,11 +57,9 @@ class Shell:
         if args[0] in ENV.path:         # Check path
             prog = ENV.path[args[0]]
 
-        errcode = prog(args)
+        # TODO: handle GUI execution
+        errcode = prog.cli_main(args)
         if errcode == ExitCode.EXIT:
             return False
         return True
-
-    def prompt(self):
-        return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)
 
