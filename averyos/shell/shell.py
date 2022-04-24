@@ -16,6 +16,14 @@ class UnknownProgram(CLIProgramBase):
         return ExitCode.ERROR
 
 
+# TODO: move this somewhere else once callbacks are figured out
+def sheesh_split(s: str):
+    """ Put a space between the 'sh' and 'eesh' """
+    if s.startswith('sh'):
+        return 'sh ' + s[2:]
+    return s
+
+
 # TODO: Validate arg[i] values for every shell command
 # TODO: Prettify list outputs
 class Shell:
@@ -46,6 +54,10 @@ class Shell:
 
         Returns: `True` to stay alive, `False` to exit
         """
+        # Preprocess inputs
+        # TODO: Add callbacks for puzzles to take control
+        inp = sheesh_split(inp)
+        
         # Split and check input
         args = shlex.split(inp)
         if len(args) == 0:

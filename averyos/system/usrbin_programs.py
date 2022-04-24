@@ -8,6 +8,7 @@ from .program import ExitCode, ProgramBase, CLIProgramBase
 EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
 CHDIRID_CMD = "cdid"
+CDBACK_CMD = "sh"
 LISTF_CMD = "lsf"
 LISTD_CMD = "lsd"
 SHOWLOG_CMD = "showlog"
@@ -20,6 +21,7 @@ def usrbin_progs():
         EXIT_CMD: SendExit(),
         CHDIR_CMD: Chdir(),
         CHDIRID_CMD: Chdirid(),
+        CDBACK_CMD: ChdirBack(),
         LISTF_CMD: ListFiles(),
         LISTD_CMD: ListDirs(),
         SHOWLOG_CMD: ShowLog(),
@@ -65,7 +67,7 @@ class Chdirid(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
-            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
+            print("Error: {0} only accepts 1 argument!".format(CHDIRID_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -86,6 +88,47 @@ class Chdirid(CLIProgramBase):
         ENV.node_history.append(ENV.curr_node)
         ENV.curr_node = new_node
         new_node.call_entry_callbacks()
+        return ExitCode.OK
+
+
+class ChdirBack(CLIProgramBase):
+    """ This program implements 'sheesh' back-navigating """
+
+    def cli_main(self, args) -> ExitCode:
+        if len(args) != 2:
+            print("Error: caller has a weak 'sheesh'", file=sys.stderr)
+            return ExitCode.ERROR
+
+        argl = len(args[1])
+        len_e = argl if argl < 2 else argl - 2
+        es = args[1][:len_e]            # Substring of only the e's
+        if es != len_e * 'e':
+            print("Error: wtf is 'sh{0}'??????".format(args[1]), 
+                file=sys.stderr)
+            return ExitCode.ERROR
+
+        if not args[1].endswith("sh"):
+            print("Error: didn't end the 'sheesh' smh", file=sys.stderr)
+            return ExitCode.ERROR
+
+        if len_e == 0:
+            print("(shsh... don't move...)")
+        else:
+            hist_len = len(ENV.node_history)
+            del_len = min(len_e, hist_len)
+
+            if del_len == 0: 
+                print("No space to 'sheesh'. This is so sad...")
+                return ExitCode.OK
+
+            print("SH")
+            for i in range(del_len):
+                print("E\t{0}".format(ENV.node_history[-i-1].directory.name))
+            print("SH")
+
+            ENV.curr_node = ENV.node_history[-del_len]
+            del ENV.node_history[-del_len:]
+        
         return ExitCode.OK
 
 

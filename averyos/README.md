@@ -20,10 +20,6 @@ allows the OS to be decoupled from any specific puzzle designs.
 
 ### Todo
 
-- [x] Separate shell control from entrypoint
-  - Better practice, especially if we will move to a server later
-- [x] Implement logging to handle and track printouts
-  - Also makes it easier to send shell log to user clients
 - [x] Add global puzzle state
   - Can be used to solve puzzles (e.g. total explored nodes, was a file opened, etc...)
   - Better to keep information in a "State" object rather than the nodes themselves for 
@@ -38,13 +34,20 @@ allows the OS to be decoupled from any specific puzzle designs.
       - Easier for master node to override locks
   - (add other needed callbacks here)
 - [ ] Show shell and programs in a GUI (so we don't have to switch windows)
-- [x] Add `cdid` command to force move to any node by its id
-- [ ] Support cd-ing backwards along the node history
 - [x] Add global environment variables
   - Semantically different from global state. ENV data is tied to the OS, but 
     puzzle state data is tied to the puzzles.
   - Should store pwd, node history, path, master node, etc...
-- [ ] Programs
+- Shell
+  - [x] Separate shell control from entrypoint
+    - Better practice, especially if we will move to a server later
+  - [x] Implement logging to handle and track printouts
+    - Also makes it easier to send shell log to user clients
+  - [x] Add `cdid` command to force move to any node by its id
+  - [x] Support cd-ing backwards along the node history
+  - [ ] chdir multiple directories at once
+  - [ ] Add input pre-processing callbacks
+- Programs
   - [x] Define an abstract program
     - Make an abstract class which defines a function as the entrypoint
     - Each program is a sub-class which defines it's own entrypoint and keeps track 
