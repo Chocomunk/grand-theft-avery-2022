@@ -1,7 +1,7 @@
 from typing import Dict, List
 
-from os.filesystem import Node
-from os.program import ProgramBase
+from system.filesystem import Node
+from system.program import ProgramBase
 
 
 class ENV:

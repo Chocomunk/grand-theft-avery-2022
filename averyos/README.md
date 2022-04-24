@@ -38,7 +38,7 @@ allows the OS to be decoupled from any specific puzzle designs.
       - Easier for master node to override locks
   - (add other needed callbacks here)
 - [ ] Show shell and programs in a GUI (so we don't have to switch windows)
-- [ ] Define a "master" node for development
+- [x] Add `cdid` command to force move to any node by its id
 - [ ] Support cd-ing backwards along the node history
 - [x] Add global environment variables
   - Semantically different from global state. ENV data is tied to the OS, but 
@@ -52,6 +52,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Let sub-programs override the GUI
       - Alternatively, add a pane to side (side-by-side view could be cool)
   - [x] Convert non-kernel commands to programs
+  - [x] Catch program exceptions
   - [ ] Puzzle state editor
   - [ ] Passphrase unlock for node
     - [x] CLI command version of this program

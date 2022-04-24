@@ -28,8 +28,10 @@ class Node:
 
     # Static variables
     next_id = 0         # Keeps track of the next available unique-id
+    id_to_node: List[Node] = []
 
-    def __init__(self, parents: List[Node]=[], dirname="New Folder", directory: Directory=None):
+    def __init__(self, parents: List[Node]=[], dirname="New Folder", 
+                directory: Directory=None, master=False):
         # Set unique id
         self.id = Node.next_id
         Node.next_id += 1
@@ -38,10 +40,14 @@ class Node:
         self.directory = Directory(dirname) if not directory else directory
 
         # Callbacks
+        # All callbacks and lock functions should idealling use ENV and a 
+        # puzzle-specific state to manage data. Need to change the implementation
+        # here if that is not possible.
+        # Callbacks should be called on the containing node
         self.entry_callbacks: List[Callable[[Node]]] = []
 
         # Locking
-        # lockfunc should be called on the current node and the calling shell
+        # lockfunc should be called on the containing node
         self.lockfunc: Callable[[Node], bool] = always_false
         self.passlocked = False
         self.password = None
@@ -53,6 +59,9 @@ class Node:
         self.parents: List[Node] = parents
         for parent in parents:
             parent.add_child(self)
+
+        # Add node to id_to_node map
+        Node.id_to_node.append(self)
 
     def call_entry_callbacks(self):
         """ Must be called when entering this node """
@@ -85,9 +94,8 @@ class Node:
 
     def find_neighbor(self, dirname) -> Optional[Node]:
         if dirname in self.navref:
-            n = self.navref[dirname]
-            return n, n.locked()
-        return None, False
+            return self.navref[dirname]
+        return None
 
     def list_children(self):
         return [c.directory.name for c in self.children]

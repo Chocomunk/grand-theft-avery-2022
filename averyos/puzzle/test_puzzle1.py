@@ -1,7 +1,7 @@
 """
 An example puzzle design
 """
-from os.filesystem import File, Directory, Node
+from system.filesystem import File, Directory, Node
 
 
 class PuzzleState:

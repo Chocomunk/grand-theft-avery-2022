@@ -1,11 +1,13 @@
 import sys
 
 from shell.env import ENV
-from program import ExitCode, ProgramBase, CLIProgramBase
+from .filesystem import Node
+from .program import ExitCode, ProgramBase, CLIProgramBase
 
 
 EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
+CHDIRID_CMD = "cdid"
 LISTF_CMD = "lsf"
 LISTD_CMD = "lsd"
 SHOWLOG_CMD = "showlog"
@@ -17,6 +19,7 @@ def usrbin_progs():
     return {
         EXIT_CMD: SendExit(),
         CHDIR_CMD: Chdir(),
+        CHDIRID_CMD: Chdirid(),
         LISTF_CMD: ListFiles(),
         LISTD_CMD: ListDirs(),
         SHOWLOG_CMD: ShowLog(),
@@ -40,7 +43,7 @@ class Chdir(CLIProgramBase):
             return ExitCode.ERROR
 
         dirname = args[1]
-        new_node, locked = ENV.curr_node.find_neighbor(dirname)
+        new_node = ENV.curr_node.find_neighbor(dirname)
 
         if not new_node:
             pwd = ENV.curr_node.directory.name
@@ -48,13 +51,41 @@ class Chdir(CLIProgramBase):
                 dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
-        if locked:
-            ENV.curr_node = new_node
+        if not new_node.locked():
             ENV.node_history.append(ENV.curr_node)
+            ENV.curr_node = new_node
             new_node.call_entry_callbacks()
         else:
             print("Error: {0} is locked!".format(dirname))
             return ExitCode.ERROR
+        return ExitCode.OK
+
+
+class Chdirid(CLIProgramBase):
+
+    def cli_main(self, args) -> ExitCode:
+        if len(args) != 2:
+            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
+                file=sys.stderr)
+            return ExitCode.ERROR
+
+        try:
+            node_id = int(args[1])
+        except ValueError as e:
+            print("Error: node id must be an integer, {0} is invalid.".format(
+                args[1]), file=sys.stderr)
+            return ExitCode.ERROR
+
+        if node_id >= len(Node.id_to_node):
+            print("Error: invalid node id {0}".format(args[1]), file=sys.stderr)
+            return ExitCode.ERROR
+
+        new_node = Node.id_to_node[node_id]
+
+        # Ignore locks and just chdir to new_node
+        ENV.node_history.append(ENV.curr_node)
+        ENV.curr_node = new_node
+        new_node.call_entry_callbacks()
         return ExitCode.OK
 
 
@@ -102,7 +133,13 @@ class ShowHistory(CLIProgramBase):
 
         start_i = 0 
         if len(args) == 2:
-            start_i = max(len(ENV.node_history) - args[1], 0)
+            try:
+                hist_len = int(args[1])
+            except ValueError as e:
+                print("Error: '{0}' is not an integer".format(args[1]), 
+                    file=sys.stderr)
+                return ExitCode.ERROR
+            start_i = max(0, len(ENV.node_history) - hist_len)
 
         print([n.directory.name for n in ENV.node_history[start_i:]])
         return ExitCode.OK

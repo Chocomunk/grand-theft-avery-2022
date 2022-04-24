@@ -1,11 +1,12 @@
 import sys
 import shlex
+import traceback
 
-from env import ENV
-from os.filesystem import Node
-from logger import get_stdio_loggers
-from os.usrbin_programs import usrbin_progs
-from os.program import ExitCode, CLIProgramBase
+from .env import ENV
+from system.filesystem import Node
+from .logger import get_stdio_loggers
+from system.usrbin_programs import usrbin_progs
+from system.program import ExitCode, CLIProgramBase
 
 
 class UnknownProgram(CLIProgramBase):
@@ -58,7 +59,12 @@ class Shell:
             prog = ENV.path[args[0]]
 
         # TODO: handle GUI execution
-        errcode = prog.cli_main(args)
+        try:
+            errcode = prog.cli_main(args)
+        except Exception:               # Catch program errors then continue
+            traceback.print_exc()
+            errcode = ExitCode.ERROR
+
         if errcode == ExitCode.EXIT:
             return False
         return True
