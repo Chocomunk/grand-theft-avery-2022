@@ -28,13 +28,14 @@ allows the OS to be decoupled from any specific puzzle designs.
   - Semantically different from global state. ENV data is tied to the OS, but 
     puzzle state data is tied to the puzzles.
   - Should store pwd, node history, path, master node, etc...
-- [ ] Prettify command outputs
-- [ ] Refactor Logging to make clear what it does
 - [ ] Show shell and programs in a GUI (so we don't have to switch windows)
 - [ ] Start Puzzle state webserver
   - AveryOS backend send puzzle state to webserver.
   - Webserver serves (mobile-friendly) websites to users and forwards user interactions
     back to the AveryOS backend.
+- Puzzles
+  - [ ] Write a function to convert an adjacency matrix and a list of names to a
+        FS graph.
 - File System
   - [ ] Keep track of whether nodes are visited.
     - Also consider keeping track of whether all of a node's connections are
@@ -42,6 +43,8 @@ allows the OS to be decoupled from any specific puzzle designs.
 - Shell
   - [x] Add `cdid` command to force move to any node by its id
   - [x] Support cd-ing backwards along the node history
+  - [ ] Refactor Logging to make clear what it does
+  - [ ] Prettify command outputs
   - [ ] Implement cat
     - Maybe allow users to add files to the path
   - [ ] chdir multiple directories at once
@@ -50,9 +53,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [x] Define an abstract program
     - [ ] Let sub-programs override the GUI
       - Alternatively, add a pane to side (side-by-side view could be cool)
-  - [ ] Make programs a file
-    - Or put them in a file
-    - Or have nodes keep track of programs separately (**this**)
+  - [x] Add programs to the FS
   - [x] Catch program exceptions
   - [ ] Puzzle state editor
   - [ ] Passphrase unlock for node
