@@ -45,6 +45,9 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [x] Support cd-ing backwards along the node history
   - [x] Refactor Logging to make clear what it does
   - [ ] Prettify command outputs
+    - [x] List node contents
+    - [ ] Node history
+    - [ ] Log printout
   - [ ] Implement cat
     - Maybe allow users to add files to the path
   - [ ] chdir multiple directories at once

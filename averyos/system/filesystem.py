@@ -24,8 +24,11 @@ class Directory:
     def add_program(self, name, prog: ProgramBase):
         self.programs[name] = prog
 
-    def list_dir(self):
+    def list_files(self):
         return list(self.files.keys())
+
+    def list_programs(self):
+        return list(self.programs.keys())
 
 
 def always_false(*args, **kwargs): return False

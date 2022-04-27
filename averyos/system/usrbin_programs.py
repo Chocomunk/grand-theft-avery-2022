@@ -9,8 +9,7 @@ EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
 CHDIRID_CMD = "cdid"
 CDBACK_CMD = "sh"
-LISTF_CMD = "lsf"
-LISTD_CMD = "lsd"
+LIST_CMD = "ls"
 SHOWLOG_CMD = "showlog"
 HISTORY_CMD = "history"
 PASSWD_CMD = "passwd"
@@ -22,8 +21,7 @@ def usrbin_progs():
         CHDIR_CMD: Chdir(),
         CHDIRID_CMD: Chdirid(),
         CDBACK_CMD: ChdirBack(),
-        LISTF_CMD: ListFiles(),
-        LISTD_CMD: ListDirs(),
+        LIST_CMD: ListNode(),
         SHOWLOG_CMD: ShowLog(),
         HISTORY_CMD: ShowHistory(),
         PASSWD_CMD: UnlockPassword()
@@ -132,25 +130,32 @@ class ChdirBack(CLIProgramBase):
         return ExitCode.OK
 
 
-class ListFiles(CLIProgramBase):
+class ListNode(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 1:
-            print("Error: {0} does not take any arguments".format(LISTF_CMD), 
+            print("Error: {0} does not take any arguments".format(LIST_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
-        print(ENV.curr_node.directory.list_dir())
-        return ExitCode.OK
 
+        files = ENV.curr_node.directory.list_files()
+        progs = ENV.curr_node.directory.list_programs()
+        dirs = ENV.curr_node.list_children()
+        cwd = ENV.curr_node.directory.name
+        
+        print("\nDirectory: {0}".format(cwd))
 
-class ListDirs(CLIProgramBase):
+        STR_TMP = "{0:>12}\t{1:<}"
+        print(STR_TMP.format("Type", "Name"))
+        print(STR_TMP.format("----", "----"))
+        for dir in dirs:
+            print(STR_TMP.format("directory", dir))
+        for prog in progs:
+            print(STR_TMP.format("executable", prog))
+        for file in files:
+            print(STR_TMP.format("file", file))
+        print()
 
-    def cli_main(self, args) -> ExitCode:
-        if len(args) != 1:
-            print("Error: {0} does not take any arguments".format(LISTD_CMD), 
-                file=sys.stderr)
-            return ExitCode.ERROR
-        print(ENV.curr_node.list_children())
         return ExitCode.OK
 
 
