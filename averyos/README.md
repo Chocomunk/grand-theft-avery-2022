@@ -43,7 +43,7 @@ allows the OS to be decoupled from any specific puzzle designs.
 - Shell
   - [x] Add `cdid` command to force move to any node by its id
   - [x] Support cd-ing backwards along the node history
-  - [ ] Refactor Logging to make clear what it does
+  - [x] Refactor Logging to make clear what it does
   - [ ] Prettify command outputs
   - [ ] Implement cat
     - Maybe allow users to add files to the path

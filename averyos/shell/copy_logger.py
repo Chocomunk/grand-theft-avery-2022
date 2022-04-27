@@ -16,14 +16,18 @@ STDIN  = sys.__stdin__          # Save stdin before we mess with it
 
 
 def get_stdio_loggers():
-    data = LogData()
-    stdout_log = Logger(STDOUT, logdata=data, logtype=LogType.OUT)
-    stderr_log = Logger(STDERR, logdata=data, logtype=LogType.ERR)
-    stdin_log = Logger(STDIN, logdata=data, logtype=LogType.IN)
+    data = LinesLog()
+    stdout_log = CopyLogger(STDOUT, logdata=data, logtype=LogType.OUT)
+    stderr_log = CopyLogger(STDERR, logdata=data, logtype=LogType.ERR)
+    stdin_log = CopyLogger(STDIN, logdata=data, logtype=LogType.IN)
     return stdout_log, stderr_log, stdin_log
 
 
-class LogData:
+class LinesLog:
+    """
+    Maintains an array of all lines of strings written. Automatically splits
+    string into different lines.
+    """
 
     def __init__(self, lines=[]):
         self.lines = lines
@@ -48,14 +52,14 @@ class LogData:
         return self.curr_line
 
 
-class Logger(object):
+class CopyLogger(object):
     """ 
-    Creates a logger that writes to a file and saves the messages on memory
+    Copies all written messages to memory while still writing to the file.
     
     Setting `file=None` will save messages without writing to a file.
     """
 
-    def __init__(self, file, logdata: LogData=LogData(), logtype=LogType.OUT):
+    def __init__(self, file, logdata: LinesLog=LinesLog(), logtype=LogType.OUT):
         # Stores tuples of (msg, log_type)
         self.log = logdata
         self.logtype: LogType = logtype

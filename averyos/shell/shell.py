@@ -6,7 +6,7 @@ import traceback
 
 from .env import ENV
 from system.filesystem import Node
-from .logger import get_stdio_loggers
+from .copy_logger import get_stdio_loggers
 from system.usrbin_programs import usrbin_progs
 from system.program import ExitCode, CLIProgramBase
 
