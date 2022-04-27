@@ -1,3 +1,5 @@
+from ast import arg
+from multiprocessing.dummy import current_process
 import sys
 import shlex
 import traceback
@@ -66,8 +68,12 @@ class Shell:
         # Parse commands
         prog = self.unknown_program     # Default to unknown
 
-        # TODO: handle cwd programs first
-        if args[0] in ENV.path:         # Check path
+        # Check programs in CWD
+        if args[0] in ENV.curr_node.directory.programs:
+            prog = ENV.curr_node.directory.programs[args[0]]
+
+        # Check programs in path
+        elif args[0] in ENV.path:
             prog = ENV.path[args[0]]
 
         # TODO: handle GUI execution

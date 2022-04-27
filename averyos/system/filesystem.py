@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Callable, Dict, List, Optional
 
+from system.program import ProgramBase
+
 
 class File:
 
@@ -13,13 +15,17 @@ class Directory:
 
     def __init__(self, dirname):
         self.name = dirname
-        self._data = {}     # May be able to turn this into a list
+        self.files: Dict[str, File] = {}
+        self.programs: Dict[str, ProgramBase] = {}
 
     def add_file(self, file: File):
-        self._data[file.name] = file
+        self.files[file.name] = file
+
+    def add_program(self, name, prog: ProgramBase):
+        self.programs[name] = prog
 
     def list_dir(self):
-        return list(self._data.keys())
+        return list(self.files.keys())
 
 
 def always_false(*args, **kwargs): return False

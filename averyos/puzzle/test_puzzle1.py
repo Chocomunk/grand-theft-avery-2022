@@ -1,14 +1,26 @@
 """
 An example puzzle design
 """
+from system.program import CLIProgramBase
 from system.filesystem import File, Directory, Node
 
 
+# ---------------------------- Global Puzzle State ---------------------------- 
 class PuzzleState:
     """ Keeps track of global puzzle variables """
     nodes = []
 
     c_trigger = False       # Should be set to True when we step on 'c'
+
+
+# --------------------------- Puzzle Logic/Behavior --------------------------- 
+# Example puzzle program
+class CheckC(CLIProgramBase):
+
+    name = "checkc"
+
+    def cli_main(self, args):
+        print("C triggered: {0}".format(PuzzleState.c_trigger))
 
 
 def new_node(state, parents=[], dirname="New Folder", directory: Directory=None):
@@ -19,6 +31,7 @@ def new_node(state, parents=[], dirname="New Folder", directory: Directory=None)
     return n
 
 
+# ---------------------------- Main (build puzzle) ---------------------------- 
 def test_puzzle1():
     # Define state tracker
     state = PuzzleState
@@ -51,6 +64,10 @@ def test_puzzle1():
     a.directory.add_file(File("a.txt", "a text"))
     c.directory.add_file(shared)
     d.directory.add_file(shared)
+
+    # Add programs
+    root.directory.add_program(CheckC.name, CheckC())
+    a.directory.add_program(CheckC.name, CheckC())
 
     # Set callbacks
     c.add_entry_callback(c_trig)
