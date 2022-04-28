@@ -228,7 +228,10 @@ class ShowHistory(CLIProgramBase):
                 return ExitCode.ERROR
             start_i = max(0, len(ENV.node_history) - hist_len)
 
-        print([n.directory.name for n in ENV.node_history[start_i:]])
+        hist = [n.directory.name for n in ENV.node_history[start_i:]]
+        chain_str = " -> ".join(hist)
+        chain_str += " :=> {0}".format(ENV.curr_node.directory.name)
+        print(chain_str)
         return ExitCode.OK
 
 
