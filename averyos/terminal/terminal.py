@@ -135,9 +135,10 @@ class _TerminalFunctionality:
             return self._set_basename(True)
         # print('cmd:', cmd)
         f = io.StringIO()
-        with contextlib.redirect_stdout(f):
+        g = io.StringIO()
+        with contextlib.redirect_stdout(f), contextlib.redirect_stderr(g):
             self.averyos.handle_input(cmd)
-        output = f.getvalue()
+        output = f.getvalue() if f.getvalue() != '' else g.getvalue()
         # print('output:', output)
         if output != '':
             self.insert('end', '\n' + output)
