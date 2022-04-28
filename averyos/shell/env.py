@@ -14,6 +14,9 @@ class ENV:
     curr_node: Node = None
     node_history: List[Node] = []       # Does not include curr_node
 
+    # NOTE: Creating a shell will reset the path, which might overwrite
+    #       puzzle programs that we place into the path. If this is a problem,
+    #       then fix it (lol).
     @classmethod
     def reset(cls):
         cls.prompt_base = "[{pwd}]> "

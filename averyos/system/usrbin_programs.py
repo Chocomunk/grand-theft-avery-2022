@@ -10,6 +10,7 @@ CHDIR_CMD = "cd"
 CHDIRID_CMD = "cdid"
 CDBACK_CMD = "sh"
 LIST_CMD = "ls"
+READFILE_CMD = "cat"
 SHOWLOG_CMD = "showlog"
 HISTORY_CMD = "history"
 PASSWD_CMD = "passwd"
@@ -22,6 +23,7 @@ def usrbin_progs():
         CHDIRID_CMD: Chdirid(),
         CDBACK_CMD: ChdirBack(),
         LIST_CMD: ListNode(),
+        READFILE_CMD: ReadFile(),
         SHOWLOG_CMD: ShowLog(),
         HISTORY_CMD: ShowHistory(),
         PASSWD_CMD: UnlockPassword()
@@ -155,6 +157,27 @@ class ListNode(CLIProgramBase):
         for file in files:
             print(STR_TMP.format("file", file))
         print()
+
+        return ExitCode.OK
+
+
+class ReadFile(CLIProgramBase):
+
+    def cli_main(self, args) -> ExitCode:
+        if len(args) != 2:
+            print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
+                file=sys.stderr)
+            return ExitCode.ERROR
+
+        filename = args[1]
+
+        if filename not in ENV.curr_node.directory.files:
+            pwd = ENV.curr_node.directory.name
+            print("Error: no file named {0} in {1}".format(
+                filename, pwd), file=sys.stderr)
+            return ExitCode.ERROR
+
+        print(ENV.curr_node.directory.files[filename].data)
 
         return ExitCode.OK
 

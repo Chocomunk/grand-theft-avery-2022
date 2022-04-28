@@ -61,7 +61,7 @@ def test_puzzle1():
 
     # Add files
     shared = File("shared.txt", "shared text")
-    a.directory.add_file(File("a.txt", "a text"))
+    a.directory.add_file(File("a.txt", "a text\nNext Line"))
     c.directory.add_file(shared)
     d.directory.add_file(shared)
 
