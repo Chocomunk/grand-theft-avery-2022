@@ -46,8 +46,9 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [x] Refactor Logging to make clear what it does
   - [ ] Prettify command outputs
     - [x] List node contents
-    - [ ] Node history
+    - [x] Node history
     - [ ] Log printout
+  - [ ] Make unlock take input
   - [x] Implement cat
     - Maybe allow users to add files to the path
   - [x] chdir multiple directories at once

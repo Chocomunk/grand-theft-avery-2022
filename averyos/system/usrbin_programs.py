@@ -50,16 +50,17 @@ class Chdir(CLIProgramBase):
             return ExitCode.ERROR
 
         dirname = clean_path(args[1])
-        new_node = ENV.curr_node.find_node(dirname)
+        path = ENV.curr_node.find_node(dirname)
 
-        if not new_node:
+        if not path:
             pwd = ENV.curr_node.directory.name
             print("Error: could not find {0} under {1}".format(
                 dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
+        new_node = path[-1]
         if not new_node.locked():
-            ENV.node_history.append(ENV.curr_node)
+            ENV.node_history.extend(path[:-1])
             ENV.curr_node = new_node
             new_node.call_entry_callbacks()
         else:
@@ -181,12 +182,13 @@ class ReadFile(CLIProgramBase):
         cont_node = ENV.curr_node           # Default search in curr_node
         if len(split) > 1:
             dirname = split[0]
-            cont_node = ENV.curr_node.find_node(dirname)
+            path = ENV.curr_node.find_node(dirname)
 
-            if not cont_node:
+            if not path:
                 print("Error: could not find {0} under {1}".format(
                     dirname, pwd), file=sys.stderr)
                 return ExitCode.ERROR
+            cont_node = path[-1]            # Search under final node in path
 
         if filename not in cont_node.directory.files:
             print("Error: no file named {0} under {1}".format(
@@ -244,7 +246,7 @@ class UnlockPassword(ProgramBase):
             return ExitCode.ERROR
 
         dirname = args[1]
-        new_node = ENV.curr_node.find_node(dirname)
+        new_node = ENV.curr_node.find_neighbor(dirname)
 
         if not new_node:
             pwd = ENV.curr_node.directory.name
