@@ -101,9 +101,16 @@ class Node:
         self.navref[child_node.directory.name] = child_node
         child_node.navref[self.directory.name] = self
 
-    def find_neighbor(self, dirname) -> Optional[Node]:
-        if dirname in self.navref:
-            return self.navref[dirname]
+    def find_node(self, dirname) -> Optional[Node]:
+        return self.find_neighbor_recurse(dirname.split('/'), 0)
+
+    def find_neighbor_recurse(self, dirnames, depth) -> Optional[Node]:
+        if depth == len(dirnames):
+            return self
+
+        dname = dirnames[depth]
+        if dname in self.navref:
+            return self.navref[dname].find_neighbor_recurse(dirnames, depth+1)
         return None
 
     def list_children(self):

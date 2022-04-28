@@ -1,3 +1,4 @@
+import re
 import sys
 
 from shell.env import ENV
@@ -36,6 +37,10 @@ class SendExit(CLIProgramBase):
         return ExitCode.EXIT
 
 
+def clean_path(s):
+    return re.sub('//+', '/', s).strip('/')
+
+
 class Chdir(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
@@ -44,12 +49,12 @@ class Chdir(CLIProgramBase):
                 file=sys.stderr)
             return ExitCode.ERROR
 
-        dirname = args[1]
-        new_node = ENV.curr_node.find_neighbor(dirname)
+        dirname = clean_path(args[1])
+        new_node = ENV.curr_node.find_node(dirname)
 
         if not new_node:
             pwd = ENV.curr_node.directory.name
-            print("Error: no directory named {0} connected to {1}!".format(
+            print("Error: could not find {0} under {1}".format(
                 dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
@@ -168,16 +173,27 @@ class ReadFile(CLIProgramBase):
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
+        pwd = ENV.curr_node.directory.name
 
-        filename = args[1]
+        split = clean_path(args[1]).rsplit('/', 1)
+        filename = split[-1]                # Last entry is filename
 
-        if filename not in ENV.curr_node.directory.files:
-            pwd = ENV.curr_node.directory.name
-            print("Error: no file named {0} in {1}".format(
+        cont_node = ENV.curr_node           # Default search in curr_node
+        if len(split) > 1:
+            dirname = split[0]
+            cont_node = ENV.curr_node.find_node(dirname)
+
+            if not cont_node:
+                print("Error: could not find {0} under {1}".format(
+                    dirname, pwd), file=sys.stderr)
+                return ExitCode.ERROR
+
+        if filename not in cont_node.directory.files:
+            print("Error: no file named {0} under {1}".format(
                 filename, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
-        print(ENV.curr_node.directory.files[filename].data)
+        print(cont_node.directory.files[filename].data)
 
         return ExitCode.OK
 
@@ -225,7 +241,7 @@ class UnlockPassword(ProgramBase):
             return ExitCode.ERROR
 
         dirname = args[1]
-        new_node = ENV.curr_node.find_neighbor(dirname)
+        new_node = ENV.curr_node.find_node(dirname)
 
         if not new_node:
             pwd = ENV.curr_node.directory.name

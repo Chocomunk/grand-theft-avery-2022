@@ -50,7 +50,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Log printout
   - [x] Implement cat
     - Maybe allow users to add files to the path
-  - [ ] chdir multiple directories at once
+  - [x] chdir multiple directories at once
   - [ ] Add input pre-processing callbacks
 - Programs
   - [x] Define an abstract program
