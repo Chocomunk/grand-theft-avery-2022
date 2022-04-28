@@ -48,7 +48,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [x] List node contents
     - [x] Node history
     - [ ] Log printout
-  - [ ] Make unlock take input
+  - [x] Make unlock take input
   - [x] Implement cat
     - Maybe allow users to add files to the path
   - [x] chdir multiple directories at once

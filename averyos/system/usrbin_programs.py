@@ -14,7 +14,7 @@ LIST_CMD = "ls"
 READFILE_CMD = "cat"
 SHOWLOG_CMD = "showlog"
 HISTORY_CMD = "history"
-PASSWD_CMD = "passwd"
+PASSWD_CMD = "unlock"
 
 
 def usrbin_progs():
@@ -240,8 +240,8 @@ class ShowHistory(CLIProgramBase):
 class UnlockPassword(ProgramBase):
 
     def cli_main(self, args) -> ExitCode:
-        if len(args) != 3:
-            print("Error: {0} must take 2 arguments!".format(args[0]), 
+        if len(args) != 2:
+            print("Error: {0} must specify a directory.".format(args[0]), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -250,7 +250,7 @@ class UnlockPassword(ProgramBase):
 
         if not new_node:
             pwd = ENV.curr_node.directory.name
-            print("Error: no directory named {0} connected to {1}!".format(
+            print("Error: could not find {0} within {1}.".format(
                 dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
         
@@ -259,7 +259,8 @@ class UnlockPassword(ProgramBase):
                 dirname), file=sys.stderr)
             return ExitCode.ERROR
 
-        if new_node.try_password(args[2]):
+        passwd = input("Enter password for {0}: ".format(new_node.directory.name))
+        if new_node.try_password(passwd):
             print("Success! {0} is unlocked.".format(dirname))
         else:
             print("Incorrect password for {0}".format(dirname), file=sys.stderr)

@@ -21,7 +21,7 @@ class UnknownProgram(CLIProgramBase):
 # TODO: move this somewhere else once callbacks are figured out
 def sheesh_split(s: str):
     """ Put a space between the 'sh' and 'eesh' """
-    if s.startswith('sh'):
+    if s.startswith('she') or s.startswith('shsh'):
         return 'sh ' + s[2:]
     return s
 
