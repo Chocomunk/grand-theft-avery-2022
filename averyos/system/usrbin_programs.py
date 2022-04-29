@@ -17,6 +17,7 @@ HISTORY_CMD = "history"
 PASSWD_CMD = "unlock"
 
 
+# TODO: remove showlog
 def usrbin_progs():
     return {
         EXIT_CMD: SendExit(),
@@ -25,7 +26,7 @@ def usrbin_progs():
         CDBACK_CMD: ChdirBack(),
         LIST_CMD: ListNode(),
         READFILE_CMD: ReadFile(),
-        SHOWLOG_CMD: ShowLog(),
+        # SHOWLOG_CMD: ShowLog(),
         HISTORY_CMD: ShowHistory(),
         PASSWD_CMD: UnlockPassword()
     }

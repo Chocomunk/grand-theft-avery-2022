@@ -33,16 +33,19 @@ class Shell:
     def __init__(self, root: Node):
         # Setup logger. NOTE: If other shells become active, they will take over output
         # All stdio loggers write to the same LogData instance
-        self.stdout, self.stderr, self.stdin = get_stdio_loggers()
-        sys.stdout = self.stdout
-        sys.stderr = self.stderr
-        sys.stdin  = self.stdin
+
+        # TODO: Remove comments
+        # NOTE: Stop overriding stdio
+        # self.stdout, self.stderr, self.stdin = get_stdio_loggers()
+        # sys.stdout = self.stdout
+        # sys.stderr = self.stderr
+        # sys.stdin  = self.stdin
 
         # Initialize FS and ENV
         ENV.reset()
         self.root = root
         ENV.curr_node = root
-        ENV.log = self.stdout.log      # Same LogData as stdin and stderr
+        # ENV.log = self.stdout.log      # Same LogData as stdin and stderr
         ENV.path = usrbin_progs()
 
         self.unknown_program = UnknownProgram()
