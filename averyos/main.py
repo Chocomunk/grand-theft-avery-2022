@@ -1,8 +1,12 @@
+import sys
 import pygame as pg
 
-from gui.gui_term import *
 from shell.shell import Shell
+from shell.copy_logger import LinesLog, CopyLogger, LogType
 from puzzle.test_puzzle1 import test_puzzle1
+
+from gui.os_window import OSWindow
+from gui.terminal import TerminalSurface
 
 
 if __name__ == '__main__':
@@ -12,12 +16,14 @@ if __name__ == '__main__':
     pg.init()
 
     clock = pg.time.Clock()
-    gui = AveryOSWin()
+    gui = OSWindow((640, 480))
 
-    terminal = TerminalGUI(0, 0, 640, 480, prompt_func=shell.prompt)
+    terminal = TerminalSurface(0, 0, 640, 480, 
+                                prompt_func=shell.prompt, file=LinesLog())
     terminal.active = True
     sys.stdout = terminal.file
-    sys.stderr = terminal.file
+    sys.stderr = CopyLogger(file=sys.stderr, 
+                            logdata=terminal.file, logtype=LogType.ERR)
 
     gui.elements.append(terminal)
 
@@ -25,7 +31,6 @@ if __name__ == '__main__':
 
     running = True
     while running:
-        # running = shell.handle_input(input(shell.prompt()))
         running = gui.update()
         gui.render()
 
