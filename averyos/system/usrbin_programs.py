@@ -154,7 +154,7 @@ class ListNode(CLIProgramBase):
         
         print("\nDirectory: {0}".format(cwd))
 
-        STR_TMP = "{0:>12}\t{1:<}"
+        STR_TMP = "{0:>12}    {1:<}"
         print(STR_TMP.format("Type", "Name"))
         print(STR_TMP.format("----", "----"))
         for dir in dirs:

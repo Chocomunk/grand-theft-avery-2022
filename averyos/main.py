@@ -1,24 +1,33 @@
+import pygame as pg
+
+from gui.gui_term import *
 from shell.shell import Shell
 from puzzle.test_puzzle1 import test_puzzle1
-import tkinter as tk
-from terminal import Terminal
 
 
 if __name__ == '__main__':
-    # root = test_puzzle1()
-    # shell = Shell(root)
+    root = test_puzzle1()
+    shell = Shell(root)
 
-    # running = True
-    # while running:
-    #     running = shell.handle_input(input(shell.prompt()))
-    root = tk.Tk()
-    terminal = Terminal(pady=5, padx=5, selectbackground='White')
-    terminal.pack(expand=True, fill='both')
-    # Don't want to run through our shell
-    # terminal.shell = True
+    pg.init()
 
-    terminal.basename = 'fuckyou$'
+    clock = pg.time.Clock()
+    gui = AveryOSWin()
 
+    terminal = TerminalGUI(0, 0, 640, 480, prompt_func=shell.prompt)
+    terminal.active = True
+    sys.stdout = terminal.file
+    sys.stderr = terminal.file
 
+    gui.elements.append(terminal)
 
-    root.mainloop()
+    terminal.add_input_listener(shell.handle_input)
+
+    running = True
+    while running:
+        # running = shell.handle_input(input(shell.prompt()))
+        running = gui.update()
+        gui.render()
+
+        pg.display.flip()
+        clock.tick(30)
