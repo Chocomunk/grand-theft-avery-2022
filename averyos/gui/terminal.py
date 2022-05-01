@@ -27,7 +27,10 @@ class TerminalSurface:
 
         self.rect = pg.Rect(x, y, w, h)
         self.color = COLOR_INACTIVE
-        self.txt_surface = FONT.render("", True, self.color)
+        self.txt_surf = Surface((self.rect.w, self.rect.h), pg.SRCALPHA, 32)
+
+        # Allow for holding down a key
+        pg.key.set_repeat(400, 30)
 
     def add_input_listener(self, func):
         self.input_cbs.append(func)
@@ -54,11 +57,15 @@ class TerminalSurface:
 
         # Initialize parent surface
         # TODO: probably don't need to reinitialize
-        self.txt_surface = Surface((max_width, total_height), pg.SRCALPHA, 32)
+        tmp_surf = Surface((max_width, total_height), pg.SRCALPHA, 32)
         draw_height = 0
         for surf in surfs:
-            self.txt_surface.blit(surf, (0, draw_height))
+            tmp_surf.blit(surf, (0, draw_height))
             draw_height += surf.get_height() + 5
+
+        self.txt_surf = Surface((self.rect.w, self.rect.h), pg.SRCALPHA, 32)
+        render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height())
+        self.txt_surf.blit(tmp_surf, (0, render_height))
 
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -66,7 +73,8 @@ class TerminalSurface:
             self.active = self.rect.collidepoint(event.pos)
 
             # Change the current color of the input box.
-            self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+            # TODO: remove
+            # self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
 
         if event.type == pg.KEYDOWN:
             if self.active:
@@ -90,8 +98,8 @@ class TerminalSurface:
     def update(self):
         # Resize the box if the text is too long.
         self.render_text()
-        width = max(self.rect.w, self.txt_surface.get_width()+10)
+        width = max(self.rect.w, self.txt_surf.get_width()+10)
         self.rect.w = width
 
     def draw(self, parent_surf: Surface):
-        parent_surf.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        parent_surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
