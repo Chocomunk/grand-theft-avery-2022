@@ -28,7 +28,6 @@ allows the OS to be decoupled from any specific puzzle designs.
   - Semantically different from global state. ENV data is tied to the OS, but 
     puzzle state data is tied to the puzzles.
   - Should store pwd, node history, path, master node, etc...
-- [ ] Show shell and programs in a GUI (so we don't have to switch windows)
 - [ ] Start Puzzle state webserver
   - AveryOS backend send puzzle state to webserver.
   - Webserver serves (mobile-friendly) websites to users and forwards user interactions
@@ -40,6 +39,12 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] Keep track of whether nodes are visited.
     - Also consider keeping track of whether all of a node's connections are
       visited (both child+parent? or separately?)
+- GUI
+  - [ ] Add pre-defined window layouts for programs to use
+    - Programs can access the surfaces of a specific layout
+  - [ ] Terminal GUI
+    - [ ] Allow scrolling over lines
+    - [ ] Allow up/down arrows to get last/next in command history.
 - Shell
   - [x] Add `cdid` command to force move to any node by its id
   - [x] Support cd-ing backwards along the node history
