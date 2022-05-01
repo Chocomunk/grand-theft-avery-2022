@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class OSWindow:
+class Window:
 
     def __init__(self, size) -> None:
         self.win = pg.display.set_mode(size)

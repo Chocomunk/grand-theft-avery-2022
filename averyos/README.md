@@ -45,6 +45,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] Terminal GUI
     - [ ] Allow scrolling over lines
     - [ ] Allow up/down arrows to get last/next in command history.
+  - [ ] Configure gui/__init__.py
 - Shell
   - [x] Add `cdid` command to force move to any node by its id
   - [x] Support cd-ing backwards along the node history

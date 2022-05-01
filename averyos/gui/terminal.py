@@ -33,6 +33,7 @@ class TerminalSurface:
         self.input_cbs.append(func)
 
     # TODO: set 5px padding as constant
+    # TODO: set text color based on logtype
     def render_text(self):
         # Add all lines as a surf
         total_height = 0
