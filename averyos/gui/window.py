@@ -61,9 +61,9 @@ class OSWindow(Window):
         super().__init__((0, 0), pg.FULLSCREEN, bg_color)
 
         # Initialize state
-        ENV.gui = self          # TODO: maybe this should be somewhere else
         w, h = self.size
         self.shell = shell
+        self.shell.set_gui(self)
 
         # Initialize terminal widget
         self.terminal = TerminalWidget(0, 0, w, h, 

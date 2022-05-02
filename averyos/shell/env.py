@@ -10,7 +10,6 @@ class ENV:
     path: Dict[str, ProgramBase] = {}
 
     log = None
-    gui = None
 
     curr_node: Node = None
     node_history: List[Node] = []       # Does not include curr_node

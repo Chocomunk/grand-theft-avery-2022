@@ -9,8 +9,7 @@ from shell.copy_logger import LinesLog, LogType
 
 # TODO: Clean up color and font handling
 pg.init()
-COLOR_INACTIVE = pg.Color('lightskyblue3')
-COLOR_ACTIVE = pg.Color('dodgerblue2')
+COLOR_OUT = pg.Color('lightskyblue3')
 COLOR_ERR = pg.Color('firebrick1')
 COLOR_IN = pg.Color('darkolivegreen1')
 FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
@@ -31,8 +30,7 @@ class TerminalWidget(Widget):
         self.file.write(self.prompt_func())
 
         self.rect = pg.Rect(x, y, w, h)
-        self.color = COLOR_INACTIVE
-        self.txt_surf = Surface((self.rect.w, self.rect.h), pg.SRCALPHA, 32)
+        self.txt_surf = Surface((w, h), pg.SRCALPHA, 32)
 
         # Allow for holding down a key
         pg.key.set_repeat(400, 30)
@@ -45,7 +43,6 @@ class TerminalWidget(Widget):
     def render_text(self):
         # Add all lines as a surf
         total_height = 0
-        max_width = 0
         surfs = []
         for line, t in self.file.getlines():
             if t == LogType.ERR:
@@ -53,38 +50,32 @@ class TerminalWidget(Widget):
             elif t == LogType.IN:
                 surf = FONT.render(line, True, COLOR_IN)
             else:
-                surf = FONT.render(line, True, self.color)
+                surf = FONT.render(line, True, COLOR_OUT)
             total_height += surf.get_height() + 5
-            max_width = max(max_width, surf.get_width())
             surfs.append(surf)
 
         # Add current line as a surf
         cur_line = self.file.get_curr_line() + self.text
         surf = FONT.render(cur_line, True, COLOR_IN)
         total_height += surf.get_height() + 5
-        max_width = max(max_width, surf.get_width())
         surfs.append(surf)
 
         # Initialize parent surface
         # TODO: probably don't need to reinitialize
-        tmp_surf = Surface((max_width, total_height), pg.SRCALPHA, 32)
+        tmp_surf = Surface((self.rect.w, total_height), pg.SRCALPHA, 32)
         draw_height = 0
         for surf in surfs:
             tmp_surf.blit(surf, (0, draw_height))
             draw_height += surf.get_height() + 5
 
         self.txt_surf.fill((0, 0, 0, 0))
-        render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height())
+        render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height() - 5)
         self.txt_surf.blit(tmp_surf, (0, render_height))
 
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             self.active = self.rect.collidepoint(event.pos)
-
-            # Change the current color of the input box.
-            # TODO: remove
-            # self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
 
         if event.type == pg.KEYDOWN:
             if self.active:

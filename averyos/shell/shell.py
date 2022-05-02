@@ -31,16 +31,6 @@ def sheesh_split(s: str):
 class Shell:
 
     def __init__(self, root: Node):
-        # Setup logger. NOTE: If other shells become active, they will take over output
-        # All stdio loggers write to the same LogData instance
-
-        # TODO: Remove comments
-        # NOTE: Stop overriding stdio
-        # self.stdout, self.stderr, self.stdin = get_stdio_loggers()
-        # sys.stdout = self.stdout
-        # sys.stderr = self.stderr
-        # sys.stdin  = self.stdin
-
         # Initialize FS and ENV
         ENV.reset()
         self.root = root
@@ -48,7 +38,12 @@ class Shell:
         # ENV.log = self.stdout.log      # Same LogData as stdin and stderr
         ENV.path = usrbin_progs()
 
+        # Initialize references
+        self.gui = None
         self.unknown_program = UnknownProgram()
+
+    def set_gui(self, gui_win):
+        self.gui = gui_win
 
     def prompt(self):
         return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)
@@ -81,7 +76,10 @@ class Shell:
 
         # TODO: handle GUI execution
         try:
-            errcode = prog.cli_main(args)
+            if self.gui is not None:
+                errcode = prog.gui_main(self.gui, args)
+            else:
+                errcode = prog.cli_main(args)
         except Exception:               # Catch program errors then continue
             traceback.print_exc()
             errcode = ExitCode.ERROR

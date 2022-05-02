@@ -18,15 +18,11 @@ if __name__ == '__main__':
     clock = pg.time.Clock()
     gui = OSWindow(shell)
 
+    # NOTE: Can also show nav by calling "ls"
     def show_nav(event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_RALT:
-                if gui.viewtag != "nav":
-                    dir_widg = DirectoryWidget()
-                    new_view = SplitView(dir_widg, gui.terminal, gui.size, weight=0.2, bg_color1=(50,50,50))
-                    gui.push_view("nav", new_view)
-            if event.key == pg.K_RCTRL:
-                gui.pop_view()
+                shell.handle_input("ls")
 
     gui.add_event_listener(show_nav)
 

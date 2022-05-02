@@ -47,18 +47,20 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] `ls` GUI
     - Call `ls` to toggle a "Directory" pane on the LHS
     - Cannot be shown with `map`
+    - [x] Implement pane + dirlist
+    - [ ] Add section headers/titles
+    - [ ] Add icons
   - [ ] `map` GUI
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
   - [ ] `view` GUI
     - Opens a window to either read text or view an image
 - Shell
-  - [ ] Prettify command outputs
-    - [ ] Log printout
   - [ ] chdir multiple directories at once
     - [x] Implement multidir
     - [ ] Check locks for entire path
   - [ ] Add input pre-processing callbacks
+  - [ ] Allow ls for subdirs
 - Programs
   - [x] Define an abstract program
     - [ ] Let sub-programs override the GUI

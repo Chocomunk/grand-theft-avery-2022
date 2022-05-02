@@ -5,6 +5,9 @@ from shell.env import ENV
 from .filesystem import Node
 from .program import ExitCode, ProgramBase, CLIProgramBase
 
+from gui.view import SplitView
+from gui.directory import DirectoryWidget
+
 
 EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
@@ -139,8 +142,9 @@ class ChdirBack(CLIProgramBase):
         return ExitCode.OK
 
 
-class ListNode(CLIProgramBase):
+class ListNode(ProgramBase):
 
+    # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
         if len(args) != 1:
             print("Error: {0} does not take any arguments".format(LIST_CMD), 
@@ -165,6 +169,21 @@ class ListNode(CLIProgramBase):
             print(STR_TMP.format("file", file))
         print()
 
+        return ExitCode.OK
+
+    def gui_main(self, gui, args) -> ExitCode:
+        if len(args) != 1:
+            print("Error: {0} does not take any arguments".format(LIST_CMD), 
+                file=sys.stderr)
+            return ExitCode.ERROR
+            
+        if gui.viewtag != "nav":        # Set to nav view
+            dir_widg = DirectoryWidget()
+            new_view = SplitView(dir_widg, gui.terminal, gui.size, 
+                                weight=0.2, bg_color1=(50,50,50))
+            gui.push_view("nav", new_view)
+        else:                               # Unset nav view
+            gui.pop_view()
         return ExitCode.OK
 
 
@@ -241,9 +260,8 @@ class ShowHistory(CLIProgramBase):
 class UnlockPassword(ProgramBase):
 
     def cli_main(self, args) -> ExitCode:
-        if len(args) != 2:
-            print("Error: {0} must specify a directory.".format(args[0]), 
-                file=sys.stderr)
+        if len(args) < 2:
+            print("Error: must specify a directory.", file=sys.stderr)
             return ExitCode.ERROR
 
         dirname = args[1]
@@ -260,7 +278,11 @@ class UnlockPassword(ProgramBase):
                 dirname), file=sys.stderr)
             return ExitCode.ERROR
 
-        passwd = input("Enter password for {0}: ".format(new_node.directory.name))
+        if len(args) == 3:
+            passwd = args[2]
+        else:
+            passwd = input("Enter password for {0}: ".format(new_node.directory.name))
+
         if new_node.try_password(passwd):
             print("Success! {0} is unlocked.".format(dirname))
         else:
@@ -268,5 +290,9 @@ class UnlockPassword(ProgramBase):
         return ExitCode.OK
 
     # TODO: create proper unlock GUI
-    def gui_main(self, args) -> ExitCode:
+    def gui_main(self, gui, args) -> ExitCode:
+        if len(args) < 3:
+            print("GUI still in development, please provide password as 2nd argument", 
+                file=sys.stderr)
+            return ExitCode.ERROR
         return self.cli_main(args)
