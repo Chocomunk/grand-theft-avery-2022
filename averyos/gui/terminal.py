@@ -2,6 +2,7 @@ import pygame as pg
 from pygame import Surface
 from typing import Callable
 
+from gui.widget import Widget, WidgetStatus
 from shell.copy_logger import LinesLog, LogType
 
 
@@ -13,7 +14,7 @@ FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal 
 
 # TODO: Compute font-height and show only the latest n logs
 # TODO: Allow scrolling to show the logs at [k-n, k] (n logs ending at log k)
-class TerminalSurface:
+class TerminalSurface(Widget):
 
     def __init__(self, x, y, w, h, 
                     text='', prompt_func=lambda: "", file=LinesLog()):
@@ -84,7 +85,7 @@ class TerminalSurface:
                     self.file.write(self.text + '\n', LogType.IN)
                     for cb in self.input_cbs:
                         if not cb(self.text):
-                            return False
+                            return WidgetStatus.EXIT
                     self.file.write(self.prompt_func())
                     self.text = ''
 
@@ -93,13 +94,14 @@ class TerminalSurface:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-        return True
+        return WidgetStatus.OK
 
     def update(self):
         # Resize the box if the text is too long.
         self.render_text()
         width = max(self.rect.w, self.txt_surf.get_width()+10)
         self.rect.w = width
+        return WidgetStatus.OK
 
     def draw(self, parent_surf: Surface):
         parent_surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
