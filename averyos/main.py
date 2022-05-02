@@ -20,7 +20,7 @@ if __name__ == '__main__':
     running = True
     while running:
         running = gui.update()
-        gui.render()
+        gui.draw()
 
         pg.display.flip()
         clock.tick(30)
