@@ -1,6 +1,5 @@
 import pygame as pg
 from enum import Enum
-from pygame import Surface
 from abc import ABC, abstractmethod
 
 
@@ -20,5 +19,5 @@ class Widget(ABC):
         pass
 
     @abstractmethod
-    def draw(self, surf: Surface):
+    def draw(self, surf: pg.Surface):
         pass

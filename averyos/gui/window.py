@@ -2,6 +2,7 @@ import sys
 
 import pygame as pg
 
+from shell.env import ENV
 from shell.shell import Shell
 from shell.copy_logger import CopyLogger, LogType, LinesLog
 
@@ -44,9 +45,12 @@ class OSWindow(Window):
         # OS window is always fullscreen
         super().__init__((0, 0), pg.FULLSCREEN, bg_color)
 
+        # Initialize state
+        ENV.gui = self
         w, h = self.size
         self.shell = shell
 
+        # Initialize terminal widget
         self.terminal = TerminalWidget(0, 0, w, h, 
                             prompt_func=shell.prompt, file=LinesLog())
         self.terminal.active = True
@@ -55,4 +59,18 @@ class OSWindow(Window):
                                 logdata=self.terminal.file, logtype=LogType.ERR)
         self.terminal.add_input_listener(shell.handle_input)
 
+        # Add terminal to the default MainView
         self.view.add_widget(self.terminal)
+
+        # Initialize view stack
+        self.viewstack = []
+
+    def push_view(self, view: Widget):
+        self.viewstack.append(self.view)
+        self.view = view
+
+    def pop_view(self):
+        if len(self.viewstack) > 0:
+            self.view = self.viewstack.pop()
+        else:
+            raise IndexError("View stack is empty!")

@@ -36,7 +36,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [x] Add pre-defined window layouts for programs to use
     - Programs can access the surfaces of a specific layout
     - [x] Window "views" that programs can assign
-  - [ ] Add `ViewManager` to `OSWindow`
+  - [x] Add a view stack to `OSWindow`
   - [ ] Terminal GUI
     - [ ] Clean up color and font handling
       - Color for prompt?
