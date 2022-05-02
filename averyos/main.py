@@ -6,6 +6,7 @@ from puzzle.test_puzzle1 import test_puzzle1
 
 from gui.view import SplitView
 from gui.window import OSWindow
+from gui.directory import DirectoryWidget
 
 
 if __name__ == '__main__':
@@ -21,7 +22,8 @@ if __name__ == '__main__':
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_RALT:
                 if gui.viewtag != "nav":
-                    new_view = SplitView(None, gui.terminal, gui.size, weight=0.2, bg_color1=(50,50,50))
+                    dir_widg = DirectoryWidget()
+                    new_view = SplitView(dir_widg, gui.terminal, gui.size, weight=0.2, bg_color1=(50,50,50))
                     gui.push_view("nav", new_view)
             if event.key == pg.K_RCTRL:
                 gui.pop_view()

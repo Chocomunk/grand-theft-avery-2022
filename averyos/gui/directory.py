@@ -1,0 +1,58 @@
+import pygame as pg
+
+from shell.env import ENV
+from gui.widget import Widget, WidgetStatus
+
+
+# TODO: Clean up color and font handling
+pg.init()
+COLOR_DIR = pg.Color("#BC6C25")
+COLOR_PROG = pg.Color("#DDA15E")
+COLOR_FILE = pg.Color("#FEFAE0")
+FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+
+
+class DirectoryWidget(Widget):
+
+    def __init__(self, pos=(20,20), line_spacing=5, sec_spacing=10):
+        self.x, self.y = pos
+        self.line_spacing = line_spacing
+        self.sec_spacing = sec_spacing
+
+        self.dirs = []
+        self.progs = []
+        self.files = []
+
+    def handle_event(self, event: pg.event.Event) -> WidgetStatus:
+        return WidgetStatus.OK
+
+    def update(self) -> WidgetStatus:
+        if ENV.curr_node:
+            self.dirs = ENV.curr_node.list_children()
+            self.progs = ENV.curr_node.directory.list_programs()
+            self.files = ENV.curr_node.directory.list_files()
+        else:
+            self.dirs = []
+            self.progs = []
+            self.files = []
+        return WidgetStatus.OK
+
+    def draw(self, surf: pg.Surface):
+        h = self.y
+        w = self.x
+        for dir in self.dirs:
+            txt_surf = FONT.render(dir, True, COLOR_DIR)
+            surf.blit(txt_surf, (w, h))
+            h += txt_surf.get_height() + self.line_spacing
+
+        h += self.sec_spacing - self.line_spacing
+        for prog in self.progs:
+            txt_surf = FONT.render(prog, True, COLOR_PROG)
+            surf.blit(txt_surf, (w, h))
+            h += txt_surf.get_height() + self.line_spacing
+
+        h += self.sec_spacing - self.line_spacing
+        for file in self.files:
+            txt_surf = FONT.render(file, True, COLOR_FILE)
+            surf.blit(txt_surf, (w, h))
+            h += txt_surf.get_height() + self.line_spacing

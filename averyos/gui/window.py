@@ -1,6 +1,6 @@
 import sys
 import traceback
-from typing import Callable, List
+from typing import Any, Callable, List
 
 import pygame as pg
 
@@ -21,9 +21,9 @@ class Window:
         self.bg_color = bg_color
         self.size = self.screen.get_size()
 
-        self.event_cbs: List[Callable[[pg.event.Event]]] = []
+        self.event_cbs: List[Callable[[pg.event.Event], Any]] = []
 
-    def add_event_listener(self, func: Callable[[pg.event.Event]]):
+    def add_event_listener(self, func: Callable[[pg.event.Event], Any]):
         self.event_cbs.append(func)
 
     def update(self):
