@@ -7,9 +7,12 @@ from gui.widget import Widget, WidgetStatus
 from shell.copy_logger import LinesLog, LogType
 
 
+# TODO: Clean up color and font handling
 pg.init()
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
+COLOR_ERR = pg.Color('firebrick1')
+COLOR_IN = pg.Color('darkolivegreen1')
 FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
 
 
@@ -38,21 +41,26 @@ class TerminalWidget(Widget):
         self.input_cbs.append(func)
 
     # TODO: set 5px padding as constant
-    # TODO: set text color based on logtype
+    # TODO: set text color based on logtype. SUSSY IMPLEMENTATION
     def render_text(self):
         # Add all lines as a surf
         total_height = 0
         max_width = 0
         surfs = []
-        for line, _ in self.file.getlines():
-            surf = FONT.render(line, True, self.color)
+        for line, t in self.file.getlines():
+            if t == LogType.ERR:
+                surf = FONT.render(line, True, COLOR_ERR)
+            elif t == LogType.IN:
+                surf = FONT.render(line, True, COLOR_IN)
+            else:
+                surf = FONT.render(line, True, self.color)
             total_height += surf.get_height() + 5
             max_width = max(max_width, surf.get_width())
             surfs.append(surf)
 
         # Add current line as a surf
         cur_line = self.file.get_curr_line() + self.text
-        surf = FONT.render(cur_line, True, self.color)
+        surf = FONT.render(cur_line, True, COLOR_IN)
         total_height += surf.get_height() + 5
         max_width = max(max_width, surf.get_width())
         surfs.append(surf)

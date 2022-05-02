@@ -38,7 +38,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [x] Window "views" that programs can assign
   - [ ] Add `ViewManager` to `OSWindow`
   - [ ] Terminal GUI
-    - [ ] Print different log types in different colors
+    - [ ] Clean up color and font handling
       - Color for prompt?
     - [ ] Allow scrolling over lines
       - Stop doing line moving in a sussy way
