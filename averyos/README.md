@@ -32,7 +32,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - Also consider keeping track of whether all of a node's connections are
       visited (both child+parent? or separately?)
 - GUI
-  - [ ] Make everything fullscreen
+  - [x] Make everything fullscreen
   - [ ] Add pre-defined window layouts for programs to use
     - Programs can access the surfaces of a specific layout
     - [ ] Window "views" that programs can assign

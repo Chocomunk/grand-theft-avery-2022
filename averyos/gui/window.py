@@ -3,7 +3,7 @@ import pygame as pg
 
 class Window:
 
-    def __init__(self, size) -> None:
+    def __init__(self, size, flags=0) -> None:
         self.win = pg.display.set_mode(size)
         self.elements = []
 

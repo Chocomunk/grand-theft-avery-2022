@@ -16,9 +16,9 @@ if __name__ == '__main__':
     pg.init()
 
     clock = pg.time.Clock()
-    gui = Window((640, 480))
+    gui = Window((0, 0), pg.FULLSCREEN)
 
-    terminal = TerminalSurface(0, 0, 640, 480, 
+    terminal = TerminalSurface(0, 0, gui.win.get_width(), gui.win.get_height(), 
                                 prompt_func=shell.prompt, file=LinesLog())
     terminal.active = True
     sys.stdout = terminal.file

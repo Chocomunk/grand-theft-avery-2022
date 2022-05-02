@@ -8,7 +8,7 @@ from shell.copy_logger import LinesLog, LogType
 pg.init()
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
-FONT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
 
 
 # TODO: Compute font-height and show only the latest n logs
@@ -63,7 +63,7 @@ class TerminalSurface:
             tmp_surf.blit(surf, (0, draw_height))
             draw_height += surf.get_height() + 5
 
-        self.txt_surf = Surface((self.rect.w, self.rect.h), pg.SRCALPHA, 32)
+        self.txt_surf.fill((0, 0, 0, 0))
         render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height())
         self.txt_surf.blit(tmp_surf, (0, render_height))
 
