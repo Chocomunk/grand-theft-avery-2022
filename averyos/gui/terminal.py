@@ -94,6 +94,7 @@ class TerminalWidget(Widget):
                     self.file.write(self.text + '\n', LogType.IN)
                     for cb in self.input_cbs:
                         if not cb(self.text):
+                            print("QUITTING")
                             return WidgetStatus.EXIT
                     self.file.write(self.prompt_func())
                     self.text = ''

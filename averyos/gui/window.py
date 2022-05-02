@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 import pygame as pg
 
@@ -19,16 +20,29 @@ class Window:
         self.bg_color = bg_color
         self.size = self.screen.get_size()
 
+        self.event_cbs = []
+
+    def add_event_listener(self, func):
+        self.event_cbs.append(func)
+
     def update(self):
         for event in pg.event.get():
+            # Window event handlers
             if event.type == pg.QUIT:
                 return False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     return False
+
+            # Event callbacks
+            for cb in self.event_cbs:
+                cb(event)
+
+            # View's event handler
             if self.view.handle_event(event) == WidgetStatus.EXIT:
                 return False
 
+        # View update
         if self.view.update() == WidgetStatus.EXIT:
             return False
 
@@ -64,13 +78,21 @@ class OSWindow(Window):
 
         # Initialize view stack
         self.viewstack = []
+        self.viewtag = "MAIN"
 
-    def push_view(self, view: Widget):
-        self.viewstack.append(self.view)
+    def push_view(self, tag, view: Widget):
+        """ Push and render the view. The `tag` parameter helps identify views """
+        self.viewstack.append((self.viewtag, self.view))
         self.view = view
+        self.viewtag = tag
 
     def pop_view(self):
         if len(self.viewstack) > 0:
-            self.view = self.viewstack.pop()
+            self.viewtag, self.view = self.viewstack.pop()
         else:
-            raise IndexError("View stack is empty!")
+
+            # NOTE: Print exception to console without really raising
+            try:
+                raise IndexError("View stack is empty!")
+            except:
+                traceback.print_exc(file=sys.__stderr__)

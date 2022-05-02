@@ -1,3 +1,4 @@
+import sys
 import pygame as pg
 from pygame import Surface
 
@@ -45,12 +46,15 @@ class MainView(Widget):
 class SplitView(Widget):
 
     def __init__(self, widg1: Widget, widg2: Widget, 
-                    size, pos=(0,0), weight=0.5, horizontal=False):
+                    size, pos=(0,0), weight=0.5, horizontal=False,
+                    bg_color1=(0,0,0,0), bg_color2=(0,0,0,0)):
         w, h = size
         self.w, self.h = w, h
         self.x, self.y = pos
         self.weight = weight
         self.horizontal = horizontal
+        self.bg_color1 = bg_color1
+        self.bg_color2 = bg_color2
 
         if horizontal:
             self.t = int(h*weight)      # Var to store surf1 height
@@ -65,21 +69,31 @@ class SplitView(Widget):
         self.widg2 = widg2
 
     def handle_event(self, event: pg.event.Event) -> WidgetStatus:
-        status1 = self.widg1.handle_event(event).value()
-        status2 = self.widg2.handle_event(event).value()
-        return WidgetStatus(status1 | status2)
+        status = 0
+        if self.widg1:
+            status |= self.widg1.handle_event(event).value
+        if self.widg2:
+            status |= self.widg2.handle_event(event).value
+
+        return WidgetStatus(status)
 
     def update(self) -> WidgetStatus:
-        status1 = self.widg1.update().value()
-        status2 = self.widg2.update().value()
-        return WidgetStatus(status1 | status2)
+        status = 0
+        if self.widg1:
+            status |= self.widg1.update().value
+        if self.widg2:
+            status |= self.widg2.update().value
+
+        return WidgetStatus(status)
 
     def draw(self, surf: Surface):
-        self.surf1.fill((0,0,0,0))
-        self.surf2.fill((0,0,0,0))
+        self.surf1.fill(self.bg_color1)
+        self.surf2.fill(self.bg_color2)
 
-        self.widg1.draw(self.surf1)
-        self.widg2.draw(self.surf2)
+        if self.widg1:
+            self.widg1.draw(self.surf1)
+        if self.widg2:
+            self.widg2.draw(self.surf2)
 
         if self.horizontal:
             surf.blit(self.surf1, (self.x, self.y))
