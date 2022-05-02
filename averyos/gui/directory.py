@@ -1,7 +1,7 @@
 import pygame as pg
 
 from shell.env import ENV
-from gui.widget import Widget, WidgetStatus
+from gui.widget import Widget
 
 
 # TODO: Clean up color and font handling
@@ -23,10 +23,10 @@ class DirectoryWidget(Widget):
         self.progs = []
         self.files = []
 
-    def handle_event(self, event: pg.event.Event) -> WidgetStatus:
-        return WidgetStatus.OK
+    def handle_event(self, event: pg.event.Event):
+        pass
 
-    def update(self) -> WidgetStatus:
+    def update(self):
         if ENV.curr_node:
             self.dirs = ENV.curr_node.list_children()
             self.progs = ENV.curr_node.directory.list_programs()
@@ -35,7 +35,6 @@ class DirectoryWidget(Widget):
             self.dirs = []
             self.progs = []
             self.files = []
-        return WidgetStatus.OK
 
     def draw(self, surf: pg.Surface):
         h = self.y

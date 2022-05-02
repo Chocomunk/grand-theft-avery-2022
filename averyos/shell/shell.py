@@ -1,12 +1,9 @@
-from ast import arg
-from multiprocessing.dummy import current_process
 import sys
 import shlex
 import traceback
 
 from .env import ENV
 from system.filesystem import Node
-from .copy_logger import get_stdio_loggers
 from system.usrbin_programs import usrbin_progs
 from system.program import ExitCode, CLIProgramBase
 
@@ -27,7 +24,6 @@ def sheesh_split(s: str):
 
 
 # TODO: Validate arg[i] values for every shell command
-# TODO: Prettify list outputs
 class Shell:
 
     def __init__(self, root: Node):
@@ -35,7 +31,6 @@ class Shell:
         ENV.reset()
         self.root = root
         ENV.curr_node = root
-        # ENV.log = self.stdout.log      # Same LogData as stdin and stderr
         ENV.path = usrbin_progs()
 
         # Initialize references
@@ -54,7 +49,7 @@ class Shell:
 
         Returns: `True` to stay alive, `False` to exit
         """
-        # Preprocess inputs
+        # -------------------- Preprocess inputs --------------------
         # TODO: Add callbacks for puzzles to take control
         inp = sheesh_split(inp)
         
@@ -63,7 +58,7 @@ class Shell:
         if len(args) == 0:
             return True
         
-        # Parse commands
+        # -------------------- Parse commands --------------------
         prog = self.unknown_program     # Default to unknown
 
         # Check programs in CWD
@@ -74,7 +69,7 @@ class Shell:
         elif args[0] in ENV.path:
             prog = ENV.path[args[0]]
 
-        # TODO: handle GUI execution
+        # -------------------- Execute --------------------
         try:
             if self.gui is not None:
                 errcode = prog.gui_main(self.gui, args)

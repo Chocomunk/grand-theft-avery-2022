@@ -1,21 +1,15 @@
 import pygame as pg
-from enum import Enum
 from abc import ABC, abstractmethod
-
-
-class WidgetStatus(Enum):
-    OK=0
-    EXIT=1
 
 
 class Widget(ABC):
 
     @abstractmethod
-    def handle_event(self, event: pg.event.Event) -> WidgetStatus:
+    def handle_event(self, event: pg.event.Event):
         pass
 
     @abstractmethod
-    def update(self) -> WidgetStatus:
+    def update(self):
         pass
 
     @abstractmethod

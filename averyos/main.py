@@ -1,12 +1,9 @@
-import sys
 import pygame as pg
 
 from shell.shell import Shell
 from puzzle.test_puzzle1 import test_puzzle1
 
-from gui.view import SplitView
 from gui.window import OSWindow
-from gui.directory import DirectoryWidget
 
 
 if __name__ == '__main__':
@@ -29,7 +26,8 @@ if __name__ == '__main__':
     running = True
     while running:
         running = gui.update()
-        gui.draw()
+        if running:
+            gui.draw()
 
-        pg.display.flip()
-        clock.tick(30)
+            pg.display.flip()
+            clock.tick(30)

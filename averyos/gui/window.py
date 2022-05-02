@@ -4,13 +4,12 @@ from typing import Any, Callable, List
 
 import pygame as pg
 
-from shell.env import ENV
 from shell.shell import Shell
 from shell.copy_logger import CopyLogger, LogType, LinesLog
 
 from gui.view import MainView
 from gui.terminal import TerminalWidget
-from gui.widget import Widget, WidgetStatus
+from gui.widget import Widget
 
 
 class Window:
@@ -30,6 +29,7 @@ class Window:
         for event in pg.event.get():
             # Window event handlers
             if event.type == pg.QUIT:
+                pg.quit()
                 return False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
@@ -40,12 +40,10 @@ class Window:
                 cb(event)
 
             # View's event handler
-            if self.view.handle_event(event) == WidgetStatus.EXIT:
-                return False
+            self.view.handle_event(event)
 
         # View update
-        if self.view.update() == WidgetStatus.EXIT:
-            return False
+        self.view.update()
 
         return True
 
@@ -55,6 +53,8 @@ class Window:
 
 
 class OSWindow(Window):
+
+    MAIN_TAG = "__MAIN__"
 
     def __init__(self, shell: Shell, bg_color=(30, 30, 30)) -> None:
         # OS window is always fullscreen
@@ -79,7 +79,7 @@ class OSWindow(Window):
 
         # Initialize view stack
         self.viewstack = []
-        self.viewtag = "MAIN"
+        self.viewtag = OSWindow.MAIN_TAG
 
     # TODO: Consider ways to handle repeat tags
     def push_view(self, tag, view: Widget):

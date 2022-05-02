@@ -1,9 +1,8 @@
-import sys
 import pygame as pg
 from pygame import Surface
 
 from typing import List
-from gui.widget import Widget, WidgetStatus
+from gui.widget import Widget
 
 
 # NOTE: You can put views inside other views
@@ -24,17 +23,13 @@ class MainView(Widget):
     def add_widget(self, widget: Widget):
         self.widgets.append(widget)
 
-    def handle_event(self, event: pg.event.Event) -> WidgetStatus:
-        status = 0
+    def handle_event(self, event: pg.event.Event):
         for widget in self.widgets:
-            status |= widget.handle_event(event).value
-        return WidgetStatus(status)
+            widget.handle_event(event).value
 
-    def update(self) -> WidgetStatus:
-        status = 0
+    def update(self):
         for widget in self.widgets:
-            status |= widget.update().value
-        return WidgetStatus(status)
+            widget.update().value
 
     def draw(self, surf: Surface):
         self.surf.fill(self.bg_color)
@@ -68,23 +63,17 @@ class SplitView(Widget):
         self.widg1 = widg1
         self.widg2 = widg2
 
-    def handle_event(self, event: pg.event.Event) -> WidgetStatus:
-        status = 0
+    def handle_event(self, event: pg.event.Event):
         if self.widg1:
-            status |= self.widg1.handle_event(event).value
+            self.widg1.handle_event(event).value
         if self.widg2:
-            status |= self.widg2.handle_event(event).value
+            self.widg2.handle_event(event).value
 
-        return WidgetStatus(status)
-
-    def update(self) -> WidgetStatus:
-        status = 0
+    def update(self):
         if self.widg1:
-            status |= self.widg1.update().value
+            self.widg1.update().value
         if self.widg2:
-            status |= self.widg2.update().value
-
-        return WidgetStatus(status)
+            self.widg2.update().value
 
     def draw(self, surf: Surface):
         self.surf1.fill(self.bg_color1)

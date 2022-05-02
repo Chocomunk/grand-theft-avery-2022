@@ -1,9 +1,8 @@
-import sys
 import pygame as pg
 from pygame import Surface
 from typing import Callable, List
 
-from gui.widget import Widget, WidgetStatus
+from gui.widget import Widget
 from shell.copy_logger import LinesLog, LogType
 
 
@@ -20,10 +19,12 @@ FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal 
 class TerminalWidget(Widget):
 
     def __init__(self, x, y, w, h, 
-                    text='', prompt_func=lambda: "", file=LinesLog()):
+                    text='', line_spacing=5,
+                    prompt_func=lambda: "", file=LinesLog()):
         self.file = file
         self.prompt_func = prompt_func
         self.text = text
+        self.line_spacing = line_spacing
         self.active = False
         self.input_cbs: List[Callable[[str], bool]] = []
 
@@ -38,8 +39,7 @@ class TerminalWidget(Widget):
     def add_input_listener(self, func):
         self.input_cbs.append(func)
 
-    # TODO: set 5px padding as constant
-    # TODO: set text color based on logtype. SUSSY IMPLEMENTATION
+    # TODO: set text color based on logtype. BAD IMPLEMENTATION
     def render_text(self):
         # Add all lines as a surf
         total_height = 0
@@ -51,13 +51,13 @@ class TerminalWidget(Widget):
                 surf = FONT.render(line, True, COLOR_IN)
             else:
                 surf = FONT.render(line, True, COLOR_OUT)
-            total_height += surf.get_height() + 5
+            total_height += surf.get_height() + self.line_spacing
             surfs.append(surf)
 
         # Add current line as a surf
         cur_line = self.file.get_curr_line() + self.text
         surf = FONT.render(cur_line, True, COLOR_IN)
-        total_height += surf.get_height() + 5
+        total_height += surf.get_height() + self.line_spacing
         surfs.append(surf)
 
         # Initialize parent surface
@@ -66,7 +66,7 @@ class TerminalWidget(Widget):
         draw_height = 0
         for surf in surfs:
             tmp_surf.blit(surf, (0, draw_height))
-            draw_height += surf.get_height() + 5
+            draw_height += surf.get_height() + self.line_spacing
 
         self.txt_surf.fill((0, 0, 0, 0))
         render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height() - 5)
@@ -83,9 +83,13 @@ class TerminalWidget(Widget):
                 # Send input
                 if event.key == pg.K_RETURN:
                     self.file.write(self.text + '\n', LogType.IN)
+
+                    # If input handler returns False, then quit
                     for cb in self.input_cbs:
-                        if not cb(self.text):
-                            return WidgetStatus.EXIT
+                        if cb(self.text) == False:
+                            quit_event = pg.event.Event(pg.QUIT)
+                            pg.event.post(quit_event)
+
                     self.file.write(self.prompt_func())
                     self.text = ''
 
@@ -94,14 +98,12 @@ class TerminalWidget(Widget):
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-        return WidgetStatus.OK
 
     def update(self):
         # Resize the box if the text is too long.
         self.render_text()
         width = max(self.rect.w, self.txt_surf.get_width()+10)
         self.rect.w = width
-        return WidgetStatus.OK
 
     def draw(self, surf: Surface):
         surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
