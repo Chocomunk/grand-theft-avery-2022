@@ -25,11 +25,11 @@ class MainView(Widget):
 
     def handle_event(self, event: pg.event.Event):
         for widget in self.widgets:
-            widget.handle_event(event).value
+            widget.handle_event(event)
 
     def update(self):
         for widget in self.widgets:
-            widget.update().value
+            widget.update()
 
     def draw(self, surf: Surface):
         self.surf.fill(self.bg_color)
@@ -65,15 +65,15 @@ class SplitView(Widget):
 
     def handle_event(self, event: pg.event.Event):
         if self.widg1:
-            self.widg1.handle_event(event).value
+            self.widg1.handle_event(event)
         if self.widg2:
-            self.widg2.handle_event(event).value
+            self.widg2.handle_event(event)
 
     def update(self):
         if self.widg1:
-            self.widg1.update().value
+            self.widg1.update()
         if self.widg2:
-            self.widg2.update().value
+            self.widg2.update()
 
     def draw(self, surf: Surface):
         self.surf1.fill(self.bg_color1)
