@@ -1,7 +1,7 @@
 import sys
 import pygame as pg
 from pygame import Surface
-from typing import Callable
+from typing import Callable, List
 
 from gui.widget import Widget, WidgetStatus
 from shell.copy_logger import LinesLog, LogType
@@ -26,7 +26,7 @@ class TerminalWidget(Widget):
         self.prompt_func = prompt_func
         self.text = text
         self.active = False
-        self.input_cbs: Callable[[str], bool] = []
+        self.input_cbs: List[Callable[[str], bool]] = []
 
         self.file.write(self.prompt_func())
 
@@ -94,7 +94,6 @@ class TerminalWidget(Widget):
                     self.file.write(self.text + '\n', LogType.IN)
                     for cb in self.input_cbs:
                         if not cb(self.text):
-                            print("QUITTING")
                             return WidgetStatus.EXIT
                     self.file.write(self.prompt_func())
                     self.text = ''

@@ -1,5 +1,6 @@
 import sys
 import traceback
+from typing import Callable, List
 
 import pygame as pg
 
@@ -20,9 +21,9 @@ class Window:
         self.bg_color = bg_color
         self.size = self.screen.get_size()
 
-        self.event_cbs = []
+        self.event_cbs: List[Callable[[pg.event.Event]]] = []
 
-    def add_event_listener(self, func):
+    def add_event_listener(self, func: Callable[[pg.event.Event]]):
         self.event_cbs.append(func)
 
     def update(self):
@@ -60,7 +61,7 @@ class OSWindow(Window):
         super().__init__((0, 0), pg.FULLSCREEN, bg_color)
 
         # Initialize state
-        ENV.gui = self
+        ENV.gui = self          # TODO: maybe this should be somewhere else
         w, h = self.size
         self.shell = shell
 
@@ -80,8 +81,12 @@ class OSWindow(Window):
         self.viewstack = []
         self.viewtag = "MAIN"
 
+    # TODO: Consider ways to handle repeat tags
     def push_view(self, tag, view: Widget):
-        """ Push and render the view. The `tag` parameter helps identify views """
+        """ 
+        Push and render the view. The `tag` parameter is used to identify views,
+        it can be any type that supports equality comparisons.
+        """
         self.viewstack.append((self.viewtag, self.view))
         self.view = view
         self.viewtag = tag
