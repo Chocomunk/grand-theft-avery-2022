@@ -9,10 +9,7 @@ from .program import ExitCode, ProgramBase, CLIProgramBase
 from gui.view import SplitView, MainView
 from gui.directory import DirectoryWidget
 from gui.labelbox import LabelBoxWidget
-<<<<<<< HEAD
 from gui.password import PasswordWidget
-=======
->>>>>>> a0afb1e (Add labelbox widget)
 
 
 EXIT_CMD = "exit"
