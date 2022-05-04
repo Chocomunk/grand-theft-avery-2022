@@ -5,8 +5,9 @@ from shell.env import ENV
 from .filesystem import Node
 from .program import ExitCode, ProgramBase, CLIProgramBase
 
-from gui.view import SplitView
+from gui.view import SplitView, MainView
 from gui.directory import DirectoryWidget
+from gui.password import PasswordWidget
 
 
 EXIT_CMD = "exit"
@@ -291,8 +292,27 @@ class UnlockPassword(ProgramBase):
 
     # TODO: create proper unlock GUI
     def gui_main(self, gui, args) -> ExitCode:
-        if len(args) < 3:
-            print("GUI still in development, please provide password as 2nd argument", 
-                file=sys.stderr)
+        # if len(args) < 3:
+        #     print("GUI still in development, please provide password as 2nd argument", 
+        #         file=sys.stderr)
+        #     return ExitCode.ERROR
+        # return self.cli_main(args)
+        if len(args) < 2:
+            print("Error: must specify a directory.", file=sys.stderr)
             return ExitCode.ERROR
-        return self.cli_main(args)
+
+        dirname = args[1]
+        new_node = ENV.curr_node.find_neighbor(dirname)
+
+        if not new_node:
+            pwd = ENV.curr_node.directory.name
+            print("Error: could not find {0} within {1}.".format(
+                dirname, pwd), file=sys.stderr)
+            return ExitCode.ERROR
+            
+        passwd_widg = PasswordWidget(new_node.password, lambda: gui.pop_view())
+        new_view = MainView(gui.size)
+        new_view.add_widget(passwd_widg)
+        gui.push_view("passwd", new_view)
+        passwd_widg.active = True
+        return ExitCode.OK
