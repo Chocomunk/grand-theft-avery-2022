@@ -10,6 +10,7 @@ from gui.directory import DirectoryWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
 from gui.labelbox import LabelBoxWidget
+from gui.password import PasswordWidget
 
 
 EXIT_CMD = "exit"
