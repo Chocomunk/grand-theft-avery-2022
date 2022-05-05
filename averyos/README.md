@@ -57,6 +57,11 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] `at` GUI
     - Opens a widget that displays text
     - [ ] Allow for scrolling over text
+    - [ ] Make it pretty?
+  - [ ] `unlock` GUI
+    - [ ] Actually unlock the node
+    - [ ] Pause/animations after answers
+    - [ ] Make it pretty
 - Shell
   - [ ] chdir multiple directories at once
     - [x] Implement multidir
