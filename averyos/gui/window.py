@@ -32,7 +32,7 @@ class Window:
                 pg.quit()
                 return False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
+                if event.key == pg.K_RCTRL:
                     return False
 
             # Event callbacks
