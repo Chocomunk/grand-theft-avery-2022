@@ -1,4 +1,3 @@
-from msilib.schema import Error
 import re
 import sys
 
@@ -218,7 +217,7 @@ class ReadFile(ProgramBase):
                 filename, pwd), file=sys.stderr)
             return ExitCode.ERROR, None
 
-        return cont_node.directory.files[filename].data
+        return ExitCode.OK, cont_node.directory.files[filename].data
 
     def cli_main(self, args) -> ExitCode:
         print(self.get_file_data(args))
