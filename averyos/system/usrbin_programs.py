@@ -7,7 +7,6 @@ from .program import ExitCode, ProgramBase, CLIProgramBase
 
 from gui.view import SplitView, MainView
 from gui.directory import DirectoryWidget
-from gui.password import PasswordWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
 
@@ -283,10 +282,10 @@ class ShowHistory(CLIProgramBase):
 
 class UnlockPassword(ProgramBase):
 
-    def cli_main(self, args) -> ExitCode:
+    def check_node(self, args):
         if len(args) < 2:
             print("Error: must specify a directory.", file=sys.stderr)
-            return ExitCode.ERROR
+            return ExitCode.ERROR, None
 
         dirname = args[1]
         new_node = ENV.curr_node.find_neighbor(dirname)
@@ -295,7 +294,15 @@ class UnlockPassword(ProgramBase):
             pwd = ENV.curr_node.directory.name
             print("Error: could not find {0} within {1}.".format(
                 dirname, pwd), file=sys.stderr)
-            return ExitCode.ERROR
+            return ExitCode.ERROR, None
+
+        return ExitCode.OK, (dirname, new_node)
+
+    def cli_main(self, args) -> ExitCode:
+        status, out = self.check_node(args)
+        if status != ExitCode.OK:
+            return status
+        dirname, new_node = out
         
         if not new_node.passlocked:
             print("Error: directory {0} is not password-locked (something else?)".format(
@@ -315,23 +322,10 @@ class UnlockPassword(ProgramBase):
 
     # TODO: create proper unlock GUI
     def gui_main(self, gui, args) -> ExitCode:
-        # if len(args) < 3:
-        #     print("GUI still in development, please provide password as 2nd argument", 
-        #         file=sys.stderr)
-        #     return ExitCode.ERROR
-        # return self.cli_main(args)
-        if len(args) < 2:
-            print("Error: must specify a directory.", file=sys.stderr)
-            return ExitCode.ERROR
-
-        dirname = args[1]
-        new_node = ENV.curr_node.find_neighbor(dirname)
-
-        if not new_node:
-            pwd = ENV.curr_node.directory.name
-            print("Error: could not find {0} within {1}.".format(
-                dirname, pwd), file=sys.stderr)
-            return ExitCode.ERROR
+        status, out = self.check_node(args)
+        if status != ExitCode.OK:
+            return status
+        _, new_node = out
             
         passwd_widg = PasswordWidget(new_node.password, lambda: gui.pop_view())
         new_view = MainView(gui.size)
