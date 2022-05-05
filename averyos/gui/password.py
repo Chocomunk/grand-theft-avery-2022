@@ -7,7 +7,8 @@ from gui.widget import Widget
 # TODO: Clean up color and font handling
 pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
-FONT = pg.font.SysFont('Consolas', 48)      # Must be a uniform-sized "terminal font"
+FONT = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
+FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
 
 
 class PasswordWidget(Widget):
@@ -41,36 +42,38 @@ class PasswordWidget(Widget):
             self.answer = ""
             return
 
-        if len(self.text) == len(self.answer):
-            if self.text == self.answer:
+        ans_len = len(self.answer)
+        if len(self.text) >= ans_len:
+            if self.text[:ans_len] == self.answer:
                 # TODO: finish
                 self.finish_cb(self.text)
             else:
                 self.text = ""
 
     # TODO: figure out sizes before-hand
+    # TODO: set padding as constants
     def draw(self, surf: pg.Surface):
         surfs = []
         width = 0
         height = 0
         for c in self.answer:
             txt_surf = FONT.render(c, True, COLOR_OUT)
-            width += txt_surf.get_width() + self.spacing
-            height = max(height, txt_surf.get_height())
+            width += txt_surf.get_width() + self.spacing + 10
+            height = max(height, txt_surf.get_height() + 10)
             surfs.append(txt_surf)
 
         tmp_surf = pg.Surface((width, height), pg.SRCALPHA, 32)
         x, y = 0, 0
         for i, txt_surf in enumerate(surfs):
-            pg.draw.rect(tmp_surf, (0, 0, 0), 
-                        pg.Rect(x, y, txt_surf.get_width(), height))
+            pg.draw.rect(tmp_surf, (10, 10, 10), 
+                        pg.Rect(x, y, txt_surf.get_width() + 10, height))
             if i < len(self.text):
                 usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
-                tmp_surf.blit(usr_txt, (x, y))
+                tmp_surf.blit(usr_txt, (x+5, y+5))
             x += txt_surf.get_width() + self.spacing
 
         cx, cy = surf.get_width() // 2, surf.get_height() // 2       
         px, py = cx - width // 2, cy - height // 2
         surf.blit(tmp_surf, (px, py))
 
-        surf.blit(FONT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))
+        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))

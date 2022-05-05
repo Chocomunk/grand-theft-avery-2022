@@ -1,3 +1,4 @@
+import sys
 import pygame as pg
 from pygame import Surface
 from typing import Callable, List
@@ -27,8 +28,6 @@ class TerminalWidget(Widget):
         self.line_spacing = line_spacing
         self.input_cbs: List[Callable[[str], bool]] = []
 
-        self.file.write(self.prompt_func())
-
         self.rect = pg.Rect(x, y, w, h)
         self.txt_surf = Surface((w, h), pg.SRCALPHA, 32)
 
@@ -56,7 +55,7 @@ class TerminalWidget(Widget):
             surfs.append(surf)
 
         # Add current line as a surf
-        cur_line = self.file.get_curr_line() + self.text
+        cur_line = self.prompt_func() + self.text
         surf = FONT.render(cur_line, True, COLOR_IN)
         total_height += surf.get_height() + self.line_spacing
         surfs.append(surf)
@@ -83,7 +82,7 @@ class TerminalWidget(Widget):
 
                 # Send input
                 if event.key == pg.K_RETURN:
-                    self.file.write(self.text + '\n', LogType.IN)
+                    self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
 
                     # If input handler returns False, then quit
                     for cb in self.input_cbs:
@@ -91,7 +90,6 @@ class TerminalWidget(Widget):
                             quit_event = pg.event.Event(pg.QUIT)
                             pg.event.post(quit_event)
 
-                    self.file.write(self.prompt_func())
                     self.text = ''
 
                 # Type or delete text

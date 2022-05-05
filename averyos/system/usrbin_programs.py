@@ -330,10 +330,11 @@ class UnlockPassword(ProgramBase):
         status, out = self.check_node(args)
         if status != ExitCode.OK:
             return status
-        _, new_node = out
+        dirname, new_node = out
 
         def leave_window(passwd):
-            new_node.try_password(passwd)
+            if new_node.try_password(passwd):
+                print("Success! {0} is unlocked.".format(dirname))
             gui.pop_view()
             
         passwd_widg = PasswordWidget(new_node.password, leave_window)
