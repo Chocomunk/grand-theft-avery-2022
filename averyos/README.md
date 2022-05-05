@@ -54,8 +54,9 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] `map` GUI
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
-  - [ ] `view` GUI
-    - Opens a window to either read text or view an image
+  - [ ] `at` GUI
+    - Opens a widget that displays text
+    - [ ] Allow for scrolling over text
 - Shell
   - [ ] chdir multiple directories at once
     - [x] Implement multidir
