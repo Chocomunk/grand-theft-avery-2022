@@ -220,12 +220,17 @@ class ReadFile(ProgramBase):
         return ExitCode.OK, cont_node.directory.files[filename].data
 
     def cli_main(self, args) -> ExitCode:
-        print(self.get_file_data(args))
+        status, data = self.get_file_data(args)
+        if status != ExitCode.OK:
+            return status
+        print(data)
 
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        data = self.get_file_data(args)
+        status, data = self.get_file_data(args)
+        if status != ExitCode.OK:
+            return status
             
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
