@@ -331,8 +331,12 @@ class UnlockPassword(ProgramBase):
         if status != ExitCode.OK:
             return status
         _, new_node = out
+
+        def leave_window(passwd):
+            new_node.try_password(passwd)
+            gui.pop_view()
             
-        passwd_widg = PasswordWidget(new_node.password, lambda: gui.pop_view())
+        passwd_widg = PasswordWidget(new_node.password, leave_window)
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)

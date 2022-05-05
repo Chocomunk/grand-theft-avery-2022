@@ -1,7 +1,6 @@
 import sys
 import pygame as pg
 
-from shell.env import ENV
 from gui.widget import Widget
 
 
@@ -9,7 +8,7 @@ from gui.widget import Widget
 pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
 FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
-TXT_W, TXT_H = FONT.size("O)0")
+TXT_W, TXT_H = FONT.size("O")
 
 
 class LabelBoxWidget(Widget):

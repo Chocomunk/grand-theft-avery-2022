@@ -26,7 +26,7 @@ class PasswordWidget(Widget):
             if event.type == pg.KEYDOWN:
                 # Leave
                 if event.key == pg.K_ESCAPE:
-                    self.finish_cb()
+                    self.finish_cb(self.text)
 
                 # Type or delete text
                 if event.key == pg.K_BACKSPACE:
@@ -44,7 +44,7 @@ class PasswordWidget(Widget):
         if len(self.text) == len(self.answer):
             if self.text == self.answer:
                 # TODO: finish
-                self.finish_cb()
+                self.finish_cb(self.text)
             else:
                 self.text = ""
 
