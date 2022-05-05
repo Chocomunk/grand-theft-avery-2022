@@ -54,9 +54,10 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] `map` GUI
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
-  - [ ] `at` GUI
+  - [ ] `cat` GUI
     - Opens a widget that displays text
-    - [ ] Allow for scrolling over text
+    - [x] Allow for scrolling over text
+    - [ ] Fix padding
     - [ ] Make it pretty?
   - [ ] `unlock` GUI
     - [ ] Actually unlock the node
