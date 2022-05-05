@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import re
 import sys
 
@@ -194,7 +195,7 @@ class ReadFile(ProgramBase):
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
-            return ExitCode.ERROR
+            return ExitCode.ERROR, None
         pwd = ENV.curr_node.directory.name
 
         split = clean_path(args[1]).rsplit('/', 1)
@@ -208,23 +209,28 @@ class ReadFile(ProgramBase):
             if not path:
                 print("Error: could not find {0} under {1}".format(
                     dirname, pwd), file=sys.stderr)
-                return ExitCode.ERROR
+                return ExitCode.ERROR, None
             cont_node = path[-1]            # Search under final node in path
 
         if filename not in cont_node.directory.files:
             print("Error: no file named {0} under {1}".format(
                 filename, pwd), file=sys.stderr)
-            return ExitCode.ERROR
+            return ExitCode.ERROR, None
 
-        return cont_node.directory.files[filename].data
+        return Error.OK, cont_node.directory.files[filename].data
 
     def cli_main(self, args) -> ExitCode:
-        print(self.get_file_data(args))
+        status, data = self.get_file_data(args)
+        if status != ExitCode.OK:
+            return status
+        print(data)
 
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        data = self.get_file_data(args)
+        status, data = self.get_file_data(args)
+        if status != ExitCode.OK:
+            return status
             
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
