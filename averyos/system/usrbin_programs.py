@@ -8,6 +8,7 @@ from .program import ExitCode, ProgramBase, CLIProgramBase
 from gui.view import SplitView, MainView
 from gui.directory import DirectoryWidget
 from gui.password import PasswordWidget
+from gui.labelbox import LabelBoxWidget
 
 
 EXIT_CMD = "exit"
@@ -188,9 +189,9 @@ class ListNode(ProgramBase):
         return ExitCode.OK
 
 
-class ReadFile(CLIProgramBase):
+class ReadFile(ProgramBase):
 
-    def cli_main(self, args) -> ExitCode:
+    def get_file_data(self, args):
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
@@ -216,8 +217,29 @@ class ReadFile(CLIProgramBase):
                 filename, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
-        print(cont_node.directory.files[filename].data)
+        return cont_node.directory.files[filename].data
 
+    def cli_main(self, args) -> ExitCode:
+        print(self.get_file_data(args))
+
+        return ExitCode.OK
+
+    def gui_main(self, gui, args) -> ExitCode:
+        data = self.get_file_data(args)
+            
+        # Just replace right-pane, leave directory view in left-pane
+        if gui.viewtag == "nav":
+            def return_terminal():
+                gui.view.widg2 = gui.terminal
+            label_widg = LabelBoxWidget(data, return_terminal)
+            gui.view.widg2 = label_widg
+
+        # Make a new view.
+        else:
+            label_widg = LabelBoxWidget(data, lambda: gui.pop_view())
+            new_view = MainView(gui.size)
+            new_view.add_widget(label_widg)
+            gui.push_view("viewfile", new_view)
         return ExitCode.OK
 
 

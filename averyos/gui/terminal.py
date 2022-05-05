@@ -25,13 +25,14 @@ class TerminalWidget(Widget):
         self.prompt_func = prompt_func
         self.text = text
         self.line_spacing = line_spacing
-        self.active = False
         self.input_cbs: List[Callable[[str], bool]] = []
 
         self.file.write(self.prompt_func())
 
         self.rect = pg.Rect(x, y, w, h)
         self.txt_surf = Surface((w, h), pg.SRCALPHA, 32)
+
+        self.active = False
 
         # Allow for holding down a key
         pg.key.set_repeat(400, 30)
