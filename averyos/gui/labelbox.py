@@ -20,7 +20,8 @@ class LabelBoxWidget(Widget):
 
         self.offset = 0
         self.text = text
-        self.lines = ['a' * (i//2) for i in range(100)] + text.split('\n')
+        # self.lines = ['a' * (i//2) for i in range(60)] + text.split('\n')
+        self.lines = text.split('\n')
 
     # NOTE: assumes that this widget is always active.
     def handle_event(self, event: pg.event.Event):
@@ -28,27 +29,33 @@ class LabelBoxWidget(Widget):
             if event.key == pg.K_ESCAPE:
                 self.finish_cb()
         elif event.type == pg.MOUSEWHEEL:
-            self.offset -= event.y
+            self.offset = max(0, self.offset - event.y)
 
-    # TODO: maybe update the text range when scrolling is implemented
     def update(self):
         pass
 
-    # TODO: add padding
+    # TODO: Turn hard-coded adjustments into constants
     def draw(self, surf: pg.Surface):
+        line_h = TXT_H + self.line_spacing
         line_len = len(self.lines)
-        num_lines = (surf.get_height() // (TXT_H + self.line_spacing)) - 1
+        surf_lines = (surf.get_height() // line_h)
+        num_lines = min(surf_lines + 1, line_len)
+
+        # Disable offset if text is smaller than the surface.
+        if num_lines < surf_lines:
+            self.offset = 0
+        else:
+            self.offset = min(self.offset, line_len - num_lines + 1)
 
         # Compute window of lines
-        end_idx = line_len + self.offset                    # Exclusive
-        end_idx = max(num_lines, min(line_len, end_idx))    # Clamp idx
-        self.offset = end_idx - line_len                    # Correct offset
-        start_idx = end_idx - num_lines                     # Inclusive
+        start_idx = self.offset
+        end_idx = start_idx + num_lines
 
         # Draw lines
-        x, y = self.pos
+        x,y = self.pos
+        y -= min(self.offset * line_h, self.pos[1] + 5)
         for line in self.lines[start_idx:end_idx]:
             if line:
                 txt_surf = FONT.render(line, True, COLOR_OUT)
                 surf.blit(txt_surf, (x, y))
-            y += TXT_H + self.line_spacing
+            y += line_h
