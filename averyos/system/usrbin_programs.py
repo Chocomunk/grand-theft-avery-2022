@@ -9,6 +9,7 @@ from gui.view import SplitView, MainView
 from gui.directory import DirectoryWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
+from gui.labelbox import LabelBoxWidget
 
 
 EXIT_CMD = "exit"
@@ -225,7 +226,9 @@ class ReadFile(ProgramBase):
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        data = self.get_file_data(args)
+        status, data = self.get_file_data(args)
+        if status != ExitCode.OK:
+            return status
             
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
