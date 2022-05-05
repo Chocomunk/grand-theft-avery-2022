@@ -225,9 +225,7 @@ class ReadFile(ProgramBase):
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        status, data = self.get_file_data(args)
-        if status != ExitCode.OK:
-            return status
+        data = self.get_file_data(args)
             
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
