@@ -226,6 +226,22 @@ class ReadFile(ProgramBase):
             return status
         print(data)
 
+    def gui_main(self, gui, args) -> ExitCode:
+        data = self.get_file_data(args)
+            
+        # Just replace right-pane, leave directory view in left-pane
+        if gui.viewtag == "nav":
+            def return_terminal():
+                gui.view.widg2 = gui.terminal
+            label_widg = LabelBoxWidget(data, return_terminal)
+            gui.view.widg2 = label_widg
+
+        # Make a new view.
+        else:
+            label_widg = LabelBoxWidget(data, lambda: gui.pop_view())
+            new_view = MainView(gui.size)
+            new_view.add_widget(label_widg)
+            gui.push_view("viewfile", new_view)
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
