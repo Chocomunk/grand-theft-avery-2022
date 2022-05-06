@@ -22,8 +22,8 @@ class LabelBoxWidget(Widget):
 
         self.offset = 0
         self.text = text
-        self.lines = ['' if i%20==0 else 'a' * (i//2) for i in range(2, 100)] + text.split('\n')
-        # self.lines = text.split('\n')
+        # self.lines = ['' if i%20==0 else 'a' * (i//2) for i in range(2, 100)] + text.split('\n')
+        self.lines = text.split('\n')
 
     # NOTE: assumes that this widget is always active.
     def handle_event(self, event: pg.event.Event):

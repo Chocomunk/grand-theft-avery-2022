@@ -144,21 +144,42 @@ class ChdirBack(CLIProgramBase):
         return ExitCode.OK
 
 
+# TODO: handle locked nodes
 class ListNode(ProgramBase):
 
     # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
-        if len(args) != 1:
-            print("Error: {0} does not take any arguments".format(LIST_CMD), 
+        if len(args) > 2:
+            print("Error: {0} takes up to 2 arguments".format(LIST_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
-        files = ENV.curr_node.directory.list_files()
-        progs = ENV.curr_node.directory.list_programs()
-        dirs = ENV.curr_node.list_children()
-        cwd = ENV.curr_node.directory.name
+        # Search subdirectories
+        if len(args) > 1:
+            dirname = clean_path(args[1])
+            path = ENV.curr_node.find_node(dirname)
+
+            if not path:
+                pwd = ENV.curr_node.directory.name
+                print("Error: could not find {0} under {1}".format(
+                    dirname, pwd), file=sys.stderr)
+                return ExitCode.ERROR
+
+            node = path[-1]
+            if node.locked():
+                print("Error: {0} is locked!".format(dirname))
+                return ExitCode.ERROR
+
+        # Just use this node
+        else:
+            node = ENV.curr_node
+            dirname = ENV.curr_node.directory.name
+
+        files = node.directory.list_files()
+        progs = node.directory.list_programs()
+        dirs = node.list_children()
         
-        print("\nDirectory: {0}".format(cwd))
+        print("\nDirectory: {0}".format(dirname))
 
         STR_TMP = "{0:>12}    {1:<}"
         print(STR_TMP.format("Type", "Name"))
@@ -174,19 +195,17 @@ class ListNode(ProgramBase):
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        if len(args) != 1:
-            print("Error: {0} does not take any arguments".format(LIST_CMD), 
-                file=sys.stderr)
-            return ExitCode.ERROR
-            
-        if gui.viewtag != "nav":        # Set to nav view
-            dir_widg = DirectoryWidget()
-            new_view = SplitView(dir_widg, gui.terminal, gui.size, 
-                                weight=0.2, bg_color1=(50,50,50))
-            gui.push_view("nav", new_view)
-        else:                               # Unset nav view
-            gui.pop_view()
-        return ExitCode.OK
+        if len(args) == 1:
+            if gui.viewtag != "nav":        # Set to nav view
+                dir_widg = DirectoryWidget()
+                new_view = SplitView(dir_widg, gui.terminal, gui.size, 
+                                    weight=0.2, bg_color1=(50,50,50))
+                gui.push_view("nav", new_view)
+            else:                               # Unset nav view
+                gui.pop_view()
+            return ExitCode.OK
+        else:
+            return self.cli_main(args)
 
 
 class ReadFile(ProgramBase):

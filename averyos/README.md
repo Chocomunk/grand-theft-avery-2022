@@ -34,6 +34,8 @@ allows the OS to be decoupled from any specific puzzle designs.
 - GUI
   - [ ] Make all the margins/padding line up
   - Terminal GUI
+    - [ ] Add cursor
+    - [ ] Allow left/right moving
     - [ ] Clean up color and font handling
       - Color for prompt?
   - `ls` GUI
@@ -47,6 +49,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - `cat` GUI
     - Opens a widget that displays text
     - [ ] Make it pretty?
+    - [ ] Remove added test text
   - `unlock` GUI
     - [ ] Pause/animations after answers
     - [ ] Make it pretty
@@ -54,7 +57,9 @@ allows the OS to be decoupled from any specific puzzle designs.
   - chdir multiple directories at once
     - [ ] Check locks for entire path
   - [ ] Add input pre-processing callbacks
-  - [ ] Allow ls for subdirs
+  - Allow ls for subdirs
+    - [ ] Implement
+    - [ ] Handle locked subdirs
 - Programs
   - [ ] Puzzle state editor
 
