@@ -36,6 +36,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - Terminal GUI
     - [ ] Add cursor
     - [ ] Allow left/right moving
+    - [ ] Scrolling past the end
     - [ ] Clean up color and font handling
       - Color for prompt?
   - `ls` GUI

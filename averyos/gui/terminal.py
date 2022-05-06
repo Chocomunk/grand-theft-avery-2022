@@ -16,6 +16,7 @@ FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal 
 TXT_W, TXT_H = FONT.size("O")
 
 
+# TODO: allow scrolling past the end. Snap to the end when typing
 class TerminalWidget(Widget):
 
     def __init__(self, x, y, w, h, 
