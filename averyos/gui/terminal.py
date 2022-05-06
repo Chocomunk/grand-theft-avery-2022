@@ -16,7 +16,6 @@ FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal 
 TXT_W, TXT_H = FONT.size("O")
 
 
-# TODO: Compute font-height and show only the latest n logs
 class TerminalWidget(Widget):
 
     def __init__(self, x, y, w, h, 
@@ -57,21 +56,21 @@ class TerminalWidget(Widget):
                 # Scroll command history
                 if len(self.cmd_hist) > 0:
                     if event.key == pg.K_UP:
-                        print("A", self.hist_idx, file=sys.__stdout__)
                         self.hist_idx = max(0, self.hist_idx-1)
-                        print("B", self.hist_idx, file=sys.__stdout__)
                         self.text = self.cmd_hist[self.hist_idx]
                     if event.key == pg.K_DOWN:
-                        print("C", self.hist_idx, file=sys.__stdout__)
-                        self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
-                        print("D", self.hist_idx, file=sys.__stdout__)
-                        self.text = self.cmd_hist[self.hist_idx]
+                        if self.hist_idx < len(self.cmd_hist) - 1:
+                            self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
+                            self.text = self.cmd_hist[self.hist_idx]
+                        else:
+                            self.text = ""      # Went past the newest history
 
                 # Send input
                 if event.key == pg.K_RETURN:
                     self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
-                    self.cmd_hist.append(self.text)
-                    self.hist_idx = len(self.cmd_hist)
+                    if self.text.strip():
+                        self.cmd_hist.append(self.text)
+                        self.hist_idx = len(self.cmd_hist)
 
                     # If input handler returns False, then quit
                     for cb in self.input_cbs:

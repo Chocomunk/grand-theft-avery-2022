@@ -52,12 +52,14 @@ class SplitView(Widget):
         self.bg_color2 = bg_color2
 
         if horizontal:
-            self.t = int(h*weight)      # Var to store surf1 height
-            self.surf1 = Surface((w, self.t), pg.SRCALPHA, 32)
+            self.s = int(h*weight)      # Var to store surf1 height
+            self.t = h - self.s         # Var to store surf2 height
+            self.surf1 = Surface((w, self.s), pg.SRCALPHA, 32)
             self.surf2 = Surface((w, self.t), pg.SRCALPHA, 32)
         else:
-            self.t = int(w*weight)      # Var to store surf1 width
-            self.surf1 = Surface((self.t, h), pg.SRCALPHA, 32)
+            self.s = int(w*weight)      # Var to store surf1 width
+            self.t = w - self.s         # Var to store surf2 width
+            self.surf1 = Surface((self.s, h), pg.SRCALPHA, 32)
             self.surf2 = Surface((self.t, h), pg.SRCALPHA, 32)
 
         self.widg1 = widg1
@@ -86,7 +88,7 @@ class SplitView(Widget):
 
         if self.horizontal:
             surf.blit(self.surf1, (self.x, self.y))
-            surf.blit(self.surf2, (self.x, self.y + self.t + 1))
+            surf.blit(self.surf2, (self.x, self.y + self.s + 1))
         else:
             surf.blit(self.surf1, (self.x, self.y))
-            surf.blit(self.surf2, (self.x + self.t + 1, self.y))
+            surf.blit(self.surf2, (self.x + self.s + 1, self.y))
