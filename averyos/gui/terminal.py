@@ -17,7 +17,6 @@ TXT_W, TXT_H = FONT.size("O")
 
 
 # TODO: Compute font-height and show only the latest n logs
-# TODO: Allow scrolling to show the logs at [k-n, k] (n logs ending at log k)
 class TerminalWidget(Widget):
 
     def __init__(self, x, y, w, h, 
@@ -33,6 +32,9 @@ class TerminalWidget(Widget):
         self.txt_surf = Surface((w, h), pg.SRCALPHA, 32)
 
         self.offset = 0
+        self.cmd_hist = []
+        self.hist_idx = 0
+
         self.active = False
 
         # Allow for holding down a key
@@ -41,6 +43,62 @@ class TerminalWidget(Widget):
     def add_input_listener(self, func):
         self.input_cbs.append(func)
 
+    def handle_event(self, event: pg.event.Event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            self.active = self.rect.collidepoint(event.pos)
+
+        if event.type == pg.MOUSEWHEEL:
+            self.offset = max(0, self.offset + event.y)
+
+        if event.type == pg.KEYDOWN:
+            if self.active:
+
+                # Scroll command history
+                if len(self.cmd_hist) > 0:
+                    if event.key == pg.K_UP:
+                        print("A", self.hist_idx, file=sys.__stdout__)
+                        self.hist_idx = max(0, self.hist_idx-1)
+                        print("B", self.hist_idx, file=sys.__stdout__)
+                        self.text = self.cmd_hist[self.hist_idx]
+                    if event.key == pg.K_DOWN:
+                        print("C", self.hist_idx, file=sys.__stdout__)
+                        self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
+                        print("D", self.hist_idx, file=sys.__stdout__)
+                        self.text = self.cmd_hist[self.hist_idx]
+
+                # Send input
+                if event.key == pg.K_RETURN:
+                    self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
+                    self.cmd_hist.append(self.text)
+                    self.hist_idx = len(self.cmd_hist)
+
+                    # If input handler returns False, then quit
+                    for cb in self.input_cbs:
+                        if cb(self.text) == False:
+                            quit_event = pg.event.Event(pg.QUIT)
+                            pg.event.post(quit_event)
+
+                    self.text = ''
+
+                # Type or delete text
+                elif event.key == pg.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+
+                # Return to look at current line
+                self.offset = 0
+
+    def update(self):
+        # Resize the box if the text is too long.
+        self.render_text()
+        width = max(self.rect.w, self.txt_surf.get_width()+10)
+        self.rect.w = width
+
+    def draw(self, surf: Surface):
+        surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
+        
     # TODO: set text color based on logtype. BAD IMPLEMENTATION
     def render_text(self):
         line_h = TXT_H + self.line_spacing
@@ -76,41 +134,3 @@ class TerminalWidget(Widget):
             cur_line = self.prompt_func() + self.text
             surf = FONT.render(cur_line, True, COLOR_IN)
             self.txt_surf.blit(surf, (0, draw_height))
-
-    def handle_event(self, event: pg.event.Event):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
-            self.active = self.rect.collidepoint(event.pos)
-
-        if event.type == pg.MOUSEWHEEL:
-            self.offset = max(0, self.offset + event.y)
-
-        if event.type == pg.KEYDOWN:
-            if self.active:
-
-                # Send input
-                if event.key == pg.K_RETURN:
-                    self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
-
-                    # If input handler returns False, then quit
-                    for cb in self.input_cbs:
-                        if cb(self.text) == False:
-                            quit_event = pg.event.Event(pg.QUIT)
-                            pg.event.post(quit_event)
-
-                    self.text = ''
-
-                # Type or delete text
-                elif event.key == pg.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                else:
-                    self.text += event.unicode
-
-    def update(self):
-        # Resize the box if the text is too long.
-        self.render_text()
-        width = max(self.rect.w, self.txt_surf.get_width()+10)
-        self.rect.w = width
-
-    def draw(self, surf: Surface):
-        surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))

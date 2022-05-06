@@ -43,7 +43,7 @@ allows the OS to be decoupled from any specific puzzle designs.
       - Color for prompt?
     - [x] Allow scrolling over lines
       - Stop doing line moving in a sussy way
-    - [ ] Allow up/down arrows to get last/next in command history.
+    - [x] Allow up/down arrows to get last/next in command history.
   - [ ] Configure gui/__init__.py
   - [ ] `ls` GUI
     - Call `ls` to toggle a "Directory" pane on the LHS
