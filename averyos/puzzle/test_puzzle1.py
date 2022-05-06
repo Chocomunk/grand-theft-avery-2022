@@ -55,7 +55,7 @@ def test_puzzle1():
     c = new_node(state, parents=[root, b], dirname="C")
     d = new_node(state, parents=[a], dirname="D")
     e = new_node(state, parents=[a,b,c,d], dirname="E")
-    f = new_node(state, parents=[e], dirname="F")
+    f = new_node(state, parents=[e, d], dirname="F")
     c.add_child(root)
     d.add_child(root)
 
@@ -64,6 +64,7 @@ def test_puzzle1():
     a.directory.add_file(File("a.txt", "a text\nNext Line"))
     c.directory.add_file(shared)
     d.directory.add_file(shared)
+    f.directory.add_file(File("f.txt", "ooga\nbooga"))
 
     # Add programs
     root.directory.add_program(CheckC.name, CheckC())

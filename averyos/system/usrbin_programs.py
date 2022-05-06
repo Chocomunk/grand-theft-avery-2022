@@ -11,6 +11,9 @@ from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
 
 
+# TODO: Documentation
+
+
 EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
 CHDIRID_CMD = "cdid"
@@ -37,14 +40,32 @@ def usrbin_progs():
     }
 
 
+def clean_path(s):
+    return re.sub('//+', '/', s).strip('/')
+
+
+def path_subdirs(dirname):
+    dirname = clean_path(dirname)
+    path = ENV.curr_node.find_node(dirname)
+
+    if not path:
+        pwd = ENV.curr_node.directory.name
+        print("Error: could not find {0} under {1}".format(
+            dirname, pwd), file=sys.stderr)
+        return None
+
+    for node in path:
+        if node.locked():
+            print("Error: {0} is locked!".format(node.directory.name))
+            return None
+
+    return path
+
+
 class SendExit(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         return ExitCode.EXIT
-
-
-def clean_path(s):
-    return re.sub('//+', '/', s).strip('/')
 
 
 class Chdir(CLIProgramBase):
@@ -55,23 +76,16 @@ class Chdir(CLIProgramBase):
                 file=sys.stderr)
             return ExitCode.ERROR
 
-        dirname = clean_path(args[1])
-        path = ENV.curr_node.find_node(dirname)
+        path = path_subdirs(args[1])
 
         if not path:
-            pwd = ENV.curr_node.directory.name
-            print("Error: could not find {0} under {1}".format(
-                dirname, pwd), file=sys.stderr)
             return ExitCode.ERROR
 
+        # chdir through the path
         new_node = path[-1]
-        if not new_node.locked():
-            ENV.node_history.extend(path[:-1])
-            ENV.curr_node = new_node
-            new_node.call_entry_callbacks()
-        else:
-            print("Error: {0} is locked!".format(dirname))
-            return ExitCode.ERROR
+        ENV.node_history.extend(path[:-1])
+        ENV.curr_node = new_node
+        new_node.call_entry_callbacks()
         return ExitCode.OK
 
 
@@ -156,28 +170,19 @@ class ListNode(ProgramBase):
 
         # Search subdirectories
         if len(args) > 1:
-            dirname = clean_path(args[1])
-            path = ENV.curr_node.find_node(dirname)
-
+            path = path_subdirs(args[1])
             if not path:
-                pwd = ENV.curr_node.directory.name
-                print("Error: could not find {0} under {1}".format(
-                    dirname, pwd), file=sys.stderr)
                 return ExitCode.ERROR
-
             node = path[-1]
-            if node.locked():
-                print("Error: {0} is locked!".format(dirname))
-                return ExitCode.ERROR
 
         # Just use this node
         else:
             node = ENV.curr_node
-            dirname = ENV.curr_node.directory.name
 
         files = node.directory.list_files()
         progs = node.directory.list_programs()
         dirs = node.list_children()
+        dirname = node.directory.name
         
         print("\nDirectory: {0}".format(dirname))
 
@@ -214,42 +219,38 @@ class ReadFile(ProgramBase):
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
-            return ExitCode.ERROR, None
-        pwd = ENV.curr_node.directory.name
+            return None
 
         split = clean_path(args[1]).rsplit('/', 1)
         filename = split[-1]                # Last entry is filename
 
-        cont_node = ENV.curr_node           # Default search in curr_node
         if len(split) > 1:
-            dirname = split[0]
-            path = ENV.curr_node.find_node(dirname)
-
+            path = path_subdirs(split[0])
             if not path:
-                print("Error: could not find {0} under {1}".format(
-                    dirname, pwd), file=sys.stderr)
-                return ExitCode.ERROR, None
-            cont_node = path[-1]            # Search under final node in path
+                return None
+            node = path[-1]            # Search under final node in path
+        else:
+            node = ENV.curr_node       # Default search in curr_node
 
-        if filename not in cont_node.directory.files:
-            print("Error: no file named {0} under {1}".format(
-                filename, pwd), file=sys.stderr)
-            return ExitCode.ERROR, None
+        if filename not in node.directory.files:
+            print("Error: no file named {0} in {1}".format(
+                filename, split[0]), file=sys.stderr)
+            return None
 
-        return ExitCode.OK, cont_node.directory.files[filename].data
+        return node.directory.files[filename].data
 
     def cli_main(self, args) -> ExitCode:
-        status, data = self.get_file_data(args)
-        if status != ExitCode.OK:
-            return status
-        print(data)
+        data = self.get_file_data(args)
+        if not data:
+            return ExitCode.ERROR
 
+        print(data)
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        status, data = self.get_file_data(args)
-        if status != ExitCode.OK:
-            return status
+        data = self.get_file_data(args)
+        if not data :
+            return ExitCode.ERROR
             
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
@@ -264,6 +265,7 @@ class ReadFile(ProgramBase):
             new_view = MainView(gui.size)
             new_view.add_widget(label_widg)
             gui.push_view("viewfile", new_view)
+
         return ExitCode.OK
 
 
@@ -309,36 +311,39 @@ class UnlockPassword(ProgramBase):
     def check_node(self, args):
         if len(args) < 2:
             print("Error: must specify a directory.", file=sys.stderr)
-            return ExitCode.ERROR, None
+            return None
 
         dirname = args[1]
-        new_node = ENV.curr_node.find_neighbor(dirname)
+        node = ENV.curr_node.find_neighbor(dirname)
 
-        if not new_node:
+        if not node:
             pwd = ENV.curr_node.directory.name
             print("Error: could not find {0} within {1}.".format(
                 dirname, pwd), file=sys.stderr)
-            return ExitCode.ERROR, None
+            return None
 
-        return ExitCode.OK, (dirname, new_node)
+        if not node.passlocked:
+            if node.locked():
+                print("Error: directory {0} is not password-locked (something else?)".format(
+                    dirname), file=sys.stderr)
+            else:
+                print("Directory {0} is not locked".format(dirname), file=sys.stderr)
+            return None
+
+        return dirname, node
 
     def cli_main(self, args) -> ExitCode:
-        status, out = self.check_node(args)
-        if status != ExitCode.OK:
-            return status
-        dirname, new_node = out
-        
-        if not new_node.passlocked:
-            print("Error: directory {0} is not password-locked (something else?)".format(
-                dirname), file=sys.stderr)
+        out = self.check_node(args)
+        if not out:
             return ExitCode.ERROR
+        dirname, node = out
 
         if len(args) == 3:
             passwd = args[2]
         else:
-            passwd = input("Enter password for {0}: ".format(new_node.directory.name))
+            passwd = input("Enter password for {0}: ".format(node.directory.name))
 
-        if new_node.try_password(passwd):
+        if node.try_password(passwd):
             print("Success! {0} is unlocked.".format(dirname))
         else:
             print("Incorrect password for {0}".format(dirname), file=sys.stderr)
@@ -346,17 +351,17 @@ class UnlockPassword(ProgramBase):
 
     # TODO: create proper unlock GUI
     def gui_main(self, gui, args) -> ExitCode:
-        status, out = self.check_node(args)
-        if status != ExitCode.OK:
-            return status
-        dirname, new_node = out
+        out = self.check_node(args)
+        if not out:
+            return ExitCode.ERROR
+        dirname, node = out
 
         def leave_window(passwd):
-            if new_node.try_password(passwd):
+            if node.try_password(passwd):
                 print("Success! {0} is unlocked.".format(dirname))
             gui.pop_view()
             
-        passwd_widg = PasswordWidget(new_node.password, leave_window)
+        passwd_widg = PasswordWidget(node.password, leave_window)
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)
