@@ -54,12 +54,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Pause/animations after answers
     - [ ] Make it pretty
 - Shell
-  - chdir multiple directories at once
-    - [ ] Check locks for entire path
   - [ ] Add input pre-processing callbacks
-  - Allow ls for subdirs
-    - [ ] Implement
-    - [ ] Handle locked subdirs
 - Programs
   - [ ] Puzzle state editor
 
