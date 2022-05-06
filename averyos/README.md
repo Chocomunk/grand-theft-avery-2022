@@ -41,7 +41,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] Terminal GUI
     - [ ] Clean up color and font handling
       - Color for prompt?
-    - [ ] Allow scrolling over lines
+    - [x] Allow scrolling over lines
       - Stop doing line moving in a sussy way
     - [ ] Allow up/down arrows to get last/next in command history.
   - [ ] Configure gui/__init__.py

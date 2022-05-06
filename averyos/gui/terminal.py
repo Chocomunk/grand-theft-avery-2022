@@ -13,6 +13,7 @@ COLOR_OUT = pg.Color('lightskyblue3')
 COLOR_ERR = pg.Color('firebrick1')
 COLOR_IN = pg.Color('darkolivegreen1')
 FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+TXT_W, TXT_H = FONT.size("O")
 
 
 # TODO: Compute font-height and show only the latest n logs
@@ -31,6 +32,7 @@ class TerminalWidget(Widget):
         self.rect = pg.Rect(x, y, w, h)
         self.txt_surf = Surface((w, h), pg.SRCALPHA, 32)
 
+        self.offset = 0
         self.active = False
 
         # Allow for holding down a key
@@ -41,41 +43,47 @@ class TerminalWidget(Widget):
 
     # TODO: set text color based on logtype. BAD IMPLEMENTATION
     def render_text(self):
+        line_h = TXT_H + self.line_spacing
+        line_len = len(self.file) + 1
+        surf_lines = (self.txt_surf.get_height() // line_h)
+        num_lines = min(surf_lines, line_len)
+
+        # Disable offset if text is smaller than the surface.
+        if num_lines < surf_lines:
+            self.offset = 0
+        else:
+            self.offset = min(self.offset, line_len - num_lines)
+
+        # Compute window of lines
+        end_idx = line_len - self.offset
+        start_idx = end_idx - num_lines
+
         # Add all lines as a surf
-        total_height = 0
-        surfs = []
-        for line, t in self.file.getlines():
+        self.txt_surf.fill((0, 0, 0, 0))
+        draw_height = 0
+        for line, t in self.file.getlines(start_idx, end_idx):
             if t == LogType.ERR:
                 surf = FONT.render(line, True, COLOR_ERR)
             elif t == LogType.IN:
                 surf = FONT.render(line, True, COLOR_IN)
             else:
                 surf = FONT.render(line, True, COLOR_OUT)
-            total_height += surf.get_height() + self.line_spacing
-            surfs.append(surf)
-
-        # Add current line as a surf
-        cur_line = self.prompt_func() + self.text
-        surf = FONT.render(cur_line, True, COLOR_IN)
-        total_height += surf.get_height() + self.line_spacing
-        surfs.append(surf)
-
-        # Initialize parent surface
-        # TODO: probably don't need to reinitialize
-        tmp_surf = Surface((self.rect.w, total_height), pg.SRCALPHA, 32)
-        draw_height = 0
-        for surf in surfs:
-            tmp_surf.blit(surf, (0, draw_height))
+            self.txt_surf.blit(surf, (0, draw_height))
             draw_height += surf.get_height() + self.line_spacing
 
-        self.txt_surf.fill((0, 0, 0, 0))
-        render_height = min(0, self.txt_surf.get_height() - tmp_surf.get_height() - 5)
-        self.txt_surf.blit(tmp_surf, (0, render_height))
+        # Add current line as a surf
+        if self.offset == 0:
+            cur_line = self.prompt_func() + self.text
+            surf = FONT.render(cur_line, True, COLOR_IN)
+            self.txt_surf.blit(surf, (0, draw_height))
 
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             self.active = self.rect.collidepoint(event.pos)
+
+        if event.type == pg.MOUSEWHEEL:
+            self.offset = max(0, self.offset + event.y)
 
         if event.type == pg.KEYDOWN:
             if self.active:
