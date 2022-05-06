@@ -58,19 +58,19 @@ class PasswordWidget(Widget):
         height = 0
         for c in self.answer:
             txt_surf = FONT.render(c, True, COLOR_OUT)
-            width += txt_surf.get_width() + self.spacing + 10
-            height = max(height, txt_surf.get_height() + 10)
+            width += txt_surf.get_width() + self.spacing + 20
+            height = max(height, txt_surf.get_height() + 20)
             surfs.append(txt_surf)
 
         tmp_surf = pg.Surface((width, height), pg.SRCALPHA, 32)
         x, y = 0, 0
         for i, txt_surf in enumerate(surfs):
-            pg.draw.rect(tmp_surf, (10, 10, 10), 
-                        pg.Rect(x, y, txt_surf.get_width() + 10, height))
+            pg.draw.rect(tmp_surf, (15, 15, 15), 
+                        pg.Rect(x, y, txt_surf.get_width() + 20, height))
             if i < len(self.text):
                 usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
-                tmp_surf.blit(usr_txt, (x+5, y+5))
-            x += txt_surf.get_width() + self.spacing
+                tmp_surf.blit(usr_txt, (x+10, y+10))
+            x += txt_surf.get_width() + self.spacing + 20
 
         cx, cy = surf.get_width() // 2, surf.get_height() // 2       
         px, py = cx - width // 2, cy - height // 2

@@ -57,10 +57,11 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] `cat` GUI
     - Opens a widget that displays text
     - [x] Allow for scrolling over text
-    - [ ] Fix padding
+    - [x] Fix padding
     - [ ] Make it pretty?
+    - [ ] Add "escape to exit" hint
   - [ ] `unlock` GUI
-    - [ ] Actually unlock the node
+    - [x] Actually unlock the node
     - [ ] Pause/animations after answers
     - [ ] Make it pretty
 - Shell

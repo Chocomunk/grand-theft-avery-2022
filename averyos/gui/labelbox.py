@@ -8,6 +8,7 @@ from gui.widget import Widget
 pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
 FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
 TXT_W, TXT_H = FONT.size("O")
 
 
@@ -20,8 +21,8 @@ class LabelBoxWidget(Widget):
 
         self.offset = 0
         self.text = text
-        # self.lines = ['a' * (i//2) for i in range(60)] + text.split('\n')
-        self.lines = text.split('\n')
+        self.lines = ['' if i%20==0 else 'a' * (i//2) for i in range(2, 100)] + text.split('\n')
+        # self.lines = text.split('\n')
 
     # NOTE: assumes that this widget is always active.
     def handle_event(self, event: pg.event.Event):
@@ -34,6 +35,7 @@ class LabelBoxWidget(Widget):
     def update(self):
         pass
 
+    # TODO: Draw hint at top-left
     # TODO: Turn hard-coded adjustments into constants
     def draw(self, surf: pg.Surface):
         line_h = TXT_H + self.line_spacing
@@ -59,3 +61,7 @@ class LabelBoxWidget(Widget):
                 txt_surf = FONT.render(line, True, COLOR_OUT)
                 surf.blit(txt_surf, (x, y))
             y += line_h
+
+        # Draw hint
+        hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
+        surf.blit(hint, (surf.get_width() - hint.get_width() - 10, 10))
