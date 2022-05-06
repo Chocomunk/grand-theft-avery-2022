@@ -9,6 +9,7 @@ from shell.copy_logger import LinesLog, LogType
 
 # TODO: Clean up color and font handling
 pg.init()
+COLOR_CURSOR = pg.Color(230,230,230,100)
 COLOR_OUT = pg.Color('lightskyblue3')
 COLOR_ERR = pg.Color('firebrick1')
 COLOR_IN = pg.Color('darkolivegreen1')
@@ -35,6 +36,8 @@ class TerminalWidget(Widget):
         self.cmd_hist = []
         self.hist_idx = 0
 
+        self.cursor = len(self.text)
+
         self.active = False
 
         # Allow for holding down a key
@@ -55,19 +58,26 @@ class TerminalWidget(Widget):
             if self.active:
 
                 # Scroll command history
-                if len(self.cmd_hist) > 0:
-                    if event.key == pg.K_UP:
+                if event.key == pg.K_UP:
+                    if len(self.cmd_hist) > 0:  # (this 'if' must be inside for cursor to work)
                         self.hist_idx = max(0, self.hist_idx-1)
                         self.text = self.cmd_hist[self.hist_idx]
-                    if event.key == pg.K_DOWN:
+                elif event.key == pg.K_DOWN:
+                    if len(self.cmd_hist) > 0:
                         if self.hist_idx < len(self.cmd_hist) - 1:
                             self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
                             self.text = self.cmd_hist[self.hist_idx]
                         else:
                             self.text = ""      # Went past the newest history
 
+                # Move cursor
+                elif event.key == pg.K_LEFT:
+                    self.cursor = max(0, self.cursor - 1)
+                elif event.key == pg.K_RIGHT:
+                    self.cursor = min(len(self.text), self.cursor + 1)
+
                 # Send input
-                if event.key == pg.K_RETURN:
+                elif event.key == pg.K_RETURN:
                     self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
                     if self.text.strip():
                         self.cmd_hist.append(self.text)
@@ -80,12 +90,17 @@ class TerminalWidget(Widget):
                             pg.event.post(quit_event)
 
                     self.text = ''
+                    self.cursor = 0
 
                 # Type or delete text
                 elif event.key == pg.K_BACKSPACE:
-                    self.text = self.text[:-1]
+                    if self.cursor > 0:
+                        self.text = self.text[:self.cursor-1] + self.text[self.cursor:]
+                        self.cursor = max(0, self.cursor - 1)
                 else:
-                    self.text += event.unicode
+                    c = event.unicode
+                    self.text = self.text[:self.cursor] + c + self.text[self.cursor:]
+                    self.cursor += 1
 
                 # Return to look at current line
                 self.offset = 0
@@ -131,6 +146,15 @@ class TerminalWidget(Widget):
 
         # Add current line as a surf
         if self.offset == 0:
-            cur_line = self.prompt_func() + self.text
+            prompt = self.prompt_func()
+
+            # Draw cursor
+            cursor_pos = TXT_W * (len(prompt) + self.cursor)
+            cursor_box = pg.Rect(cursor_pos, draw_height, TXT_W, TXT_H)
+            pg.draw.rect(self.txt_surf, COLOR_CURSOR, cursor_box)
+
+            # Draw text
+            cur_line = prompt + self.text
             surf = FONT.render(cur_line, True, COLOR_IN)
             self.txt_surf.blit(surf, (0, draw_height))
+

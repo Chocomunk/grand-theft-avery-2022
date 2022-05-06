@@ -34,8 +34,8 @@ allows the OS to be decoupled from any specific puzzle designs.
 - GUI
   - [ ] Make all the margins/padding line up
   - Terminal GUI
-    - [ ] Add cursor
-    - [ ] Allow left/right moving
+    - [x] Add cursor
+    - [x] Allow left/right moving
     - [ ] Scrolling past the end
     - [ ] Clean up color and font handling
       - Color for prompt?
