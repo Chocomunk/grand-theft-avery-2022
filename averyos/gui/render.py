@@ -45,7 +45,7 @@ class RenderWidget(Widget):
         
         nodes = {node.id: node for node in history}
         # Get a square grid to draw nodes on
-        n = max(math.ceil(math.sqrt(max(nodes.keys()))), 1)
+        n = math.ceil(math.sqrt(max(nodes.keys()) + 1))
         # TODO: Center the whole graph
         # Don't want to draw off the screen
         offset = 200
@@ -75,7 +75,7 @@ class RenderWidget(Widget):
                     # Midpoint of line
                     mid_x, mid_y = (x + child_x) // 2, (y + child_y) // 2
                     # Rotate points by 120 degrees to get equilateral triangle
-                    point1 = (mid_x + t * math.sin(math.radians(rot)), 
+                    point1 = (mid_x + t * math.sin(math.radians(rot)),
                               mid_y + t * math.cos(math.radians(rot)))
                     point2 = (mid_x + t * math.sin(math.radians(rot - 120)),
                               mid_y + t * math.cos(math.radians(rot - 120)))
@@ -87,7 +87,7 @@ class RenderWidget(Widget):
             # Draw node
             pg.draw.circle(surf, (0, 128, 0), (x, y), radius)
             name = node.directory.name
-            txt_surf = FONT.render(node.directory.name, True, COLOR_OUT)
+            txt_surf = FONT.render(name, True, COLOR_OUT)
             # Offset name
             surf.blit(txt_surf, (x - len(name) * 4, y - 16))
 
