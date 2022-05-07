@@ -1,12 +1,9 @@
-from ast import arg
-from multiprocessing.dummy import current_process
 import sys
 import shlex
 import traceback
 
 from .env import ENV
 from system.filesystem import Node
-from .copy_logger import get_stdio_loggers
 from system.usrbin_programs import usrbin_progs
 from system.program import ExitCode, CLIProgramBase
 
@@ -27,25 +24,22 @@ def sheesh_split(s: str):
 
 
 # TODO: Validate arg[i] values for every shell command
-# TODO: Prettify list outputs
 class Shell:
 
     def __init__(self, root: Node):
-        # Setup logger. NOTE: If other shells become active, they will take over output
-        # All stdio loggers write to the same LogData instance
-        self.stdout, self.stderr, self.stdin = get_stdio_loggers()
-        sys.stdout = self.stdout
-        sys.stderr = self.stderr
-        sys.stdin  = self.stdin
-
         # Initialize FS and ENV
         ENV.reset()
         self.root = root
+        ENV.global_history.add(root)
         ENV.curr_node = root
-        ENV.log = self.stdout.log      # Same LogData as stdin and stderr
         ENV.path = usrbin_progs()
 
+        # Initialize references
+        self.gui = None
         self.unknown_program = UnknownProgram()
+
+    def set_gui(self, gui_win):
+        self.gui = gui_win
 
     def prompt(self):
         return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)
@@ -56,7 +50,7 @@ class Shell:
 
         Returns: `True` to stay alive, `False` to exit
         """
-        # Preprocess inputs
+        # -------------------- Preprocess inputs --------------------
         # TODO: Add callbacks for puzzles to take control
         inp = sheesh_split(inp)
         
@@ -65,7 +59,7 @@ class Shell:
         if len(args) == 0:
             return True
         
-        # Parse commands
+        # -------------------- Parse commands --------------------
         prog = self.unknown_program     # Default to unknown
 
         # Check programs in CWD
@@ -76,9 +70,12 @@ class Shell:
         elif args[0] in ENV.path:
             prog = ENV.path[args[0]]
 
-        # TODO: handle GUI execution
+        # -------------------- Execute --------------------
         try:
-            errcode = prog.cli_main(args)
+            if self.gui is not None:
+                errcode = prog.gui_main(self.gui, args)
+            else:
+                errcode = prog.cli_main(args)
         except Exception:               # Catch program errors then continue
             traceback.print_exc()
             errcode = ExitCode.ERROR

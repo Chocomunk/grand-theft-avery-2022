@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from system.filesystem import Node
 from system.program import ProgramBase
@@ -11,6 +11,7 @@ class ENV:
 
     log = None
 
+    global_history: Set[Node] = set()   # Adding this for graph vizualization
     curr_node: Node = None
     node_history: List[Node] = []       # Does not include curr_node
 
@@ -22,5 +23,6 @@ class ENV:
         cls.prompt_base = "[{pwd}]> "
         cls.path = {}
         cls.log = None
+        cls.gui = None
         cls.curr_node = None
         cls.node_history = []

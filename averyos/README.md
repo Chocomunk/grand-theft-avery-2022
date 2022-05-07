@@ -20,15 +20,6 @@ allows the OS to be decoupled from any specific puzzle designs.
 
 ### Todo
 
-- [x] Add global puzzle state
-  - Can be used to solve puzzles (e.g. total explored nodes, was a file opened, etc...)
-  - Better to keep information in a "State" object rather than the nodes themselves for 
-    debugging puzzles and for interacting with client data vs. server data
-- [x] Add global environment variables
-  - Semantically different from global state. ENV data is tied to the OS, but 
-    puzzle state data is tied to the puzzles.
-  - Should store pwd, node history, path, master node, etc...
-- [ ] Show shell and programs in a GUI (so we don't have to switch windows)
 - [ ] Start Puzzle state webserver
   - AveryOS backend send puzzle state to webserver.
   - Webserver serves (mobile-friendly) websites to users and forwards user interactions
@@ -40,28 +31,50 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] Keep track of whether nodes are visited.
     - Also consider keeping track of whether all of a node's connections are
       visited (both child+parent? or separately?)
+- GUI
+  - [ ] Make all the margins/padding line up
+  - [x] Make everything fullscreen
+  - [x] Add pre-defined window layouts for programs to use
+    - Programs can access the surfaces of a specific layout
+    - [x] Window "views" that programs can assign
+  - [x] Add a view stack to `OSWindow`
+  - [ ] Terminal GUI
+    - [ ] Clean up color and font handling
+      - Color for prompt?
+    - [ ] Allow scrolling over lines
+      - Stop doing line moving in a sussy way
+    - [ ] Allow up/down arrows to get last/next in command history.
+  - [ ] Configure gui/__init__.py
+  - [ ] `ls` GUI
+    - Call `ls` to toggle a "Directory" pane on the LHS
+    - Cannot be shown with `map`
+    - [x] Implement pane + dirlist
+    - [ ] Add section headers/titles
+    - [ ] Add icons
+  - [ ] `map` GUI
+    - Call `map` to toggle either a "Map" view or pane.
+    - Cannot be shown with `ls`
+  - [ ] `cat` GUI
+    - Opens a widget that displays text
+    - [x] Allow for scrolling over text
+    - [ ] Fix padding
+    - [ ] Make it pretty?
+  - [ ] `unlock` GUI
+    - [ ] Actually unlock the node
+    - [ ] Pause/animations after answers
+    - [ ] Make it pretty
 - Shell
-  - [x] Add `cdid` command to force move to any node by its id
-  - [x] Support cd-ing backwards along the node history
-  - [x] Refactor Logging to make clear what it does
-  - [ ] Prettify command outputs
-    - [x] List node contents
-    - [x] Node history
-    - [ ] Log printout
-  - [x] Make unlock take input
-  - [x] Implement cat
-    - Maybe allow users to add files to the path
-  - [x] chdir multiple directories at once
+  - [ ] chdir multiple directories at once
+    - [x] Implement multidir
+    - [ ] Check locks for entire path
   - [ ] Add input pre-processing callbacks
+  - [ ] Allow ls for subdirs
 - Programs
   - [x] Define an abstract program
     - [ ] Let sub-programs override the GUI
       - Alternatively, add a pane to side (side-by-side view could be cool)
-  - [x] Add programs to the FS
-  - [x] Catch program exceptions
+    - [ ] Passphrase unlock for node
   - [ ] Puzzle state editor
-  - [ ] Passphrase unlock for node
-    - [x] CLI command version of this program
 
 - Misc Ideas:
   - Visibility (similar to locks, but for whether nodes can be seen and navigated)

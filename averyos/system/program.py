@@ -15,7 +15,7 @@ class ProgramBase(ABC):
         pass
 
     @abstractmethod
-    def gui_main(self, args) -> ExitCode:
+    def gui_main(self, gui, args) -> ExitCode:
         pass
 
 
@@ -25,6 +25,6 @@ class CLIProgramBase(ProgramBase):
     def cli_main(self, args) -> ExitCode:
         pass
 
-    # GUI interface is just the text intergface
-    def gui_main(self, args):
-        return self.cli_main()
+    # GUI interface is just the text interface
+    def gui_main(self, gui, args):
+        return self.cli_main(args)

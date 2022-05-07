@@ -33,23 +33,29 @@ class LinesLog:
         self.lines = lines
         self.curr_line = ""
 
-    def write(self, msg, logtype):
-        self.curr_line += msg
-        if self.curr_line.endswith('\n'):
-            self.lines.append((self.curr_line[:-1], logtype))
-            self.curr_line = ""
+    # Convert '\n' and '\t' to new line entries and spaces.
+    def write(self, msg, logtype=LogType.OUT):
+        lines = msg.split('\n')
+        self.curr_line += lines[0]
+        for line in lines[1:]:
+            self.curr_line = self.curr_line.replace('\t', "    ")
+            self.lines.append((self.curr_line, logtype))
+            self.curr_line = line
 
-    def get(self, start_i):
+    def getlines(self, start_i=0):
         """ Returns all logs starting from `start_i` onwards """
         return self.lines[start_i:]
 
     def get_latest(self):
         """ Returns the latest log entry """
-        return self.get(-1)
+        return self.getlines(-1)
 
     def get_curr_line(self):
         """ Returns the text in the current line """
         return self.curr_line
+
+    def flush(self):
+        pass
 
 
 class CopyLogger(object):
@@ -77,3 +83,4 @@ class CopyLogger(object):
 
     def flush(self):
         self.file.flush()
+        self.log.flush()
