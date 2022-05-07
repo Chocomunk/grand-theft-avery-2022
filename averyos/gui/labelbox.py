@@ -12,7 +12,6 @@ FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "term
 TXT_W, TXT_H = FONT.size("O")
 
 
-# TODO: Fix splitview sizing
 class LabelBoxWidget(Widget):
 
     def __init__(self, text, on_finish, pos=(20,20), line_spacing=5):
@@ -36,7 +35,6 @@ class LabelBoxWidget(Widget):
     def update(self):
         pass
 
-    # TODO: Draw hint at top-left
     # TODO: Turn hard-coded adjustments into constants
     def draw(self, surf: pg.Surface):
         line_h = TXT_H + self.line_spacing

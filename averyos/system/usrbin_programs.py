@@ -158,10 +158,8 @@ class ChdirBack(CLIProgramBase):
         return ExitCode.OK
 
 
-# TODO: handle locked nodes
 class ListNode(ProgramBase):
 
-    # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
         if len(args) > 2:
             print("Error: {0} takes up to 2 arguments".format(LIST_CMD), 
@@ -349,7 +347,6 @@ class UnlockPassword(ProgramBase):
             print("Incorrect password for {0}".format(dirname), file=sys.stderr)
         return ExitCode.OK
 
-    # TODO: create proper unlock GUI
     def gui_main(self, gui, args) -> ExitCode:
         out = self.check_node(args)
         if not out:
