@@ -100,7 +100,7 @@ class TerminalWidget(Widget):
                 else:
                     c = event.unicode
                     self.text = self.text[:self.cursor] + c + self.text[self.cursor:]
-                    self.cursor += 1
+                    self.cursor += len(c)
 
                 # Return to look at current line
                 self.offset = 0
