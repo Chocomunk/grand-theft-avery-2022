@@ -33,47 +33,31 @@ allows the OS to be decoupled from any specific puzzle designs.
       visited (both child+parent? or separately?)
 - GUI
   - [ ] Make all the margins/padding line up
-  - [x] Make everything fullscreen
-  - [x] Add pre-defined window layouts for programs to use
-    - Programs can access the surfaces of a specific layout
-    - [x] Window "views" that programs can assign
-  - [x] Add a view stack to `OSWindow`
-  - [ ] Terminal GUI
+  - Terminal GUI
+    - [x] Add cursor
+    - [x] Allow left/right moving
+    - [ ] Scrolling past the end
     - [ ] Clean up color and font handling
       - Color for prompt?
-    - [ ] Allow scrolling over lines
-      - Stop doing line moving in a sussy way
-    - [ ] Allow up/down arrows to get last/next in command history.
-  - [ ] Configure gui/__init__.py
-  - [ ] `ls` GUI
+  - `ls` GUI
     - Call `ls` to toggle a "Directory" pane on the LHS
     - Cannot be shown with `map`
-    - [x] Implement pane + dirlist
     - [ ] Add section headers/titles
     - [ ] Add icons
-  - [ ] `map` GUI
+  - `map` GUI
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
-  - [ ] `cat` GUI
+  - `cat` GUI
     - Opens a widget that displays text
-    - [x] Allow for scrolling over text
-    - [ ] Fix padding
     - [ ] Make it pretty?
-  - [ ] `unlock` GUI
-    - [ ] Actually unlock the node
+    - [ ] Remove added test text
+  - `unlock` GUI
     - [ ] Pause/animations after answers
     - [ ] Make it pretty
 - Shell
-  - [ ] chdir multiple directories at once
-    - [x] Implement multidir
-    - [ ] Check locks for entire path
   - [ ] Add input pre-processing callbacks
   - [ ] Allow ls for subdirs
 - Programs
-  - [x] Define an abstract program
-    - [ ] Let sub-programs override the GUI
-      - Alternatively, add a pane to side (side-by-side view could be cool)
-    - [ ] Passphrase unlock for node
   - [ ] Puzzle state editor
 
 - Misc Ideas:

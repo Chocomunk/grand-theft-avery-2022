@@ -7,6 +7,8 @@ from terminal import Terminal
 
 from gui.window import OSWindow
 
+from gui.window import OSWindow
+
 
 if __name__ == '__main__':
     root = test_puzzle1()

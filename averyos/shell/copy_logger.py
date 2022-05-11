@@ -42,13 +42,14 @@ class LinesLog:
             self.lines.append((self.curr_line, logtype))
             self.curr_line = line
 
-    def getlines(self, start_i=0):
-        """ Returns all logs starting from `start_i` onwards """
-        return self.lines[start_i:]
+    def __len__(self):
+        return len(self.lines)
 
-    def get_latest(self):
-        """ Returns the latest log entry """
-        return self.getlines(-1)
+    def getlines(self, start_i=0, end_i=None):
+        """ Returns all logs in `[start_i:end_i]` """
+        if not end_i:
+            return self.lines[start_i:]
+        return self.lines[start_i:end_i]
 
     def get_curr_line(self):
         """ Returns the text in the current line """
