@@ -11,9 +11,9 @@ class ENV:
 
     log = None
 
-    global_history: Set[Node] = set()   # Adding this for graph vizualization
     curr_node: Node = None
     node_history: List[Node] = []       # Does not include curr_node
+    visited_nodes: Set[Node] = set()    # Set of all nodes that have been visited
 
     # NOTE: Creating a shell will reset the path, which might overwrite
     #       puzzle programs that we place into the path. If this is a problem,

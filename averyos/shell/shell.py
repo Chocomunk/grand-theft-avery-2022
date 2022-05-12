@@ -30,7 +30,7 @@ class Shell:
         # Initialize FS and ENV
         ENV.reset()
         self.root = root
-        ENV.global_history.add(root)
+        ENV.visited_nodes.add(root)
         ENV.curr_node = root
         ENV.path = usrbin_progs()
 

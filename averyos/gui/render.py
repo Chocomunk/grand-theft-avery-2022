@@ -20,10 +20,9 @@ class RenderWidget(Widget):
         self.base_r = base_r
 
         # Get visited nodes and all their children (visible nodes)
-        history = ENV.global_history.copy()
-        for node in ENV.global_history:
-            history |= set(node.children)
-        self.nodes = history
+        self.nodes = ENV.visited_nodes.copy()
+        for node in ENV.visited_nodes:
+            self.nodes |= set(node.children)
 
         # TODO: update self.r based on number of nodes.
         self.r = base_r
@@ -66,7 +65,7 @@ class RenderWidget(Widget):
             if child in self.nodes:
                 self.draw_line(self.surf, ENV.curr_node, child)
         for par in ENV.curr_node.parents:
-            if par in ENV.global_history:
+            if par in ENV.visited_nodes:
                 self.draw_line(self.surf, par, ENV.curr_node)
 
         # Draw nodes
