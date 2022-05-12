@@ -87,6 +87,7 @@ class Chdir(CLIProgramBase):
         # chdir through the path
         new_node = path[-1]
         ENV.node_history.extend(path[:-1])
+        ENV.global_history.add(new_node)
         ENV.curr_node = new_node
         new_node.call_entry_callbacks()
         return ExitCode.OK
