@@ -25,17 +25,18 @@ allows the OS to be decoupled from any specific puzzle designs.
   - Webserver serves (mobile-friendly) websites to users and forwards user interactions
     back to the AveryOS backend.
 - Puzzles
+  - [ ] Make tutorial puzzle
   - [ ] Write a function to convert an adjacency matrix and a list of names to a
         FS graph.
 - File System
+  - [ ] Add image files
+  - [ ] Read files from real files
   - [ ] Keep track of whether nodes are visited.
     - Also consider keeping track of whether all of a node's connections are
       visited (both child+parent? or separately?)
 - GUI
   - [ ] Make all the margins/padding line up
   - Terminal GUI
-    - [x] Add cursor
-    - [x] Allow left/right moving
     - [ ] Scrolling past the end
     - [ ] Clean up color and font handling
       - Color for prompt?
@@ -44,9 +45,12 @@ allows the OS to be decoupled from any specific puzzle designs.
     - Cannot be shown with `map`
     - [ ] Add section headers/titles
     - [ ] Add icons
-  - `map` GUI
+  - `map` GUI (`render`)
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
+    - [ ] Only show edges for current node
+    - [ ] Different colors
+    - [ ] Read node positions from a mesh
   - `cat` GUI
     - Opens a widget that displays text
     - [ ] Make it pretty?
@@ -56,9 +60,6 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Make it pretty
 - Shell
   - [ ] Add input pre-processing callbacks
-  - [ ] Allow ls for subdirs
-- Programs
-  - [ ] Puzzle state editor
 
 - Misc Ideas:
   - Visibility (similar to locks, but for whether nodes can be seen and navigated)
