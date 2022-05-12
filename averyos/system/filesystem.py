@@ -11,18 +11,17 @@ class File:
         self.name = filename
         self.data = data
         self.filepath = filepath
-
-        self.real_file = filepath != None
         self.is_image = is_image
 
     def get_data(self):
         if self.is_image:
             return "(this is an image...)"
-        if not self.real_file:
-            data = self.data
 
-        with open(self.filepath, 'r') as f:
-            data = f.read()
+        if not self.filepath:
+            data = self.data
+        else:
+            with open(self.filepath, 'r') as f:
+                data = f.read()
 
         if not data:
             return "(empty file...)"

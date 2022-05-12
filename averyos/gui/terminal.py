@@ -61,6 +61,7 @@ class TerminalWidget(Widget):
                     if len(self.cmd_hist) > 0:  # (this 'if' must be inside for cursor to work)
                         self.hist_idx = max(0, self.hist_idx-1)
                         self.text = self.cmd_hist[self.hist_idx]
+                        self.cursor = len(self.text)
                 elif event.key == pg.K_DOWN:
                     if len(self.cmd_hist) > 0:
                         if self.hist_idx < len(self.cmd_hist) - 1:
@@ -68,6 +69,7 @@ class TerminalWidget(Widget):
                             self.text = self.cmd_hist[self.hist_idx]
                         else:
                             self.text = ""      # Went past the newest history
+                        self.cursor = len(self.text)
 
                 # Move cursor
                 elif event.key == pg.K_LEFT:
