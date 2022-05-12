@@ -3,10 +3,11 @@ import sys
 from gui.render import RenderWidget
 
 from shell.env import ENV
-from .filesystem import Node
+from .filesystem import Node, File
 from .program import ExitCode, ProgramBase, CLIProgramBase
 
 from gui.view import SplitView, MainView
+from gui.imageviewer import ImageViewerWidget
 from gui.directory import DirectoryWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
@@ -243,7 +244,7 @@ class ListNode(ProgramBase):
 
 class ReadFile(ProgramBase):
 
-    def get_file_data(self, args):
+    def get_file(self, args) -> File | None:
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
@@ -262,34 +263,42 @@ class ReadFile(ProgramBase):
 
         if filename not in node.directory.files:
             print("Error: no file named {0} in {1}".format(
-                filename, split[0]), file=sys.stderr)
+                filename, node.directory.name), file=sys.stderr)
             return None
 
-        return node.directory.files[filename].data
+        return node.directory.files[filename]
 
     def cli_main(self, args) -> ExitCode:
-        data = self.get_file_data(args)
-        if not data:
+        file = self.get_file(args)
+        if not file:
             return ExitCode.ERROR
+        data = file.get_data()
 
         print(data)
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        data = self.get_file_data(args)
-        if not data :
+        file = self.get_file(args)
+        if not file :
             return ExitCode.ERROR
             
+        if file.is_image:
+            data = file.filepath
+            widget = ImageViewerWidget
+        else:
+            data = file.get_data()
+            widget = LabelBoxWidget
+
         # Just replace right-pane, leave directory view in left-pane
         if gui.viewtag == "nav":
             def return_terminal():
                 gui.view.widg2 = gui.terminal
-            label_widg = LabelBoxWidget(data, return_terminal)
+            label_widg = widget(data, return_terminal)
             gui.view.widg2 = label_widg
 
         # Make a new view.
         else:
-            label_widg = LabelBoxWidget(data, lambda: gui.pop_view())
+            label_widg = widget(data, lambda: gui.pop_view())
             new_view = MainView(gui.size)
             new_view.add_widget(label_widg)
             gui.push_view("viewfile", new_view)

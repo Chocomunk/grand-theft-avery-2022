@@ -4,11 +4,29 @@ from typing import Callable, Dict, List, Optional
 from system.program import ProgramBase
 
 
+# TODO: Check filepath extension to see if file is an image
 class File:
 
-    def __init__(self, filename, data):
+    def __init__(self, filename, data=None, filepath=None, is_image=False):
         self.name = filename
         self.data = data
+        self.filepath = filepath
+
+        self.real_file = filepath != None
+        self.is_image = is_image
+
+    def get_data(self):
+        if self.is_image:
+            return "(this is an image...)"
+        if not self.real_file:
+            data = self.data
+
+        with open(self.filepath, 'r') as f:
+            data = f.read()
+
+        if not data:
+            return "(empty file...)"
+        return data
 
 
 class Directory:

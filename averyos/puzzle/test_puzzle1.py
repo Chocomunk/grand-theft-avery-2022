@@ -62,7 +62,9 @@ def test_puzzle1():
     # Add files
     shared = File("shared.txt", "shared text")
     a.directory.add_file(File("a.txt", "a text\nNext Line"))
+    b.directory.add_file(File("b.txt", filepath="puzzle/b.txt"))
     c.directory.add_file(shared)
+    c.directory.add_file(File("space-cat.png", filepath="puzzle/space-cat.png", is_image=True))
     d.directory.add_file(shared)
     f.directory.add_file(File("f.txt", "ooga\nbooga"))
 
