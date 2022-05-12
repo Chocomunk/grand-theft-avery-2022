@@ -1,21 +1,28 @@
 import math
 
 import pygame as pg
+from pygame.gfxdraw import aacircle, filled_circle
 
 from shell.env import ENV
 from gui.widget import Widget
 
 
 pg.init()
-COLOR_OUT = pg.Color('white')
-FONT = pg.font.SysFont('Arial', 16)
+COLOR_CURRENT = pg.Color("#EBD288")
+COLOR_VISITED = pg.Color("#183078")
+COLOR_VISIBLE = pg.Color("#9EAEDE")
+COLOR_EDGE = pg.Color("#F1FFFA")
+# COLOR_ARROW = pg.Color("#464E47")
+COLOR_ARROW = COLOR_EDGE
+COLOR_TEXT = COLOR_EDGE
+FONT = pg.font.SysFont('Consolas', 18)
 TXT_W, TXT_H = FONT.size("O")
 
 
 # TODO: replace grid with mesh
 class RenderWidget(Widget):
 
-    def __init__(self, on_finish, base_r=50, arrow_size=15):
+    def __init__(self, on_finish, base_r=50, arrow_size=10):
         self.finish_cb = on_finish
         self.base_r = base_r
         self.arrow_size = arrow_size
@@ -34,8 +41,8 @@ class RenderWidget(Widget):
         self.d = math.ceil(math.sqrt(max_id + 1))
 
         # Compute map surface size. Draw nodes with 2r space between eachother
-        w = 4 * self.r * self.d - 2 * self.r
-        h = 4 * self.r * (1 + max_id // self.d) - 2 * self.r
+        w = 4 * self.r * self.d - 2 * self.r + 5
+        h = 4 * self.r * (1 + max_id // self.d) - 2 * self.r + 5
         self.surf = pg.Surface((w,h), pg.SRCALPHA, 32)
         self.draw_map()
 
@@ -78,7 +85,7 @@ class RenderWidget(Widget):
         x2, y2 = self.get_scr_pos(node2)
 
         # Draw line
-        pg.draw.line(surf, (0, 128, 0), (x2, y2), (x1, y1), 5)
+        pg.draw.line(surf, COLOR_EDGE, (x2, y2), (x1, y1), 5)
 
         # Compute angle of line
         rot = math.atan2(y2 - y1, x1 - x2) - math.pi/2
@@ -94,15 +101,23 @@ class RenderWidget(Widget):
                     mid_y + s * math.cos(rot - ang))
         point3 = (mid_x + s * math.sin(rot + ang),
                     mid_y + s * math.cos(rot + ang))
-        pg.draw.polygon(surf, (128, 0, 0), (point1, point2, point3))
+        pg.draw.polygon(surf, COLOR_ARROW, (point1, point2, point3))
 
     def draw_node(self,surf, node):
         x, y = self.get_scr_pos(node)
 
+        # Determine node color
+        color = COLOR_VISIBLE                   # Default to 'visible' color
+        if node == ENV.curr_node:
+            color = COLOR_CURRENT
+        elif node in ENV.visited_nodes:
+            color = COLOR_VISITED
+
         # Draw node
-        pg.draw.circle(surf, (0, 128, 0), (x, y), self.r)
+        aacircle(surf, x, y, self.r, color)
+        filled_circle(surf, x, y, self.r, color)
         name = node.directory.name
-        txt_surf = FONT.render(name, True, COLOR_OUT)
+        txt_surf = FONT.render(name, True, COLOR_TEXT)
 
         # Center and render name
         w, h = txt_surf.get_size()
