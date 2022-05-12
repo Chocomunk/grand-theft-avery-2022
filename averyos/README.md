@@ -29,8 +29,6 @@ allows the OS to be decoupled from any specific puzzle designs.
   - [ ] Write a function to convert an adjacency matrix and a list of names to a
         FS graph.
 - File System
-  - [ ] Add image files
-  - [ ] Read files from real files
   - [ ] Keep track of whether nodes are visited.
     - Also consider keeping track of whether all of a node's connections are
       visited (both child+parent? or separately?)
@@ -48,9 +46,8 @@ allows the OS to be decoupled from any specific puzzle designs.
   - `map` GUI (`render`)
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
-    - [ ] Only show edges for current node
-    - [ ] Different colors
     - [ ] Read node positions from a mesh
+    - [ ] Make minimap
   - `cat` GUI
     - Opens a widget that displays text
     - [ ] Make it pretty?
