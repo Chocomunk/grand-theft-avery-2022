@@ -15,9 +15,10 @@ TXT_W, TXT_H = FONT.size("O")
 # TODO: replace grid with mesh
 class RenderWidget(Widget):
 
-    def __init__(self, on_finish, base_r=50):
+    def __init__(self, on_finish, base_r=50, arrow_size=15):
         self.finish_cb = on_finish
         self.base_r = base_r
+        self.arrow_size = arrow_size
 
         # Get visited nodes and all their children (visible nodes)
         self.nodes = ENV.visited_nodes.copy()
@@ -85,14 +86,14 @@ class RenderWidget(Widget):
 
         # Draw direction arrow
         # Rotate points by 120 degrees to get equilateral triangle
-        arrow_size = 15
         ang = 2 * math.pi / 3
-        point1 = (mid_x + arrow_size * math.sin(rot),
-                    mid_y + arrow_size * math.cos(rot))
-        point2 = (mid_x + arrow_size * math.sin(rot - ang),
-                    mid_y + arrow_size * math.cos(rot - ang))
-        point3 = (mid_x + arrow_size * math.sin(rot + ang),
-                    mid_y + arrow_size * math.cos(rot + ang))
+        s = self.arrow_size
+        point1 = (mid_x + s * math.sin(rot),
+                    mid_y + s * math.cos(rot))
+        point2 = (mid_x + s * math.sin(rot - ang),
+                    mid_y + s * math.cos(rot - ang))
+        point3 = (mid_x + s * math.sin(rot + ang),
+                    mid_y + s * math.cos(rot + ang))
         pg.draw.polygon(surf, (128, 0, 0), (point1, point2, point3))
 
     def draw_node(self,surf, node):
