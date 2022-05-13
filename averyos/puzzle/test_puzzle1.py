@@ -4,7 +4,7 @@ An example puzzle design
 import csv
 
 from shell.env import ENV
-from gui.mesh import Mesh
+from gui.plotter import MeshPlotter
 from system.program import CLIProgramBase
 from system.filesystem import File, Directory, Node
 
@@ -39,18 +39,8 @@ def load_mesh(filename):
     pts = []
     with open(filename) as f:
         data = csv.reader(f, delimiter=',')
-
-        xvals = []
-        zvals = []
-        for x, _, z in data:
-            xvals.append(float(x))
-            zvals.append(float(z))
-
-        xmax = max(xvals)
-        zmax = max(zvals)
-        pts = list(zip(xvals, zvals))
-
-    ENV.mesh = Mesh(pts, 1080. / zmax)
+        pts = [(float(x), float(z)) for (x,_,z) in data]
+    ENV.plotter = MeshPlotter(pts)
 
 
 # ---------------------------- Main (build puzzle) ---------------------------- 

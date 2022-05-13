@@ -3,7 +3,7 @@ from typing import Dict, List, Set, Tuple
 from system.filesystem import Node
 from system.program import ProgramBase
 
-from gui.mesh import Mesh
+from gui.plotter import Plotter, GridPlotter
 
 
 class ENV:
@@ -16,7 +16,7 @@ class ENV:
     curr_node: Node = None
     node_history: List[Node] = []       # Does not include curr_node
     visited_nodes: Set[Node] = set()    # Set of all nodes that have been visited
-    mesh: Mesh = None                   # Graph mesh
+    plotter: Plotter = GridPlotter()    # Graph plotter
 
     # NOTE: Creating a shell will reset the path, which might overwrite
     #       puzzle programs that we place into the path. If this is a problem,
@@ -30,4 +30,4 @@ class ENV:
         cls.curr_node = None
         cls.node_history = []
         cls.visited_nodes = set()
-        cls.mesh = None
+        cls.plotter = GridPlotter()

@@ -21,13 +21,10 @@ FONT = pg.font.SysFont('Consolas', 18)
 TXT_W, TXT_H = FONT.size("O")
 
 
-# TODO: replace grid with mesh
 class RenderWidget(Widget):
 
-    def __init__(self, on_finish, nodes=None, base_r=50, arrow_size=10):
+    def __init__(self, on_finish, nodes=None, arrow_size=10):
         self.finish_cb = on_finish
-        self.base_r = base_r
-        self.r = self.base_r
         self.arrow_size = arrow_size
 
         self.l = 0
@@ -40,7 +37,7 @@ class RenderWidget(Widget):
         self.nodes = self.visible if not nodes else nodes
 
         # Initialize the surface and draw the map
-        w, h = self.update_dims()
+        w, h = ENV.plotter.set_nodes(self.nodes)
         self.map_surf = pg.Surface((w,h), pg.SRCALPHA, 32)
         self.draw_map(self.map_surf)
 
@@ -61,41 +58,6 @@ class RenderWidget(Widget):
         px, py = cx - m_w // 2, cy - m_h // 2
         surf.blit(self.map_surf, (px, py))
 
-    # TODO: replace grid with mesh
-    def get_scr_pos(self, node):
-        if ENV.mesh:
-            if node.id < len(ENV.mesh.points):
-                x, y = ENV.mesh.points[node.id]
-                return self.r + int(x) - self.l, self.r + int(y) - self.t
-        else:
-            rel_id = node.id - min(n.id for n in self.nodes)    # Relative id
-
-            # Get position on an nxn grid
-            x, y = rel_id % self.d, rel_id // self.d
-            return self.r + 4 * x * self.r, self.r + 4 * y * self.r
-
-    def update_dims(self):
-        # TODO: update self.r based on number of nodes.
-        self.r = self.base_r
-
-        # Compute grid dimensions
-        ids = [n.id for n in self.nodes]
-        self.d = math.ceil(math.sqrt(max(ids) - min(ids) + 1))
-
-        if ENV.mesh:
-            self.l, self.t, w, h = [int(x) for x in ENV.mesh.node_dims(self.nodes)]
-            w, h = w + self.r, h + self.r
-        else:
-            w = 0
-            h = 0
-            # Find max width/height
-            for node in self.nodes:
-                w1, h1 = self.get_scr_pos(node)
-                w = max(w, w1)
-                h = max(h, h1)
-
-        return w + self.r + 5, h + self.r + 5
-
     def draw_map(self, surf):
         # Draw connections between nodes
         for child in ENV.curr_node.children:
@@ -110,8 +72,8 @@ class RenderWidget(Widget):
             self.draw_node(surf, node)
 
     def draw_line(self, surf, node1, node2):
-        x1, y1 = self.get_scr_pos(node1)
-        x2, y2 = self.get_scr_pos(node2)
+        x1, y1 = ENV.plotter.get_pos(node1)
+        x2, y2 = ENV.plotter.get_pos(node2)
 
         # Draw line
         pg.draw.line(surf, COLOR_EDGE, (x2, y2), (x1, y1), 5)
@@ -133,7 +95,7 @@ class RenderWidget(Widget):
         pg.draw.polygon(surf, COLOR_ARROW, (point1, point2, point3))
 
     def draw_node(self,surf, node):
-        x, y = self.get_scr_pos(node)
+        x, y = ENV.plotter.get_pos(node)
 
         # Determine node color
         if node == ENV.curr_node:
@@ -146,8 +108,8 @@ class RenderWidget(Widget):
             color = COLOR_INVISIBLE             # Default to 'invisible' color
 
         # Draw node
-        aacircle(surf, x, y, self.r, color)
-        filled_circle(surf, x, y, self.r, color)
+        aacircle(surf, x, y, ENV.plotter.r, color)
+        filled_circle(surf, x, y, ENV.plotter.r, color)
 
         # Center and render name
         if color != COLOR_INVISIBLE:
