@@ -41,6 +41,7 @@ def load_mesh(filename):
         data = csv.reader(f, delimiter=',')
         pts = [(float(x), float(z)) for (x,_,z) in data]
     ENV.plotter = MeshPlotter(pts)
+    return len(pts)
 
 
 # ---------------------------- Main (build puzzle) ---------------------------- 
@@ -48,7 +49,7 @@ def test_puzzle1():
     # Define state tracker
     state = PuzzleState
 
-    load_mesh("puzzle/Example-Spiral-Mesh.csv")
+    numpts = load_mesh("puzzle/Example-Spiral-Mesh.csv")
 
     # Define callback functions
     # This function unlocks F when C is stepped on 
@@ -72,6 +73,10 @@ def test_puzzle1():
     f = new_node(state, parents=[e, d], dirname="F")
     c.add_child(root)
     d.add_child(root)
+
+    # l = numpts - len(state.nodes)
+    # for i in range(l):
+    #     new_node(state, dirname="fake"+str(i))
 
     # Add files
     shared = File("shared.txt", "shared text")

@@ -10,18 +10,14 @@ PADDING = 5
 
 class Plotter(ABC):
 
-    def __init__(self, radius=50, scale=1080):
-        self.base_r = radius
-        self.r = radius
-        self.base_scale = scale
+    def __init__(self, radius: int=50, size: Tuple[int, int]=(1920,1080), 
+                    scale: float=1, max_radius: int=75):
+        self._r = radius * scale
+        self.max_r = max_radius
         self.scale = scale
+        self.w, self.h = size
 
-    def set_scale(self, scale):
-        self.r = int(self.base_r * scale / self.base_scale)
-        self.scale = scale
-
-    @abstractmethod
-    def set_nodes(self, nodes: List[Node]) -> Tuple[int, int]:
+    def set_scale(self, nodes: List[Node], size: Tuple[int, int]=None):
         """ 
         Tell the plotter what the set of nodes are.
         Arguments:
@@ -29,37 +25,58 @@ class Plotter(ABC):
         Returns:
             (width, height): The dimensions of the plotting region
         """
+        if size:
+            self.w, self.h = size
+        w, h = self._node_dims(nodes)
+
+        if float(w)/h > float(self.w)/self.h:
+            self.scale = (self.w - PADDING) / (w + 2*self._r)
+        else:
+            self.scale = (self.h - PADDING) / (h + 2*self._r)
+
+        width = (w + 2*self._r) * self.scale
+        height = (h + 2*self._r) * self.scale
+        return int(width) + PADDING, int(height) + PADDING
+
+    def get_pos(self, node: Node) -> Tuple[int, int]:
+        """ Returns (x, y): The center of the node to plot """
+        p = self._node_pos(node)
+        if p:
+            return int(p[0] * self.scale), int(p[1] * self.scale)
+
+    @property
+    def r(self):
+        return min(int(self._r * self.scale), self.max_r)
+
+    @abstractmethod
+    def _node_dims(self, nodes: List[Node]) -> Tuple[int, int]:
+        """ Returns the unscaled (width, height) of the nodes """
         pass
 
     @abstractmethod
-    def get_pos(self, node: Node) -> Tuple[int, int]:
-        """ Returns (x, y): The center of the node to plot """
+    def _node_pos(self, node: Node) -> Tuple[int, int]:
+        """ Returns the unscaled center of the node to plot """
         pass
 
 
 class MeshPlotter(Plotter):
 
-    def __init__(self, pts, radius=50, scale=1080):
-        super().__init__(radius, scale)
-        l, t, w, h = self.pts_dims(pts)
-        norm = 1. / max(w,h)                    # Normalize largest dim to 1
-        pts = [((x-l)*norm, (y-t)*norm) for (x,y) in pts]
-        self.l, self.t = 0, 0
+    def __init__(self, pts, radius: int=3, size: Tuple[int, int]=(1920,1080)):
+        super().__init__(radius, size)
         self.points = pts
+        self.l, self.t = 0, 0
 
-    def set_nodes(self, nodes: List[Node]):
+    def _node_dims(self, nodes: List[Node]):
         ids = [n.id for n in nodes if n.id < len(self.points)]
         self.l, self.t, w, h = self.pts_dims([self.points[i] for i in ids])
-        width = w*self.scale + 2*self.r
-        height = h*self.scale + 2*self.r
-        return int(width) + PADDING, int(height) + PADDING
+        return w, h
 
-    def get_pos(self, node: Node):
+    def _node_pos(self, node: Node):
         if node.id < len(self.points):
             x, y = self.points[node.id]
-            u = self.r + (x - self.l) * self.scale
-            v = self.r + (y - self.t) * self.scale
-            return int(u), int(v)
+            u = self._r + x - self.l
+            v = self._r + y - self.t
+            return u, v
         return None
 
     def pts_dims(self, pts):
@@ -77,24 +94,23 @@ class MeshPlotter(Plotter):
 
 class GridPlotter(Plotter):
 
-    def __init__(self, radius=50):
-        super().__init__(radius)
-        self.r = radius
+    def __init__(self, radius: int=50, size: Tuple[int, int]=(1920,1080), scale: float=1):
+        super().__init__(radius, size, scale)
         self.min_id = 0
 
-    def set_nodes(self, nodes: List[Node]):
+    def _node_dims(self, nodes: List[Node]):
         ids = [n.id for n in nodes]
         self.min_id = min(ids)
         max_id = max(ids)
         self.d = math.ceil(math.sqrt(max_id - self.min_id + 1))
 
-        w = 4 * self.r * self.d - 2 * self.r
-        h = 4 * self.r * (1 + max_id // self.d) - 2 * self.r
-        return w + PADDING, h + PADDING
+        w = 4 * self._r * (self.d - 1)
+        h = 4 * self._r * (max_id // self.d)
+        return w, h
 
-    def get_pos(self, node: Node):
+    def _node_pos(self, node: Node):
         rel_id = node.id - self.min_id          # Relative id
 
         # Get position on an nxn grid
         x, y = rel_id % self.d, rel_id // self.d
-        return self.r + 4 * x * self.r, self.r + 4 * y * self.r
+        return self._r + 4 * x * self._r, self._r + 4 * y * self._r

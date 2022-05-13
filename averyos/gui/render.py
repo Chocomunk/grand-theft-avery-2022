@@ -1,4 +1,3 @@
-import sys
 import math
 
 import pygame as pg
@@ -23,7 +22,7 @@ TXT_W, TXT_H = FONT.size("O")
 
 class RenderWidget(Widget):
 
-    def __init__(self, on_finish, nodes=None, arrow_size=10):
+    def __init__(self, size, on_finish, nodes=None, arrow_size=10):
         self.finish_cb = on_finish
         self.arrow_size = arrow_size
 
@@ -37,7 +36,7 @@ class RenderWidget(Widget):
         self.nodes = self.visible if not nodes else nodes
 
         # Initialize the surface and draw the map
-        w, h = ENV.plotter.set_nodes(self.nodes)
+        w, h = ENV.plotter.set_scale(self.nodes, size=size)
         self.map_surf = pg.Surface((w,h), pg.SRCALPHA, 32)
         self.draw_map(self.map_surf)
 

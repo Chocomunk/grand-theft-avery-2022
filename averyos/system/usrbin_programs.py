@@ -182,7 +182,7 @@ class Render(ProgramBase):
                   file=sys.stderr)
             return ExitCode.ERROR
         
-        render_widg = RenderWidget(gui.pop_view)
+        render_widg = RenderWidget(gui.size, gui.pop_view)
         new_view = MainView(gui.size)
         new_view.add_widget(render_widg)
         gui.push_view("render", new_view)
