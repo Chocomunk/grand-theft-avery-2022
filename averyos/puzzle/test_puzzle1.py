@@ -1,6 +1,10 @@
 """
 An example puzzle design
 """
+import csv
+
+from shell.env import ENV
+from gui.mesh import Mesh
 from system.program import CLIProgramBase
 from system.filesystem import File, Directory, Node
 
@@ -31,10 +35,30 @@ def new_node(state, parents=[], dirname="New Folder", directory: Directory=None)
     return n
 
 
+def load_mesh(filename):
+    pts = []
+    with open(filename) as f:
+        data = csv.reader(f, delimiter=',')
+
+        xvals = []
+        zvals = []
+        for x, _, z in data:
+            xvals.append(float(x))
+            zvals.append(float(z))
+
+        xmax = max(xvals)
+        zmax = max(zvals)
+        pts = list(zip(xvals, zvals))
+
+    ENV.mesh = Mesh(pts, 1080. / zmax)
+
+
 # ---------------------------- Main (build puzzle) ---------------------------- 
 def test_puzzle1():
     # Define state tracker
     state = PuzzleState
+
+    load_mesh("puzzle/Example-Spiral-Mesh.csv")
 
     # Define callback functions
     # This function unlocks F when C is stepped on 

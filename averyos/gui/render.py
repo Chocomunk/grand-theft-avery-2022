@@ -1,3 +1,4 @@
+import sys
 import math
 
 import pygame as pg
@@ -29,6 +30,9 @@ class RenderWidget(Widget):
         self.r = self.base_r
         self.arrow_size = arrow_size
 
+        self.l = 0
+        self.t = 0
+
         # Get visited nodes and all their children (visible nodes)
         self.visible = ENV.visited_nodes.copy()
         for node in ENV.visited_nodes:
@@ -59,11 +63,16 @@ class RenderWidget(Widget):
 
     # TODO: replace grid with mesh
     def get_scr_pos(self, node):
-        rel_id = node.id - min(n.id for n in self.nodes)        # Relative id
+        if ENV.mesh:
+            if node.id < len(ENV.mesh.points):
+                x, y = ENV.mesh.points[node.id]
+                return self.r + int(x) - self.l, self.r + int(y) - self.t
+        else:
+            rel_id = node.id - min(n.id for n in self.nodes)    # Relative id
 
-        # Get position on an nxn grid
-        x, y = rel_id % self.d, rel_id // self.d
-        return self.r + 4 * x * self.r, self.r + 4 * y * self.r
+            # Get position on an nxn grid
+            x, y = rel_id % self.d, rel_id // self.d
+            return self.r + 4 * x * self.r, self.r + 4 * y * self.r
 
     def update_dims(self):
         # TODO: update self.r based on number of nodes.
@@ -73,13 +82,17 @@ class RenderWidget(Widget):
         ids = [n.id for n in self.nodes]
         self.d = math.ceil(math.sqrt(max(ids) - min(ids) + 1))
 
-        w = 0
-        h = 0
-        # Find max width/height
-        for node in self.nodes:
-            w1, h1 = self.get_scr_pos(node)
-            w = max(w, w1)
-            h = max(h, h1)
+        if ENV.mesh:
+            self.l, self.t, w, h = [int(x) for x in ENV.mesh.node_dims(self.nodes)]
+            w, h = w + self.r, h + self.r
+        else:
+            w = 0
+            h = 0
+            # Find max width/height
+            for node in self.nodes:
+                w1, h1 = self.get_scr_pos(node)
+                w = max(w, w1)
+                h = max(h, h1)
 
         return w + self.r + 5, h + self.r + 5
 

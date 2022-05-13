@@ -28,7 +28,7 @@ class Shell:
 
     def __init__(self, root: Node):
         # Initialize FS and ENV
-        ENV.reset()
+        # ENV.reset()
         self.root = root
         ENV.visited_nodes.add(root)
         ENV.curr_node = root
