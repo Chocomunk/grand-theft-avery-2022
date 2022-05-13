@@ -11,6 +11,7 @@ pg.init()
 COLOR_CURRENT = pg.Color("#EBD288")
 COLOR_VISITED = pg.Color("#183078")
 COLOR_VISIBLE = pg.Color("#9EAEDE")
+COLOR_INVISIBLE = pg.Color("#525663")
 COLOR_EDGE = pg.Color("#F1FFFA")
 # COLOR_ARROW = pg.Color("#464E47")
 COLOR_ARROW = COLOR_EDGE
@@ -22,16 +23,17 @@ TXT_W, TXT_H = FONT.size("O")
 # TODO: replace grid with mesh
 class RenderWidget(Widget):
 
-    def __init__(self, on_finish, base_r=50, arrow_size=10):
+    def __init__(self, on_finish, nodes=None, base_r=50, arrow_size=10):
         self.finish_cb = on_finish
         self.base_r = base_r
         self.r = self.base_r
         self.arrow_size = arrow_size
 
         # Get visited nodes and all their children (visible nodes)
-        self.nodes = ENV.visited_nodes.copy()
+        self.visible = ENV.visited_nodes.copy()
         for node in ENV.visited_nodes:
-            self.nodes |= set(node.children)
+            self.visible |= set(node.children)
+        self.nodes = self.visible if not nodes else nodes
 
         # Initialize the surface and draw the map
         w, h = self.update_dims()
@@ -57,8 +59,10 @@ class RenderWidget(Widget):
 
     # TODO: replace grid with mesh
     def get_scr_pos(self, node):
+        rel_id = node.id - min(n.id for n in self.nodes)        # Relative id
+
         # Get position on an nxn grid
-        x, y = node.id % self.d, node.id // self.d
+        x, y = rel_id % self.d, rel_id // self.d
         return self.r + 4 * x * self.r, self.r + 4 * y * self.r
 
     def update_dims(self):
@@ -66,8 +70,8 @@ class RenderWidget(Widget):
         self.r = self.base_r
 
         # Compute grid dimensions
-        max_id = max(n.id for n in self.nodes)
-        self.d = math.ceil(math.sqrt(max_id + 1))
+        ids = [n.id for n in self.nodes]
+        self.d = math.ceil(math.sqrt(max(ids) - min(ids) + 1))
 
         w = 0
         h = 0
@@ -119,18 +123,22 @@ class RenderWidget(Widget):
         x, y = self.get_scr_pos(node)
 
         # Determine node color
-        color = COLOR_VISIBLE                   # Default to 'visible' color
         if node == ENV.curr_node:
             color = COLOR_CURRENT
         elif node in ENV.visited_nodes:
             color = COLOR_VISITED
+        elif node in self.visible:
+            color = COLOR_VISIBLE
+        else:
+            color = COLOR_INVISIBLE             # Default to 'invisible' color
 
         # Draw node
         aacircle(surf, x, y, self.r, color)
         filled_circle(surf, x, y, self.r, color)
-        name = node.directory.name
-        txt_surf = FONT.render(name, True, COLOR_TEXT)
 
         # Center and render name
-        w, h = txt_surf.get_size()
-        surf.blit(txt_surf, (x - w//2, y - h//2))
+        if color != COLOR_INVISIBLE:
+            name = node.directory.name
+            txt_surf = FONT.render(name, True, COLOR_TEXT)
+            w, h = txt_surf.get_size()
+            surf.blit(txt_surf, (x - w//2, y - h//2))
