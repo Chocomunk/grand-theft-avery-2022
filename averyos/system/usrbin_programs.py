@@ -171,6 +171,8 @@ class Render(ProgramBase):
             print("Error: {0} does not take any arguments".format(RENDER_CMD), 
                   file=sys.stderr)
             return ExitCode.ERROR
+
+        print("Map is only available in the GUI!", file=sys.stderr)
         
         return ExitCode.OK
 

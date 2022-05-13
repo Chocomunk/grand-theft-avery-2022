@@ -25,6 +25,7 @@ class RenderWidget(Widget):
     def __init__(self, on_finish, base_r=50, arrow_size=10):
         self.finish_cb = on_finish
         self.base_r = base_r
+        self.r = self.base_r
         self.arrow_size = arrow_size
 
         # Get visited nodes and all their children (visible nodes)
@@ -32,53 +33,64 @@ class RenderWidget(Widget):
         for node in ENV.visited_nodes:
             self.nodes |= set(node.children)
 
-        # TODO: update self.r based on number of nodes.
-        self.r = base_r
-
-        # TODO: replace grid with mesh
-        # Compute grid dimensions
-        max_id = max(n.id for n in self.nodes)
-        self.d = math.ceil(math.sqrt(max_id + 1))
-
-        # Compute map surface size. Draw nodes with 2r space between eachother
-        w = 4 * self.r * self.d - 2 * self.r + 5
-        h = 4 * self.r * (1 + max_id // self.d) - 2 * self.r + 5
-        self.surf = pg.Surface((w,h), pg.SRCALPHA, 32)
-        self.draw_map()
+        # Initialize the surface and draw the map
+        w, h = self.update_dims()
+        self.map_surf = pg.Surface((w,h), pg.SRCALPHA, 32)
+        self.draw_map(self.map_surf)
 
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 self.finish_cb()
 
+    # TODO: Update when chanding directory
     def update(self):
         pass
 
     def draw(self, surf: pg.Surface):
-        # Draw map onto parent surface
+        # Draw map onto parent surface (centered)
         w, h = surf.get_size()
-        t_w, t_h = self.surf.get_size()
+        m_w, m_h = self.map_surf.get_size()
         cx, cy = w // 2, h // 2
-        px, py = cx - t_w // 2, cy - t_h // 2
-        surf.blit(self.surf, (px, py))
+        px, py = cx - m_w // 2, cy - m_h // 2
+        surf.blit(self.map_surf, (px, py))
 
+    # TODO: replace grid with mesh
     def get_scr_pos(self, node):
         # Get position on an nxn grid
         x, y = node.id % self.d, node.id // self.d
         return self.r + 4 * x * self.r, self.r + 4 * y * self.r
 
-    def draw_map(self):
+    def update_dims(self):
+        # TODO: update self.r based on number of nodes.
+        self.r = self.base_r
+
+        # Compute grid dimensions
+        max_id = max(n.id for n in self.nodes)
+        self.d = math.ceil(math.sqrt(max_id + 1))
+
+        w = 0
+        h = 0
+        # Find max width/height
+        for node in self.nodes:
+            w1, h1 = self.get_scr_pos(node)
+            w = max(w, w1)
+            h = max(h, h1)
+
+        return w + self.r + 5, h + self.r + 5
+
+    def draw_map(self, surf):
         # Draw connections between nodes
         for child in ENV.curr_node.children:
             if child in self.nodes:
-                self.draw_line(self.surf, ENV.curr_node, child)
+                self.draw_line(surf, ENV.curr_node, child)
         for par in ENV.curr_node.parents:
             if par in ENV.visited_nodes:
-                self.draw_line(self.surf, par, ENV.curr_node)
+                self.draw_line(surf, par, ENV.curr_node)
 
         # Draw nodes
         for node in self.nodes:
-            self.draw_node(self.surf, node)
+            self.draw_node(surf, node)
 
     def draw_line(self, surf, node1, node2):
         x1, y1 = self.get_scr_pos(node1)
