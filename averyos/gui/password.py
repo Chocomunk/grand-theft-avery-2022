@@ -1,4 +1,5 @@
-import sys
+import time
+import math
 import pygame as pg
 
 from gui.widget import Widget
@@ -21,6 +22,8 @@ class PasswordWidget(Widget):
         self.answer = password
         self.text = ""
         self.active = False         # Should be enabled by creator
+        self.anim_time = 0
+        self.offset = 0
 
     def handle_event(self, event: pg.event.Event):
         if self.active:
@@ -37,18 +40,25 @@ class PasswordWidget(Widget):
 
     # TODO: no pwd/fail/success animations
     def update(self):
+        t = time.time() - self.anim_time
+        if 0.25 > t:
+            self.offset = math.sin(t*8*math.pi) * 50
+        else:
+            self.offset = 0
+
         if not self.answer:
-            self.text = "NOPE"
-            self.answer = ""
+            self.finish_cb("")
             return
 
         ans_len = len(self.answer)
         if len(self.text) >= ans_len:
             if self.text[:ans_len] == self.answer:
-                # TODO: finish
+                # TODO: finish anim
                 self.finish_cb(self.text)
             else:
+                self.anim_time = time.time()
                 self.text = ""
+
 
     # TODO: figure out sizes before-hand
     # TODO: set padding as constants
@@ -74,6 +84,6 @@ class PasswordWidget(Widget):
 
         cx, cy = surf.get_width() // 2, surf.get_height() // 2       
         px, py = cx - width // 2, cy - height // 2
-        surf.blit(tmp_surf, (px, py))
+        surf.blit(tmp_surf, (px + self.offset, py))
 
         surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))
