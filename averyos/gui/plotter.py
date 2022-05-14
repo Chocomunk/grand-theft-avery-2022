@@ -61,8 +61,8 @@ class Plotter(ABC):
 
 class MeshPlotter(Plotter):
 
-    def __init__(self, pts, radius: int=3, size: Tuple[int, int]=(1920,1080)):
-        super().__init__(radius, size)
+    def __init__(self, pts, radius: int=3, *args, **kwargs):
+        super().__init__(radius, *args, **kwargs)
         self.points = pts
         self.l, self.t = 0, 0
 
@@ -94,8 +94,8 @@ class MeshPlotter(Plotter):
 
 class GridPlotter(Plotter):
 
-    def __init__(self, radius: int=50, size: Tuple[int, int]=(1920,1080), scale: float=1):
-        super().__init__(radius, size, scale)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.min_id = 0
 
     def _node_dims(self, nodes: List[Node]):
