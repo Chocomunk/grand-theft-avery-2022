@@ -83,7 +83,7 @@ class PasswordWidget(Widget):
         for txt_surf in surfs:
             if txt_surf:
                 pg.draw.rect(tmp_surf, (15, 15, 15), 
-                            pg.Rect(x, y, txt_surf.get_width() + 20, height))
+                            pg.Rect(x, y, TXT_W + 20, height))
                 if i < len(self.text):
                     usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
                     tmp_surf.blit(usr_txt, (x+10, y+10))

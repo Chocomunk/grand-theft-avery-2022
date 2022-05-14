@@ -108,7 +108,8 @@ class Node:
         self.password = password
 
     def try_password(self, password):
-        if not self.password or password == "".join(self.password.split()):
+        if not self.password or \
+                "".join(password.split()) == "".join(self.password.split()):
             self.passlocked = False
             return True
         return False
