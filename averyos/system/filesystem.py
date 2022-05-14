@@ -45,7 +45,7 @@ class Directory:
         return list(self.files.keys())
 
     def list_programs(self):
-        return list(self.programs.keys())
+        return [k for k,v in self.programs.items() if not v.hidden]
 
 
 def always_false(*args, **kwargs): return False

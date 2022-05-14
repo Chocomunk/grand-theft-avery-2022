@@ -50,18 +50,6 @@ def test_puzzle1():
     state = PuzzleState
 
     numpts = load_mesh("puzzle/Example-Spiral-Mesh.csv")
-
-    # Define callback functions
-    # This function unlocks F when C is stepped on 
-    def f_lock(n: Node):
-        locked = not state.c_trigger
-        print("Checking func-lock on {0}... Locked: {1}".format(n.directory.name, locked))
-        return locked
-    
-    # This function signals that C is stepped on 
-    def c_trig(n: Node):
-        state.c_trigger = True
-        print("Stepped on {0}!".format(n.directory.name))
         
     # Build FS graph
     root = new_node(state, dirname="root")
@@ -88,8 +76,22 @@ def test_puzzle1():
     f.directory.add_file(File("f.txt", "ooga\nbooga"))
 
     # Add programs
-    root.directory.add_program(CheckC.name, CheckC())
-    a.directory.add_program(CheckC.name, CheckC())
+    chkc = CheckC()
+    root.directory.add_program(CheckC.name, chkc)
+    a.directory.add_program(CheckC.name, chkc)
+
+    # Define callback functions
+    # This function unlocks F when C is stepped on 
+    def f_lock(n: Node):
+        locked = not state.c_trigger
+        print("Checking func-lock on {0}... Locked: {1}".format(n.directory.name, locked))
+        return locked
+    
+    # This function signals that C is stepped on 
+    def c_trig(n: Node):
+        state.c_trigger = True
+        chkc.hidden = True
+        print("Stepped on {0}!".format(n.directory.name))
 
     # Set callbacks
     c.add_entry_callback(c_trig)

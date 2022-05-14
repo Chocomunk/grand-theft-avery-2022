@@ -10,6 +10,9 @@ class ExitCode(Enum):
 
 class ProgramBase(ABC):
 
+    def __init__(self, hidden=False):
+        self.hidden = hidden
+
     @abstractmethod
     def cli_main(self, args) -> ExitCode:
         pass
