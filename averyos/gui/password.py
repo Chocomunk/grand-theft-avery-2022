@@ -51,7 +51,7 @@ class PasswordWidget(Widget):
             self.finish_cb("")
             return
 
-        ans = self.answer.replace(" ", "")
+        ans = "".join(self.answer.split())
         ans_len = len(ans)
         if len(self.text) >= ans_len:
             if self.text[:ans_len] == ans:
