@@ -10,8 +10,8 @@ PADDING = 5
 
 class Plotter(ABC):
 
-    def __init__(self, radius: int=50, size: Tuple[int, int]=(1920,1080), 
-                    scale: float=1, max_radius: int=75):
+    def __init__(self, radius: int=50, scale: float=1, max_radius: int=75,
+                    size: Tuple[int, int]=(1920-2*PADDING,1080-2*PADDING)):
         self._r = radius * scale
         self.max_r = max_radius
         self.scale = scale
