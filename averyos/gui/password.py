@@ -10,6 +10,7 @@ pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
 FONT = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
 FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+TXT_W, TXT_H = FONT.size("O")
 
 
 class PasswordWidget(Widget):
@@ -50,9 +51,10 @@ class PasswordWidget(Widget):
             self.finish_cb("")
             return
 
-        ans_len = len(self.answer)
+        ans = self.answer.replace(" ", "")
+        ans_len = len(ans)
         if len(self.text) >= ans_len:
-            if self.text[:ans_len] == self.answer:
+            if self.text[:ans_len] == ans:
                 # TODO: finish anim
                 self.finish_cb(self.text)
             else:
@@ -65,22 +67,28 @@ class PasswordWidget(Widget):
     def draw(self, surf: pg.Surface):
         surfs = []
         width = 0
-        height = 0
+        height = TXT_H + 20
         for c in self.answer:
-            txt_surf = FONT.render(c, True, COLOR_OUT)
-            width += txt_surf.get_width() + self.spacing + 20
-            height = max(height, txt_surf.get_height() + 20)
-            surfs.append(txt_surf)
+            width += TXT_W + self.spacing + 20
+            # height = max(height, txt_surf.get_height() + 20)
+            if c != " ":
+                txt_surf = FONT.render(c, True, COLOR_OUT)
+                surfs.append(txt_surf)
+            else:
+                surfs.append(None)
 
         tmp_surf = pg.Surface((width, height), pg.SRCALPHA, 32)
         x, y = 0, 0
-        for i, txt_surf in enumerate(surfs):
-            pg.draw.rect(tmp_surf, (15, 15, 15), 
-                        pg.Rect(x, y, txt_surf.get_width() + 20, height))
-            if i < len(self.text):
-                usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
-                tmp_surf.blit(usr_txt, (x+10, y+10))
-            x += txt_surf.get_width() + self.spacing + 20
+        i = 0
+        for txt_surf in surfs:
+            if txt_surf:
+                pg.draw.rect(tmp_surf, (15, 15, 15), 
+                            pg.Rect(x, y, txt_surf.get_width() + 20, height))
+                if i < len(self.text):
+                    usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
+                    tmp_surf.blit(usr_txt, (x+10, y+10))
+                i += 1
+            x += TXT_W + self.spacing + 20
 
         cx, cy = surf.get_width() // 2, surf.get_height() // 2       
         px, py = cx - width // 2, cy - height // 2

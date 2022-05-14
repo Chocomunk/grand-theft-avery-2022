@@ -108,7 +108,8 @@ class Node:
         self.password = password
 
     def try_password(self, password):
-        if not self.password or password == self.password:
+        print(password, self.password.replace(" ", ""))
+        if not self.password or password == self.password.replace(" ", ""):
             self.passlocked = False
             return True
         return False

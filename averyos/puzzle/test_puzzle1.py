@@ -95,7 +95,7 @@ def test_puzzle1():
     c.add_entry_callback(c_trig)
 
     # Set locks
-    e.set_password("gugma")
+    e.set_password("gug ma")
     f.set_lock_func(f_lock)
 
     return root
