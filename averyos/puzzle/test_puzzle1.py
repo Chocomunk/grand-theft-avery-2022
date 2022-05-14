@@ -6,7 +6,7 @@ import csv
 from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.program import CLIProgramBase
-from system.filesystem import File, Directory, Node
+from system.filesystem import File, Directory, Node, make_graph
 
 
 # ---------------------------- Global Puzzle State ---------------------------- 
@@ -44,6 +44,20 @@ def load_mesh(filename):
     return len(pts)
 
 
+dirnames = ["root", "A", "B", "C", "D", "E", "F"]
+
+# (row, col) -> (parent, child)
+adj_mat = [
+    [0, 1, 0, 1, 0, 0, 0],      # root
+    [0, 0, 1, 0, 1, 1, 0],      # A
+    [0, 0, 0, 1, 0, 1, 0],      # B
+    [1, 0, 0, 0, 0, 1, 0],      # C
+    [1, 0, 0, 0, 0, 1, 1],      # D
+    [0, 0, 0, 0, 0, 0, 1],      # E
+    [0, 0, 0, 0, 0, 0, 0]       # F
+]
+
+
 # ---------------------------- Main (build puzzle) ---------------------------- 
 def test_puzzle1():
     # Define state tracker
@@ -52,15 +66,17 @@ def test_puzzle1():
     numpts = load_mesh("puzzle/Example-Spiral-Mesh.csv")
         
     # Build FS graph
-    root = new_node(state, dirname="root")
-    a = new_node(state, parents=[root], dirname="A")
-    b = new_node(state, parents=[a], dirname="B")
-    c = new_node(state, parents=[root, b], dirname="C")
-    d = new_node(state, parents=[a], dirname="D")
-    e = new_node(state, parents=[a,b,c,d], dirname="E")
-    f = new_node(state, parents=[e, d], dirname="F")
-    c.add_child(root)
-    d.add_child(root)
+    # root = new_node(state, dirname="root")
+    # a = new_node(state, parents=[root], dirname="A")
+    # b = new_node(state, parents=[a], dirname="B")
+    # c = new_node(state, parents=[root, b], dirname="C")
+    # d = new_node(state, parents=[a], dirname="D")
+    # e = new_node(state, parents=[a,b,c,d], dirname="E")
+    # f = new_node(state, parents=[e, d], dirname="F")
+    # c.add_child(root)
+    # d.add_child(root)
+    nodes = make_graph(dirnames, adj_mat)
+    root, a, b, c, d, e, f = [nodes[name] for name in dirnames]
 
     # l = numpts - len(state.nodes)
     # for i in range(l):

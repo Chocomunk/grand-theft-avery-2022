@@ -56,8 +56,8 @@ class Node:
     next_id = 0         # Keeps track of the next available unique-id
     id_to_node: List[Node] = []
 
-    def __init__(self, parents: List[Node]=[], dirname="New Folder", 
-                directory: Directory=None, master=False):
+    def __init__(self, dirname="New Folder", parents: List[Node]=[], 
+                directory: Directory=None):
         # Set unique id
         self.id = Node.next_id
         Node.next_id += 1
@@ -117,7 +117,10 @@ class Node:
     def add_child(self, child_node: Node):
         self.children.append(child_node)
         self.navref[child_node.directory.name] = child_node
-        child_node.navref[self.directory.name] = self
+
+    def add_parent(self, parent_node: Node):
+        self.parents.append(parent_node)
+        self.navref[parent_node.directory.name] = parent_node
 
     def find_neighbor(self, dirname) -> Optional[Node]:
         """ Returns a neighbor to this node if it exists. Else, return None """
@@ -145,4 +148,24 @@ class Node:
 
     def list_children(self):
         return [c.directory.name for c in self.children]
+
+
+def make_graph(dirnames, adj_mat):
+    """
+    Builds a graph from the directory names and adjacency matrix.
+    (row, col) -> (parent, child)
+    """
+    n = len(dirnames)
+    if len(set(dirnames)) != n:
+        raise ValueError("Duplicate directory name")
+    
+    nodes = [Node(dirname=name) for name in dirnames] 
+    for i in range(n):
+        parent = nodes[i]
+        for j in range(n):
+            if adj_mat[i][j]:
+                parent.add_child(nodes[j])
+                nodes[j].add_parent(parent)
+
+    return {dirnames[i]: nodes[i] for i in range(n)}
         
