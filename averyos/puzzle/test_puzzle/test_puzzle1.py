@@ -69,7 +69,7 @@ def test_puzzle1():
     # This function unlocks F when C is stepped on 
     def f_lock(n: Node):
         locked = not state.c_trigger
-        print("Checking func-lock on {0}... Locked: {1}".format(n.directory.name, locked))
+        print("Checking func-lock on {0}... Locked: {1}".format(f.directory.name, locked))
         return locked
     
     # This function signals that C is stepped on 

@@ -94,7 +94,10 @@ class RenderWidget(Widget):
         pg.draw.polygon(surf, COLOR_ARROW, (point1, point2, point3))
 
     def draw_node(self,surf, node):
-        x, y = ENV.plotter.get_pos(node)
+        pos = ENV.plotter.get_pos(node)
+        if not pos:
+            return
+        x, y = pos
 
         # Determine node color
         if node == ENV.curr_node:

@@ -2,12 +2,13 @@ import pygame as pg
 
 from shell.shell import Shell
 from puzzle.test_puzzle.test_puzzle1 import test_puzzle1
+from puzzle.dday_puzzle.puzzle import build_graph
 
 from gui.window import OSWindow
 
 
 if __name__ == '__main__':
-    root, msg = test_puzzle1()
+    root, msg = build_graph()
     shell = Shell(root, msg)
 
     pg.init()
