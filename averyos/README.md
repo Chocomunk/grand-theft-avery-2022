@@ -50,6 +50,7 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Make minimap
   - `cat` GUI
     - Opens a widget that displays text
+    - [ ] Scrolling on images
     - [ ] Make it pretty?
     - [ ] Remove added test text
   - `unlock` GUI
