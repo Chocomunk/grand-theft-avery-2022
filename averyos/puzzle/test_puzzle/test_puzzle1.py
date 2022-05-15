@@ -53,7 +53,7 @@ def test_puzzle1():
     # Define state tracker
     state = PuzzleState
 
-    load_mesh("puzzle/Example-Spiral-Mesh.csv")
+    load_mesh("puzzle/test_puzzle/Example-Spiral-Mesh.csv")
         
     # Build FS graph
     nodes = make_graph(dirnames, adj_mat)
@@ -62,9 +62,9 @@ def test_puzzle1():
     # Add files
     shared = File("shared.txt", "shared text")
     a.directory.add_file(File("a.txt", "a text\nNext Line"))
-    b.directory.add_file(File("b.txt", filepath="puzzle/b.txt"))
+    b.directory.add_file(File("b.txt", filepath="puzzle/test_puzzle/b.txt"))
     c.directory.add_file(shared)
-    c.directory.add_file(File("space-cat.png", filepath="puzzle/space-cat.png", is_image=True))
+    c.directory.add_file(File("space-cat.png", filepath="puzzle/test_puzzle/space-cat.png"))
     d.directory.add_file(shared)
     f.directory.add_file(File("f.txt", "ooga\nbooga"))
 

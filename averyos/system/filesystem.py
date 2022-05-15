@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import imghdr
 from typing import Callable, Dict, List, Optional
 
 from system.program import ProgramBase
@@ -7,11 +9,11 @@ from system.program import ProgramBase
 # TODO: Check filepath extension to see if file is an image
 class File:
 
-    def __init__(self, filename, data=None, filepath=None, is_image=False):
+    def __init__(self, filename, data=None, filepath=None):
         self.name = filename
         self.data = data
         self.filepath = filepath
-        self.is_image = is_image
+        self.is_image = False if not filepath else imghdr.what(filepath) != None
 
     def get_data(self):
         if self.is_image:
