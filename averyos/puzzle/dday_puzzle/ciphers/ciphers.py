@@ -134,4 +134,4 @@ def build_cipher_graph():
         h+=H
     pts.append((0,h))
 
-    return caesar_nodes[0], MeshPlotter(pts, radius=2)
+    return caesar_nodes[0], MeshPlotter(pts, radius=50).transform(scale=30,angle=-30)

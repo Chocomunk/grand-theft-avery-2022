@@ -36,7 +36,7 @@ class RenderWidget(Widget):
         self.nodes = self.visible if not nodes else nodes
 
         # Initialize the surface and draw the map
-        w, h = ENV.plotter.set_scale(self.nodes, size=size)
+        w, h = ENV.plotter.set_scale(self.nodes)
         self.map_surf = pg.Surface((w,h), pg.SRCALPHA, 32)
         self.draw_map(self.map_surf)
 
