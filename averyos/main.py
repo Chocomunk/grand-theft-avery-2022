@@ -7,8 +7,8 @@ from gui.window import OSWindow
 
 
 if __name__ == '__main__':
-    root = test_puzzle1()
-    shell = Shell(root)
+    root, msg = test_puzzle1()
+    shell = Shell(root, msg)
 
     pg.init()
 

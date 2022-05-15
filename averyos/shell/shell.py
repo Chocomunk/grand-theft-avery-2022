@@ -26,10 +26,10 @@ def sheesh_split(s: str):
 # TODO: Validate arg[i] values for every shell command
 class Shell:
 
-    def __init__(self, root: Node):
+    def __init__(self, root: Node, start_msg=None):
         # Initialize FS and ENV
-        # ENV.reset()
         self.root = root
+        self.start_msg = start_msg
         ENV.visited_nodes.add(root)
         ENV.curr_node = root
         ENV.path = usrbin_progs()
@@ -40,6 +40,10 @@ class Shell:
 
     def set_gui(self, gui_win):
         self.gui = gui_win
+
+    def start(self):
+        if self.start_msg:
+            print(self.start_msg)
 
     def prompt(self):
         return ENV.prompt_base.format(pwd=ENV.curr_node.directory.name)

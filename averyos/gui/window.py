@@ -81,6 +81,9 @@ class OSWindow(Window):
         self.viewstack = []
         self.viewtag = OSWindow.MAIN_TAG
 
+        # Start shell
+        shell.start()
+
     # TODO: Consider ways to handle repeat tags
     def push_view(self, tag, view: Widget):
         """ 

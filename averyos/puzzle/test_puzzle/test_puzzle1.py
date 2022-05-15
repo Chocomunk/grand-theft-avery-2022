@@ -95,4 +95,4 @@ def test_puzzle1():
     e.set_password("gug ma")
     f.set_lock_func(f_lock)
 
-    return root
+    return root, "Welcome to the AveryOS Test Puzzle!"
