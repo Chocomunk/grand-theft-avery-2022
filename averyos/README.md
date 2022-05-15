@@ -26,12 +26,8 @@ allows the OS to be decoupled from any specific puzzle designs.
     back to the AveryOS backend.
 - Puzzles
   - [ ] Make tutorial puzzle
-  - [ ] Write a function to convert an adjacency matrix and a list of names to a
+  - [x] Write a function to convert an adjacency matrix and a list of names to a
         FS graph.
-- File System
-  - [ ] Keep track of whether nodes are visited.
-    - Also consider keeping track of whether all of a node's connections are
-      visited (both child+parent? or separately?)
 - GUI
   - [ ] Make all the margins/padding line up
   - Terminal GUI
@@ -46,15 +42,22 @@ allows the OS to be decoupled from any specific puzzle designs.
   - `map` GUI (`render`)
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
+    - [ ] Convert interface to big map
+      - [ ] Render map normally on a surface
+      - [ ] Use arrow keys for panning
+      - [ ] Scroll to zoom
+      - [ ] Grid lines?
     - [ ] Fix radius scaling
     - [ ] Make minimap
   - `cat` GUI
     - Opens a widget that displays text
     - [x] Scrolling on images
+      - [ ] Blit with rect for efficiency
     - [ ] Make it pretty?
     - [ ] Remove added test text
   - `unlock` GUI
-    - [ ] Pause/animations after answers
+    - [x] Pause/animations after answers
+    - [ ] Multiple passwords for a node
     - [ ] Make it pretty
 - Shell
   - [ ] Add input pre-processing callbacks
