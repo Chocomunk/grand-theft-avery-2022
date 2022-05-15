@@ -46,6 +46,7 @@ allows the OS to be decoupled from any specific puzzle designs.
   - `map` GUI (`render`)
     - Call `map` to toggle either a "Map" view or pane.
     - Cannot be shown with `ls`
+    - [ ] Fix radius scaling
     - [ ] Make minimap
   - `cat` GUI
     - Opens a widget that displays text
