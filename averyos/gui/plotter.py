@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from abc import ABC, abstractmethod
 
 from system.filesystem import Node
@@ -61,19 +63,34 @@ class Plotter(ABC):
 
 class MeshPlotter(Plotter):
 
-    def __init__(self, pts, radius: int=3, *args, **kwargs):
+    def __init__(self, pts: List, ids: List[int]=None, radius: int=3, *args, **kwargs):
         super().__init__(radius, *args, **kwargs)
+        if not ids:
+            self.ids = {i: i for i in range(len(pts))}
+        else:
+            self.ids = {v: i for i, v in enumerate(ids)}
         self.points = pts
         self.l, self.t = 0, 0
 
+    def extend(self, other: MeshPlotter, offset=(0,0)):
+        if len(set(self.ids).intersection(set(other.ids))):
+            raise ValueError("Overlapping MeshPlotter node ids")
+
+        x, y = offset
+        self.ids.update(other.ids)
+        self.points.extend([(px+x, py+y) for px, py in other.points])
+
+    def id_to_point(self, i):
+        return self.points[self.ids[i]]
+
     def _node_dims(self, nodes: List[Node]):
-        ids = [n.id for n in nodes if n.id < len(self.points)]
-        self.l, self.t, w, h = self.pts_dims([self.points[i] for i in ids])
+        ids = [n.id for n in nodes if n.id in self.ids]
+        self.l, self.t, w, h = self.pts_dims([self.id_to_point(i) for i in ids])
         return w, h
 
     def _node_pos(self, node: Node):
-        if node.id < len(self.points):
-            x, y = self.points[node.id]
+        if node.id in self.ids:
+            x, y = self.id_to_point(node.id)
             u = self._r + x - self.l
             v = self._r + y - self.t
             return u, v

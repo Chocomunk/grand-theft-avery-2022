@@ -1,14 +1,12 @@
 """
 An example puzzle design
 """
-import csv
-
 from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.program import CLIProgramBase
 from system.filesystem import File, Node
 
-from puzzle.util import make_graph, add_dir_files
+from puzzle.util import load_points, make_graph, add_dir_files
 
 
 # ---------------------------- Global Puzzle State ---------------------------- 
@@ -25,15 +23,6 @@ class CheckC(CLIProgramBase):
 
     def cli_main(self, args):
         print("C triggered: {0}".format(PuzzleState.c_trigger))
-
-
-def load_mesh(filename):
-    pts = []
-    with open(filename) as f:
-        data = csv.reader(f, delimiter=',')
-        pts = [(float(x), float(z)) for (x,_,z) in data]
-    ENV.plotter = MeshPlotter(pts)
-    return len(pts)
 
 
 dirnames = ["root", "A", "B", "C", "D", "E", "F"]
@@ -55,7 +44,8 @@ def test_puzzle1():
     # Define state tracker
     state = PuzzleState
 
-    load_mesh("puzzle/test_puzzle/Example-Spiral-Mesh.csv")
+    pts = load_points("puzzle/test_puzzle/Example-Spiral-Mesh.csv")
+    ENV.plotter = MeshPlotter(pts)
         
     # Build FS graph
     nodes = make_graph(dirnames, adj_mat)

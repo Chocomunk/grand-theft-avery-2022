@@ -1,6 +1,13 @@
 import os
+import csv
 
 from system.filesystem import Node, File
+
+
+def load_points(filename):
+    with open(filename) as f:
+        data = csv.reader(f, delimiter=',')
+        return [(float(x), float(y)) for (x,y) in data]
 
 
 def make_graph(dirnames, adj_mat):
