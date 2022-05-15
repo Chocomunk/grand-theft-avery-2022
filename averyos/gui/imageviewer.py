@@ -40,10 +40,8 @@ class ImageViewerWidget(Widget):
         ih = self.image.get_height()
         sh = surf.get_height()
         self.offset = max(0, min(self.offset, ih - sh))
-        x, y = self.pos
-        y -= self.offset
 
-        surf.blit(self.image, (x,y))
+        surf.blit(self.image, self.pos, pg.Rect(0,self.offset,sw,sh))
 
         # Draw hint
         hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
