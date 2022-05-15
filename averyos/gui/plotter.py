@@ -48,7 +48,6 @@ class Plotter(ABC):
 
     @property
     def r(self):
-        print(self._r, self.scale, int(self._r * self.scale), self.max_r)
         return min(int(self._r * self.scale), self.max_r)
 
     @abstractmethod

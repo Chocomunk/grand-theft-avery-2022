@@ -1,4 +1,3 @@
-import sys
 import pygame as pg
 
 from gui.widget import Widget
@@ -17,19 +16,34 @@ class ImageViewerWidget(Widget):
         self.pos = pos
         self.finish_cb = on_finish
         self.image = pg.image.load(filepath).convert_alpha()
+        self.offset = 0
 
     # NOTE: assumes that this widget is always active.
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 self.finish_cb()
+        elif event.type == pg.MOUSEWHEEL:
+            self.offset = max(0, self.offset - event.y)
 
     def update(self):
         pass
 
     # TODO: Turn hard-coded adjustments into constants
     def draw(self, surf: pg.Surface):
-        surf.blit(self.image, self.pos)
+        iw = self.image.get_width()
+        sw = surf.get_width() + 20
+        if iw > sw:
+            h = int(self.image.get_height() * sw / iw)
+            self.image = pg.transform.scale(self.image, (sw, h))
+        
+        ih = self.image.get_height()
+        sh = surf.get_height()
+        self.offset = max(0, min(self.offset, ih - sh))
+        x, y = self.pos
+        y -= self.offset
+
+        surf.blit(self.image, (x,y))
 
         # Draw hint
         hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
