@@ -12,8 +12,6 @@ from system.filesystem import File, Directory, Node, make_graph
 # ---------------------------- Global Puzzle State ---------------------------- 
 class PuzzleState:
     """ Keeps track of global puzzle variables """
-    nodes = []
-
     c_trigger = False       # Should be set to True when we step on 'c'
 
 
@@ -25,14 +23,6 @@ class CheckC(CLIProgramBase):
 
     def cli_main(self, args):
         print("C triggered: {0}".format(PuzzleState.c_trigger))
-
-
-def new_node(state, parents=[], dirname="New Folder", directory: Directory=None):
-    """ Wraps Node creation for state manipulation """
-    n = Node(parents=parents, dirname=dirname, directory=directory)
-    print("Created Node {0} (id {1})".format(n.directory.name, n.id))
-    state.nodes.append(n)
-    return n
 
 
 def load_mesh(filename):
@@ -63,24 +53,11 @@ def test_puzzle1():
     # Define state tracker
     state = PuzzleState
 
-    numpts = load_mesh("puzzle/Example-Spiral-Mesh.csv")
+    load_mesh("puzzle/Example-Spiral-Mesh.csv")
         
     # Build FS graph
-    # root = new_node(state, dirname="root")
-    # a = new_node(state, parents=[root], dirname="A")
-    # b = new_node(state, parents=[a], dirname="B")
-    # c = new_node(state, parents=[root, b], dirname="C")
-    # d = new_node(state, parents=[a], dirname="D")
-    # e = new_node(state, parents=[a,b,c,d], dirname="E")
-    # f = new_node(state, parents=[e, d], dirname="F")
-    # c.add_child(root)
-    # d.add_child(root)
     nodes = make_graph(dirnames, adj_mat)
     root, a, b, c, d, e, f = [nodes[name] for name in dirnames]
-
-    # l = numpts - len(state.nodes)
-    # for i in range(l):
-    #     new_node(state, dirname="fake"+str(i))
 
     # Add files
     shared = File("shared.txt", "shared text")

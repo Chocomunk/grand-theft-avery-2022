@@ -1,11 +1,7 @@
 import pygame as pg
 
 from shell.shell import Shell
-from puzzle.test_puzzle1 import test_puzzle1
-import tkinter as tk
-from terminal import Terminal
-
-from gui.window import OSWindow
+from puzzle.test_puzzle.test_puzzle1 import test_puzzle1
 
 from gui.window import OSWindow
 
