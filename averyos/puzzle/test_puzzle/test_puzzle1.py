@@ -6,7 +6,9 @@ import csv
 from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.program import CLIProgramBase
-from system.filesystem import File, Directory, Node, make_graph
+from system.filesystem import File, Node
+
+from puzzle.util import make_graph, add_dir_files
 
 
 # ---------------------------- Global Puzzle State ---------------------------- 
