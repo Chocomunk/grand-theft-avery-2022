@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-import imghdr
 from typing import Callable, Dict, List, Optional
 
 from system.program import ProgramBase
+
+
+IMG_EXTENSIONS = ["png", "jpg", "svg", "gif", "pdf"]
 
 
 # TODO: Check filepath extension to see if file is an image
@@ -13,7 +15,10 @@ class File:
         self.name = filename
         self.data = data
         self.filepath = filepath
-        self.is_image = False if not filepath else imghdr.what(filepath) != None
+        if not filepath:
+            self.is_image = False
+        else:
+            self.is_image = filepath.split('.')[1] in IMG_EXTENSIONS
 
     def get_data(self):
         if self.is_image:

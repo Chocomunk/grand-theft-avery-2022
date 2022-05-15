@@ -72,13 +72,14 @@ class MeshPlotter(Plotter):
         self.points = pts
         self.l, self.t = 0, 0
 
-    def extend(self, other: MeshPlotter, offset=(0,0)):
+    def extend(self, other: MeshPlotter, offset=(0,0), scale=1):
         if len(set(self.ids).intersection(set(other.ids))):
             raise ValueError("Overlapping MeshPlotter node ids")
 
         x, y = offset
+        s = scale
         self.ids.update(other.ids)
-        self.points.extend([(px+x, py+y) for px, py in other.points])
+        self.points.extend([(s*px+x, s*py+y) for px, py in other.points])
 
     def id_to_point(self, i):
         return self.points[self.ids[i]]
