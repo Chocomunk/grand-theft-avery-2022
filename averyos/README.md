@@ -5,8 +5,8 @@
 To run locally, simply call `python main.py`, and a shell instance and example
 file system will be started.
 
-You can define your own filesystem setup (`filesystem_gen.py`) and run a shell 
-on it as shown in `main.py`
+You can define your own filesystem (`puzzle/` folder for examples) and run a 
+shell on it as shown in `main.py`
 
 ## Development
 
@@ -20,14 +20,8 @@ allows the OS to be decoupled from any specific puzzle designs.
 
 ### Todo
 
-- [ ] Start Puzzle state webserver
-  - AveryOS backend send puzzle state to webserver.
-  - Webserver serves (mobile-friendly) websites to users and forwards user interactions
-    back to the AveryOS backend.
 - Puzzles
   - [ ] Make tutorial puzzle
-  - [x] Write a function to convert an adjacency matrix and a list of names to a
-        FS graph.
 - GUI
   - [ ] Make all the margins/padding line up
   - Terminal GUI
@@ -35,38 +29,15 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Clean up color and font handling
       - Color for prompt?
   - `ls` GUI
-    - Call `ls` to toggle a "Directory" pane on the LHS
-    - Cannot be shown with `map`
     - [ ] Add section headers/titles
     - [ ] Add icons
   - `map` GUI (`render`)
-    - Call `map` to toggle either a "Map" view or pane.
-    - Cannot be shown with `ls`
-    - [ ] Convert interface to big map
-      - [ ] Render map normally on a surface
-      - [ ] Use arrow keys for panning
-      - [ ] Scroll to zoom
-      - [ ] Grid lines?
-    - [ ] Fix radius scaling
     - [ ] Make minimap
   - `cat` GUI
-    - Opens a widget that displays text
-    - [x] Scrolling on images
-      - [ ] Blit with rect for efficiency
     - [ ] Make it pretty?
     - [ ] Remove added test text
   - `unlock` GUI
-    - [x] Pause/animations after answers
     - [ ] Multiple passwords for a node
     - [ ] Make it pretty
 - Shell
   - [ ] Add input pre-processing callbacks
-
-- Misc Ideas:
-  - Visibility (similar to locks, but for whether nodes can be seen and navigated)
-  - Adding files to the path (or smth similar). Global visibility for some files
-  - Alias for commands
-  - Store programs per-node rather than per-directory
-    - If we allow users to move or link directories, then could have puzzles
-      requiring files to be moved to certain nodes for programs to see them.
-    - Also good for printing.
