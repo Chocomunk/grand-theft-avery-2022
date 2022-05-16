@@ -89,8 +89,9 @@ class Node:
         # Point to both children and parents for navigating.
         self.navref: Dict[str, Node] = {}
         self.children: List[Node] = []
-        self.parents: List[Node] = parents
+        self.parents: List[Node] = []
         for parent in parents:
+            self.add_parent(parent)
             parent.add_child(self)
 
         # Add node to id_to_node map

@@ -48,12 +48,9 @@ class Plotter(ABC):
 
 class MeshPlotter(Plotter):
 
-    def __init__(self, pts: List, ids: List[int]=None, radius: int=3, *args, **kwargs):
+    def __init__(self, pts: List, ids: List[int], radius: int=3, *args, **kwargs):
         super().__init__(radius, *args, **kwargs)
-        if not ids:
-            self.ids = {i: i for i in range(len(pts))}
-        else:
-            self.ids = {v: i for i, v in enumerate(ids)}
+        self.ids = {v: i for i, v in enumerate(ids)}
         self.points = pts
         self.l, self.t = 0, 0
 
@@ -73,7 +70,9 @@ class MeshPlotter(Plotter):
     def extend(self, other: MeshPlotter) -> MeshPlotter:
         if len(set(self.ids).intersection(set(other.ids))):
             raise ValueError("Overlapping MeshPlotter node ids")
-        self.ids.update(other.ids)
+        l = len(self.points)
+        new_ids = {v: i+l for v,i in other.ids.items()}     # Shift id refs
+        self.ids.update(new_ids)
         self.points.extend(other.points)
 
     def id_to_point(self, i):

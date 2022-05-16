@@ -45,7 +45,7 @@ def test_puzzle1():
     state = PuzzleState
 
     pts = load_points("puzzle/test_puzzle/Example-Spiral-Mesh.csv")
-    ENV.plotter = MeshPlotter(pts)
+    ENV.plotter = MeshPlotter(pts, list(range(len(pts))))
         
     # Build FS graph
     nodes = make_graph(dirnames, adj_mat)
