@@ -1,7 +1,7 @@
 import math
 
 import pygame as pg
-from pygame.gfxdraw import aacircle, filled_circle
+from pygame.gfxdraw import aacircle, filled_circle, aapolygon, filled_polygon
 
 from shell.env import ENV
 from gui.widget import Widget
@@ -20,14 +20,18 @@ FONT = pg.font.SysFont('Consolas', 18)
 TXT_W, TXT_H = FONT.size("O")
 
 
+PADDING = 20
+PAN_SPEED = 30
+
+
+# TODO: Add hint for exit and controls
 class RenderWidget(Widget):
 
     def __init__(self, size, on_finish, nodes=None, arrow_size=10):
         self.finish_cb = on_finish
         self.arrow_size = arrow_size
-
-        self.l = 0
-        self.t = 0
+        self.offx = 0
+        self.offy = 0
 
         # Get visited nodes and all their children (visible nodes)
         self.visible = ENV.visited_nodes.copy()
@@ -37,25 +41,65 @@ class RenderWidget(Widget):
 
         # Initialize the surface and draw the map
         w, h = ENV.plotter.set_scale(self.nodes)
+        self.base_map = pg.Surface((w,h), pg.SRCALPHA, 32)
+        self.draw_map(self.base_map)
         self.map_surf = pg.Surface((w,h), pg.SRCALPHA, 32)
-        self.draw_map(self.map_surf)
+        self.map_surf.blit(self.base_map, (0,0))
+
+        # Scale by height
+        self.h = h
+
+        # Compute start position. Center on the current node then find top-left corner
+        sw, sh = size
+        cx, cy = sw // 2, sh // 2
+        nx, ny = ENV.plotter.get_pos(ENV.curr_node)
+        self.x = max(min(PADDING, cx-nx), sw-w-PADDING)
+        self.y = max(min(PADDING, cy-ny), sh-h-PADDING)
 
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 self.finish_cb()
+            if event.key == pg.K_UP:
+                self.y += PAN_SPEED
+            if event.key == pg.K_DOWN:
+                self.y -= PAN_SPEED
+            if event.key == pg.K_LEFT:
+                self.x += PAN_SPEED
+            if event.key == pg.K_RIGHT:
+                self.x -= PAN_SPEED
+        elif event.type == pg.MOUSEWHEEL:
+            self.h += event.y
 
-    # TODO: Update when chanding directory
     def update(self):
-        pass
+        # Scale map if needed
+        self.h = min(max(self.h, 2), 2000)
+        if self.h != self.map_surf.get_height():
+            r = self.h / self.base_map.get_height()
+            w = int(self.base_map.get_width() * r)
+            self.map_surf = pg.transform.smoothscale(self.base_map, (w,self.h))
+            
 
     def draw(self, surf: pg.Surface):
-        # Draw map onto parent surface (centered)
+        # Center map on the parent surface then find the top-left corner
         w, h = surf.get_size()
-        m_w, m_h = self.map_surf.get_size()
+        mw, mh = self.map_surf.get_size()
         cx, cy = w // 2, h // 2
-        px, py = cx - m_w // 2, cy - m_h // 2
-        surf.blit(self.map_surf, (px, py))
+        mcx, mcy = mw//2, mh//2
+        mx, my = cx - mcx, cy - mcy
+
+        # Offset and clip
+        x, y = mx, my           # Center map if smaller than the screen
+        if mw > w:
+            x = max(min(PADDING, self.x), w-mw-PADDING)
+        if mh > h:
+            y = max(min(PADDING, self.y), h-mh-PADDING)
+
+        self.x, self.y = x, y
+
+        # Draw map
+        # pg.draw.rect(surf, (255,0,0), pg.Rect(x, y, mw, mh))
+        surf.blit(self.map_surf, (x, y))
 
     def draw_map(self, surf):
         # Draw connections between nodes
@@ -91,7 +135,8 @@ class RenderWidget(Widget):
                     mid_y + s * math.cos(rot - ang))
         point3 = (mid_x + s * math.sin(rot + ang),
                     mid_y + s * math.cos(rot + ang))
-        pg.draw.polygon(surf, COLOR_ARROW, (point1, point2, point3))
+        aapolygon(surf, (point1, point2, point3), COLOR_ARROW)
+        filled_polygon(surf, (point1, point2, point3), COLOR_ARROW)
 
     def draw_node(self,surf, node):
         pos = ENV.plotter.get_pos(node)

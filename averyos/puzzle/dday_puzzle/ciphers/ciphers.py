@@ -119,13 +119,13 @@ def build_cipher_graph():
     K.set_lock_func(pub_locked)
 
     # Generate mesh
-    H = 4
+    H = 5
     h = 0
     pts = []
     for _ in range(2):
         pts.append((0, h))
         h+=H
-        pts.extend([(-10,h), (0,h), (10,h)])
+        pts.extend([(-7,h), (0,h), (7,h)])
         h+=H
     for _ in range(3):
         pts.append((0, h))
@@ -134,4 +134,4 @@ def build_cipher_graph():
         h+=H
     pts.append((0,h))
 
-    return caesar_nodes[0], MeshPlotter(pts, radius=50).transform(scale=30,angle=-30)
+    return caesar_nodes[0], MeshPlotter(pts, radius=75).transform(scale=60,angle=0)
