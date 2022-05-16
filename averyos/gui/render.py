@@ -16,15 +16,19 @@ COLOR_EDGE = pg.Color("#F1FFFA")
 # COLOR_ARROW = pg.Color("#464E47")
 COLOR_ARROW = COLOR_EDGE
 COLOR_TEXT = COLOR_EDGE
+COLOR_OUT = pg.Color('lightskyblue3')
 FONT = pg.font.SysFont('Consolas', 18)
+FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
 TXT_W, TXT_H = FONT.size("O")
 
 
 PADDING = 20
 PAN_SPEED = 30
+SCALE_SPEED = 0.05
+MIN_SCALE = 0.25
+MAX_SCALE = 3
 
 
-# TODO: Add hint for exit and controls
 class RenderWidget(Widget):
 
     def __init__(self, size, on_finish, nodes=None, arrow_size=10):
@@ -48,6 +52,7 @@ class RenderWidget(Widget):
 
         # Scale by height
         self.h = h
+        self.scale = 1.
 
         # Compute start position. Center on the current node then find top-left corner
         sw, sh = size
@@ -69,15 +74,15 @@ class RenderWidget(Widget):
             if event.key == pg.K_RIGHT:
                 self.x -= PAN_SPEED
         elif event.type == pg.MOUSEWHEEL:
-            self.h += event.y
+            self.scale += event.y * SCALE_SPEED
 
     def update(self):
         # Scale map if needed
-        self.h = min(max(self.h, 2), 2000)
-        if self.h != self.map_surf.get_height():
-            r = self.h / self.base_map.get_height()
-            w = int(self.base_map.get_width() * r)
-            self.map_surf = pg.transform.smoothscale(self.base_map, (w,self.h))
+        self.scale = min(max(self.scale, MIN_SCALE), MAX_SCALE)
+        h = self.scale * self.h
+        if int(h) != self.map_surf.get_height():
+            w = int(self.base_map.get_width() * self.scale)
+            self.map_surf = pg.transform.smoothscale(self.base_map, (w,int(h)))
             
 
     def draw(self, surf: pg.Surface):
@@ -98,8 +103,14 @@ class RenderWidget(Widget):
         self.x, self.y = x, y
 
         # Draw map
-        # pg.draw.rect(surf, (255,0,0), pg.Rect(x, y, mw, mh))
+        # pg.draw.rect(surf, (255,0,0), pg.Rect(x, y, mw, mh))      # NOTE: Debugging rect
         surf.blit(self.map_surf, (x, y))
+
+        # Draw hints
+        hint = FONT_HINT.render("Move with arrow keys, zoom with scroll", True, COLOR_OUT)
+        surf.blit(hint, (surf.get_width() - hint.get_width() - 10, 10))
+        hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
+        surf.blit(hint, (surf.get_width() - hint.get_width() - 10, 15 + hint.get_height()))
 
     def draw_map(self, surf):
         # Draw connections between nodes
