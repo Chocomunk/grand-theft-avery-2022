@@ -26,6 +26,8 @@ class PasswordWidget(Widget):
         self.anim_time = 0
         self.offset = 0
 
+        self.box_surf = self.draw_boxes()
+
     def handle_event(self, event: pg.event.Event):
         if self.active:
             if event.type == pg.KEYDOWN:
@@ -36,21 +38,23 @@ class PasswordWidget(Widget):
                 # Type or delete text
                 if event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
-                else:
+                elif not event.key == pg.K_RETURN:
                     self.text += event.unicode
 
-    # TODO: no pwd/fail/success animations
     def update(self):
+        # Compute offset
         t = time.time() - self.anim_time
         if 0.25 > t:
             self.offset = math.sin(t*8*math.pi) * 50
         else:
             self.offset = 0
 
+        # Check if password is cleared
         if not self.answer:
             self.finish_cb("")
             return
 
+        # Check attempt against answer
         ans = "".join(self.answer.split())
         ans_len = len(ans)
         if len(self.text) >= ans_len:
@@ -62,36 +66,43 @@ class PasswordWidget(Widget):
                 self.text = ""
 
 
-    # TODO: figure out sizes before-hand
     # TODO: set padding as constants
     def draw(self, surf: pg.Surface):
-        surfs = []
-        width = 0
-        height = TXT_H + 20
-        for c in self.answer:
-            width += TXT_W + self.spacing + 20
-            # height = max(height, txt_surf.get_height() + 20)
-            if c != " ":
-                txt_surf = FONT.render(c, True, COLOR_OUT)
-                surfs.append(txt_surf)
-            else:
-                surfs.append(None)
+        # Draw boxes centered
+        cx, cy = surf.get_width() // 2, surf.get_height() // 2       
+        bw, bh = self.box_surf.get_size()
+        px, py = cx - bw // 2, cy - bh // 2
+        x, y = px + self.offset, py
+        surf.blit(self.box_surf, (x,y))
 
-        tmp_surf = pg.Surface((width, height), pg.SRCALPHA, 32)
-        x, y = 0, 0
-        i = 0
-        for txt_surf in surfs:
-            if txt_surf:
-                pg.draw.rect(tmp_surf, (15, 15, 15), 
-                            pg.Rect(x, y, TXT_W + 20, height))
-                if i < len(self.text):
-                    usr_txt = FONT.render(self.text[i], True, COLOR_OUT)
-                    tmp_surf.blit(usr_txt, (x+10, y+10))
-                i += 1
+        # Draw text
+        self.draw_text(surf, (x,y))
+
+        # Draw hint
+        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))
+
+    def draw_boxes(self):
+        width = (TXT_W + self.spacing + 20) * len(self.answer)
+        height = TXT_H + 20
+        box_surf = pg.Surface((width, height), pg.SRCALPHA, 32)
+
+        x = 0
+        for c in self.answer:
+            if c != " ":
+                pg.draw.rect(box_surf, (15, 15, 15), 
+                            pg.Rect(x, 0, TXT_W + 20, height))
             x += TXT_W + self.spacing + 20
 
-        cx, cy = surf.get_width() // 2, surf.get_height() // 2       
-        px, py = cx - width // 2, cy - height // 2
-        surf.blit(tmp_surf, (px + self.offset, py))
+        return box_surf
 
-        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))
+    def draw_text(self, surf: pg.Surface, pos):
+        x, y = pos
+        i = 0
+        for c in self.text:
+            if self.answer[i] == " ":
+                x += TXT_W + self.spacing + 20
+            while self.answer[i] == " ":
+                i += 1
+            surf.blit(FONT.render(c, True, COLOR_OUT), (x+10, y+10))
+            x += TXT_W + self.spacing + 20
+            i += 1

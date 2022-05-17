@@ -1,16 +1,16 @@
 import sys
-from gui.render import RenderWidget
 
 from shell.env import ENV
 from .filesystem import Node, File
 from .program import ExitCode, ProgramBase, CLIProgramBase
 from .path_utils import path_subdirs, get_file
 
-from gui.view import SplitView, MainView
-from gui.imageviewer import ImageViewerWidget
-from gui.directory import DirectoryWidget
+from gui.render import RenderWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
+from gui.view import SplitView, MainView
+from gui.directory import DirectoryWidget
+from gui.imageviewer import ImageViewerWidget
 
 
 # TODO: Documentation
