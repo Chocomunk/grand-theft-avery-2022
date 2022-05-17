@@ -69,7 +69,7 @@ class MeshPlotter(Plotter):
 
     def extend(self, other: MeshPlotter) -> MeshPlotter:
         if len(set(self.ids).intersection(set(other.ids))):
-            raise ValueError("Overlapping MeshPlotter node ids")
+            raise KeyError("Overlapping MeshPlotter node ids")
         l = len(self.points)
         new_ids = {v: i+l for v,i in other.ids.items()}     # Shift id refs
         self.ids.update(new_ids)
