@@ -108,9 +108,9 @@ class RenderWidget(Widget):
 
         # Draw hints
         hint = FONT_HINT.render("Move with arrow keys, zoom with scroll", True, COLOR_OUT)
-        surf.blit(hint, (surf.get_width() - hint.get_width() - 10, 10))
+        surf.blit(hint, (w - hint.get_width() - 10, 10))
         hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
-        surf.blit(hint, (surf.get_width() - hint.get_width() - 10, 15 + hint.get_height()))
+        surf.blit(hint, (w - hint.get_width() - 10, 15 + hint.get_height()))
 
     def draw_map(self, surf):
         # Draw connections between nodes

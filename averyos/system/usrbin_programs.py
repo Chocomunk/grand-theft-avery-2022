@@ -1,10 +1,10 @@
-import re
 import sys
 from gui.render import RenderWidget
 
 from shell.env import ENV
 from .filesystem import Node, File
 from .program import ExitCode, ProgramBase, CLIProgramBase
+from .path_utils import path_subdirs, get_file
 
 from gui.view import SplitView, MainView
 from gui.imageviewer import ImageViewerWidget
@@ -42,28 +42,6 @@ def usrbin_progs():
         PASSWD_CMD: UnlockPassword(),
         RENDER_CMD: Render()
     }
-
-
-def clean_path(s):
-    return re.sub('//+', '/', s).strip('/')
-
-
-def path_subdirs(dirname):
-    dirname = clean_path(dirname)
-    path = ENV.curr_node.find_node(dirname)
-
-    if not path:
-        pwd = ENV.curr_node.directory.name
-        print("Error: could not find {0} under {1}".format(
-            dirname, pwd), file=sys.stderr)
-        return None
-
-    for node in path:
-        if node.locked():
-            print("Error: {0} is locked!".format(node.directory.name))
-            return None
-
-    return path
 
 
 class SendExit(CLIProgramBase):
@@ -246,32 +224,16 @@ class ListNode(ProgramBase):
 
 class ReadFile(ProgramBase):
 
-    def get_file(self, args) -> File | None:
+    def parse_file(self, args) -> File | None:
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
             return None
 
-        split = clean_path(args[1]).rsplit('/', 1)
-        filename = split[-1]                # Last entry is filename
-
-        if len(split) > 1:
-            path = path_subdirs(split[0])
-            if not path:
-                return None
-            node = path[-1]            # Search under final node in path
-        else:
-            node = ENV.curr_node       # Default search in curr_node
-
-        if filename not in node.directory.files:
-            print("Error: no file named {0} in {1}".format(
-                filename, node.directory.name), file=sys.stderr)
-            return None
-
-        return node.directory.files[filename]
+        return get_file(args[1])
 
     def cli_main(self, args) -> ExitCode:
-        file = self.get_file(args)
+        file = self.parse_file(args)
         if not file:
             return ExitCode.ERROR
         data = file.get_data()
@@ -280,7 +242,7 @@ class ReadFile(ProgramBase):
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
-        file = self.get_file(args)
+        file = self.parse_file(args)
         if not file :
             return ExitCode.ERROR
             

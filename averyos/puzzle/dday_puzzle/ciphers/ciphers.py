@@ -4,6 +4,7 @@ An example puzzle design
 from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
+from .programs.histogram import Histogram
 
 from puzzle.util import load_points, make_graph, add_dir_files
 
@@ -136,5 +137,8 @@ def build_cipher_graph():
 
     nodes = caesar_nodes + trans_nodes + sub_nodes + poly_nodes + pub_nodes
     ids = [n.id for n in nodes]
+
+    hist_prog = Histogram()
+    ENV.path[hist_prog.NAME] = hist_prog
 
     return nodes, MeshPlotter(pts, ids, radius=75).transform(scale=60,angle=0)

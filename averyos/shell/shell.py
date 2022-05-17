@@ -32,7 +32,6 @@ class Shell:
         self.start_msg = start_msg
         ENV.visited_nodes.add(root)
         ENV.curr_node = root
-        ENV.path = usrbin_progs()
 
         # Initialize references
         self.gui = None
