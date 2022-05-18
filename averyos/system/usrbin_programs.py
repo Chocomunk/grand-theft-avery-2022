@@ -5,6 +5,7 @@ from .filesystem import Node, File
 from .program import ExitCode, ProgramBase, CLIProgramBase
 from .path_utils import path_subdirs, get_file
 
+from gui.constants import Colors
 from gui.render import RenderWidget
 from gui.labelbox import LabelBoxWidget
 from gui.password import PasswordWidget
@@ -213,7 +214,7 @@ class ListNode(ProgramBase):
             if gui.viewtag != "nav":        # Set to nav view
                 dir_widg = DirectoryWidget()
                 new_view = SplitView(dir_widg, gui.terminal, gui.size, 
-                                    weight=0.2, bg_color1=(50,50,50))
+                                    weight=0.2, bg_color1=Colors.NAV_BACKGROUND)
                 gui.push_view("nav", new_view)
             else:                               # Unset nav view
                 gui.pop_view()

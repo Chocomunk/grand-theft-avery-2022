@@ -3,7 +3,11 @@ import pygame as pg
 
 pg.init()
 
+
 class Colors:
+    BACKGROUND = pg.Color(30, 30, 30)
+    NAV_BACKGROUND = pg.Color(50,50,50)
+
     TXT_OUT = pg.Color('lightskyblue3')
     TXT_ERR = pg.Color('firebrick1')
     TXT_IN = pg.Color('darkolivegreen1')

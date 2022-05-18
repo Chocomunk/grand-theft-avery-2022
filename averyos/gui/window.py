@@ -10,11 +10,12 @@ from shell.copy_logger import CopyLogger, LogType, LinesLog
 from gui.view import MainView
 from gui.terminal import TerminalWidget
 from gui.widget import Widget
+from gui.constants import Colors
 
 
 class Window:
 
-    def __init__(self, size, flags=0, bg_color=((255, 255, 255))) -> None:
+    def __init__(self, size, flags=0, bg_color=(255, 255, 255)) -> None:
         self.screen = pg.display.set_mode(size, flags)
         self.view = MainView(self.screen.get_size())
         self.bg_color = bg_color
@@ -56,7 +57,7 @@ class OSWindow(Window):
 
     MAIN_TAG = "__MAIN__"
 
-    def __init__(self, shell: Shell, bg_color=(30, 30, 30)) -> None:
+    def __init__(self, shell: Shell, bg_color=Colors.BACKGROUND) -> None:
         # OS window is always fullscreen
         super().__init__((0, 0), pg.FULLSCREEN, bg_color)
 
