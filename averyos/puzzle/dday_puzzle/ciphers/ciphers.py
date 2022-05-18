@@ -96,16 +96,28 @@ def build_poly_graph(parents, lock_func):
     G = Node("G", parents=parents)
     H1 = Node("H1", parents=[G])
     H2 = Node("H2", parents=[G])
+    H3 = Node("H3", parents=[G])
+    H4 = Node("H4", parents=[G])
 
     add_dir_files(G, DIR+"/polyalphabetic")
+    prompt_unlock = UnlockPromptPassword(hidden=True)
+    G.directory.add_program(prompt_unlock.NAME, prompt_unlock)
+
+    H1.prompt = "ptucpcdzlywluvv zs wbt"
+    H2.prompt = "tlicmmbcdhuzmf hliuu"
+    H3.prompt = "z nz o mf hrddwz rtkg"
+    H4.prompt = "y nz lmgyc"
 
     G.set_lock_func(lock_func)
-    # TODO: set passwords
+    H1.set_password("averyprivatekey is two")
+    H2.set_password("myprivatekey is three")
+    H3.set_password("q is p is twenty nine")
+    H4.set_password("g is eight")
 
     def poly_locked(n: Node):
-        return H1.passlocked or H2.passlocked
+        return H1.passlocked or H2.passlocked or H3.passlocked or H4.passlocked
 
-    return [G,H1,H2], poly_locked
+    return [G,H1,H2,H3,H4], poly_locked
 
 
 def build_pub_graph(parents, lock_func):
