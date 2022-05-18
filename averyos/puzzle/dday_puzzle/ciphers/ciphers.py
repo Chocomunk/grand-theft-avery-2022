@@ -97,7 +97,7 @@ def build_poly_graph(parents, lock_func):
     H1 = Node("H1", parents=[G])
     H2 = Node("H2", parents=[G])
 
-    # TODO: add dir files
+    add_dir_files(G, DIR+"/polyalphabetic")
 
     G.set_lock_func(lock_func)
     # TODO: set passwords
@@ -113,7 +113,7 @@ def build_pub_graph(parents, lock_func):
     J1 = Node("J1", parents=[I])
     J2 = Node("J2", parents=[I])
 
-    # TODO: add dir files
+    add_dir_files(I, DIR+"/publickey")
 
     I.set_lock_func(lock_func)
     # TODO: set passwords

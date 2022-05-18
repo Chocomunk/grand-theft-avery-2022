@@ -32,16 +32,21 @@ class ImageViewerWidget(Widget):
     # TODO: Turn hard-coded adjustments into constants
     def draw(self, surf: pg.Surface):
         iw = self.image.get_width()
-        sw = surf.get_width() + 20
+        sw = surf.get_width() - 2*self.pos[0]
         if iw > sw:
             h = int(self.image.get_height() * sw / iw)
             self.image = pg.transform.scale(self.image, (sw, h))
         
+        # Compute offset
         ih = self.image.get_height()
         sh = surf.get_height()
-        self.offset = max(0, min(self.offset, ih - sh))
+        self.offset = max(0, min(self.offset, ih - sh + 2*self.pos[1]))
 
-        surf.blit(self.image, self.pos, pg.Rect(0,self.offset,sw,sh))
+        # Draw at offset shifted position and view
+        x = self.pos[0]
+        y = max(0, self.pos[1] - self.offset)
+        ofs = self.offset - self.pos[1] if y <= 0 else 0
+        surf.blit(self.image, (x,y), pg.Rect(0,ofs,sw,sh))
 
         # Draw hint
         hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
