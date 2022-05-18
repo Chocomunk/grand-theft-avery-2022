@@ -1,5 +1,6 @@
 from system.filesystem import Node
 from gui.plotter import MeshPlotter
+from puzzle.util import add_dir_files
 
 
 # TODO: add exit
@@ -35,6 +36,9 @@ def build_emoji_graph():
 
     n11 = Node("11", parents=[n6,n7])
     n12 = Node("12", parents=[n6,n10])
+
+    # Files
+    add_dir_files(root, "puzzle/dday_puzzle/wordplay/wordgraph")
 
     # Passwords
     n1.set_password("Booty")

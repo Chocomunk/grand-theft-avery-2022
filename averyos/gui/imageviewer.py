@@ -43,8 +43,11 @@ class ImageViewerWidget(Widget):
         self.offset = max(0, min(self.offset, ih - sh + 2*self.pos[1]))
 
         # Draw at offset shifted position and view
-        x = self.pos[0]
-        y = max(0, self.pos[1] - self.offset)
+        x = self.pos[0] + (sw - iw) // 2
+        if ih < sh - 2*self.pos[1]:
+            y = (sh - ih) // 2
+        else:
+            y = max(0, self.pos[1] - self.offset)
         ofs = self.offset - self.pos[1] if y <= 0 else 0
         surf.blit(self.image, (x,y), pg.Rect(0,ofs,sw,sh))
 
