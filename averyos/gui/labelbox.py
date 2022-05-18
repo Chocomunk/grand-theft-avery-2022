@@ -7,7 +7,7 @@ from gui.widget import Widget
 # TODO: Clean up color and font handling
 pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
-FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+FONT = pg.font.SysFont('Consolas', 18)      # Must be a uniform-sized "terminal font"
 FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
 TXT_W, TXT_H = FONT.size("O")
 

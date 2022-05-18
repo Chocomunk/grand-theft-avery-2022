@@ -124,11 +124,14 @@ def build_pub_graph(parents, lock_func):
     return [I,J1,J2], pub_locked
 
 
+# TODO: exit node
+
+
 def build_cipher_graph():
     caesar_nodes, caesar_locked = build_caesar_graph()
     trans_nodes, trans_locked = build_trans_graph(caesar_nodes[1:], caesar_locked)
     sub_nodes, sub_locked = build_sub_graph(trans_nodes[1:], trans_locked)
-    poly_nodes, poly_locked = build_sub_graph(sub_nodes[1:], sub_locked)
+    poly_nodes, poly_locked = build_poly_graph(sub_nodes[1:], sub_locked)
     pub_nodes, pub_locked = build_pub_graph(poly_nodes[1:], poly_locked)
 
     K = Node("K", parents=pub_nodes[1:])

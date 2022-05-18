@@ -1,4 +1,4 @@
-I’ve had a break in the case! I intercepted a message from the Institution. I think they’re using a public key cipher, 
-but I’m not sure what they’ve said. If the Institution thinks this public key business is safe enough for them, it 
-should be safe enough for me. I’ve sent R. Stanton Avery an encrypted message with my latest suspicions. But while he 
-works to decode my message, I need to think about how to crack the Institution’s codes.
+I've had a break in the case! I intercepted a message from the Institution. I think they're using a public key cipher, 
+but I'm not sure what they've said. If the Institution thinks this public key business is safe enough for them, it 
+should be safe enough for me. I've sent R. Stanton Avery an encrypted message with my latest suspicions. But while he 
+works to decode my message, I need to think about how to crack the Institution's codes.
