@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 from abc import ABC, abstractmethod
 
 from system.filesystem import Node
@@ -48,8 +48,8 @@ class Plotter(ABC):
 
 class MeshPlotter(Plotter):
 
-    def __init__(self, pts: List, ids: List[int], radius: int=3, *args, **kwargs):
-        super().__init__(radius, *args, **kwargs)
+    def __init__(self, pts: List, ids: List[int], *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.ids = {v: i for i, v in enumerate(ids)}
         self.points = pts
         self.l, self.t = 0, 0
@@ -59,8 +59,8 @@ class MeshPlotter(Plotter):
         Transforms all points in the order: scale -> rot -> shift.
         Angles are in degrees
         """
-        c = math.cos(math.radians(angle))
-        s = math.sin(math.radians(angle))
+        c = math.cos(math.radians(-angle))
+        s = math.sin(math.radians(-angle))
         def _tf(p):
             x,y = p[0]*scale, p[1]*scale
             return c*x - s*y + shift[0], s*x + c*y + shift[1]
@@ -74,6 +74,7 @@ class MeshPlotter(Plotter):
         new_ids = {v: i+l for v,i in other.ids.items()}     # Shift id refs
         self.ids.update(new_ids)
         self.points.extend(other.points)
+        return self
 
     def id_to_point(self, i):
         return self.points[self.ids[i]]

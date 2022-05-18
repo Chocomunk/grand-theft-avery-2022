@@ -92,7 +92,6 @@ class Node:
         self.children: List[Node] = []
         self.parents: List[Node] = []
         for parent in parents:
-            self.add_parent(parent)
             parent.add_child(self)
 
         # Add node to id_to_node map
@@ -126,10 +125,8 @@ class Node:
     def add_child(self, child_node: Node):
         self.children.append(child_node)
         self.navref[child_node.directory.name] = child_node
-
-    def add_parent(self, parent_node: Node):
-        self.parents.append(parent_node)
-        self.navref[parent_node.directory.name] = parent_node
+        child_node.parents.append(self)
+        child_node.navref[self.directory.name] = self
 
     def find_neighbor(self, dirname) -> Optional[Node]:
         """ Returns a neighbor to this node if it exists. Else, return None """

@@ -3,7 +3,7 @@ An example puzzle design
 """
 from shell.env import ENV
 from gui.plotter import MeshPlotter
-from system.filesystem import File, Node
+from system.filesystem import Node
 from .programs.histogram import Histogram
 from .programs.sub_password import UnlockSubPassword
 from .programs.prompt_password import UnlockPromptPassword
@@ -171,4 +171,4 @@ def build_cipher_graph():
     hist_prog = Histogram()
     ENV.path[hist_prog.NAME] = hist_prog
 
-    return nodes, MeshPlotter(pts, ids, radius=75).transform(scale=60,angle=0)
+    return nodes, MeshPlotter(pts, ids)

@@ -25,7 +25,6 @@ def make_graph(dirnames, adj_mat):
         for j in range(n):
             if adj_mat[i][j]:
                 parent.add_child(nodes[j])
-                nodes[j].add_parent(parent)
 
     return {dirnames[i]: nodes[i] for i in range(n)}
 
