@@ -8,9 +8,15 @@ from gui.widget import Widget
 # TODO: Clean up color and font handling
 pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
+COLOR_BOX = pg.Color(15, 15, 15)
 FONT = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
 FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
 TXT_W, TXT_H = FONT.size("O")
+HNT_H = FONT_HINT.get_height()
+
+SHAKE_DUR = 0.25        # (sec)
+SHAKE_DIST = 15         # (px)
+SHAKE_SPEED = 16        # (hz / pi)
 
 
 class PasswordWidget(Widget):
@@ -22,49 +28,43 @@ class PasswordWidget(Widget):
 
         self.answer = password
         self.text = ""
-        self.active = False         # Should be enabled by creator
         self.anim_time = 0
         self.offset = 0
 
         self.box_surf = self.draw_boxes()
 
     def handle_event(self, event: pg.event.Event):
-        if self.active:
-            if event.type == pg.KEYDOWN:
-                # Leave
-                if event.key == pg.K_ESCAPE:
-                    self.finish_cb(self.text)
+        if event.type == pg.KEYDOWN:
+            # Leave
+            if event.key == pg.K_ESCAPE:
+                self.finish_cb(self.text)
 
-                # Type or delete text
-                if event.key == pg.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                elif not event.key == pg.K_RETURN:
+            elif event.key == pg.K_RETURN:
+                self.attempt()
+
+            # Type or delete text
+            elif event.key == pg.K_BACKSPACE:
+                self.text = self.text[:-1]
+            else:
+                if len(self.text) < len(self.answer):
                     self.text += event.unicode
 
     def update(self):
         # Compute offset
         t = time.time() - self.anim_time
-        if 0.25 > t:
-            self.offset = math.sin(t*8*math.pi) * 50
+        if SHAKE_DUR > t:
+            self.offset = math.sin(SHAKE_SPEED*t*math.pi) * SHAKE_DIST
         else:
             self.offset = 0
 
-        # Check if password is cleared
-        if not self.answer:
-            self.finish_cb("")
-            return
-
+    def attempt(self):
         # Check attempt against answer
         ans = "".join(self.answer.split())
-        ans_len = len(ans)
-        if len(self.text) >= ans_len:
-            if self.text[:ans_len] == ans:
-                # TODO: finish anim
-                self.finish_cb(self.text)
-            else:
-                self.anim_time = time.time()
-                self.text = ""
-
+        if self.text[:len(ans)] == ans:
+            self.finish_cb(self.text)
+        else:
+            self.anim_time = time.time()
+            self.text = ""
 
     # TODO: set padding as constants
     def draw(self, surf: pg.Surface):
@@ -79,7 +79,8 @@ class PasswordWidget(Widget):
         self.draw_text(surf, (x,y))
 
         # Draw hint
-        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,20))
+        surf.blit(FONT_HINT.render("Press (enter) to submit", True, COLOR_OUT), (20,20))
+        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,25+HNT_H))
 
     def draw_boxes(self):
         width = (TXT_W + self.spacing + 20) * len(self.answer)
@@ -89,8 +90,7 @@ class PasswordWidget(Widget):
         x = 0
         for c in self.answer:
             if c != " ":
-                pg.draw.rect(box_surf, (15, 15, 15), 
-                            pg.Rect(x, 0, TXT_W + 20, height))
+                pg.draw.rect(box_surf, COLOR_BOX, pg.Rect(x, 0, TXT_W + 20, height))
             x += TXT_W + self.spacing + 20
 
         return box_surf

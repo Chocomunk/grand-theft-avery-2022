@@ -365,5 +365,4 @@ class UnlockPassword(ProgramBase):
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)
-        passwd_widg.active = True
         return ExitCode.OK

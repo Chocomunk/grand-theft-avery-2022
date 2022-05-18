@@ -5,6 +5,7 @@ from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
 from .programs.histogram import Histogram
+from .programs.sub_password import UnlockSubPassword
 
 from puzzle.util import load_points, make_graph, add_dir_files
 
@@ -140,5 +141,7 @@ def build_cipher_graph():
 
     hist_prog = Histogram()
     ENV.path[hist_prog.NAME] = hist_prog
+    sub_unlock = UnlockSubPassword()
+    caesar_nodes[0].directory.add_program(sub_unlock.NAME, sub_unlock)
 
     return nodes, MeshPlotter(pts, ids, radius=75).transform(scale=60,angle=0)
