@@ -60,7 +60,7 @@ class PasswordWidget(Widget):
     def attempt(self):
         # Check attempt against answer
         ans = "".join(self.answer.split())
-        if self.text[:len(ans)] == ans:
+        if self.text[:len(ans)].lower() == ans.lower():
             self.finish_cb(self.text)
         else:
             self.anim_time = time.time()
