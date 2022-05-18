@@ -8,8 +8,6 @@ from gui.widget import Widget
 # NOTE: You can put views inside other views
 
 
-# TODO: Maybe look into using Rects? Other people use it but im not sure how
-#       useful it is.
 class MainView(Widget):
 
     def __init__(self, size, pos=(0,0), bg_color=(0,0,0,0)):

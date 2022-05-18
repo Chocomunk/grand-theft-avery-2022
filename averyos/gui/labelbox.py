@@ -1,14 +1,12 @@
-import sys
 import pygame as pg
 
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-FONT = pg.font.SysFont('Consolas', 18)      # Must be a uniform-sized "terminal font"
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+COLOR_OUT = Colors.TXT_OUT
+FONT = Fonts.TEXT
+FONT_HINT = Fonts.HINT
 TXT_W, TXT_H = FONT.size("O")
 
 

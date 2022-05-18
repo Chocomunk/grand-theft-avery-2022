@@ -1,15 +1,13 @@
 import pygame as pg
 
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+COLOR_OUT = Colors.TXT_OUT
+FONT_HINT = Fonts.HINT
 
 
-# TODO: support scrolling
 class ImageViewerWidget(Widget):
 
     def __init__(self, filepath, on_finish, pos=(20,20)):
@@ -18,7 +16,6 @@ class ImageViewerWidget(Widget):
         self.image = pg.image.load(filepath).convert_alpha()
         self.offset = 0
 
-    # NOTE: assumes that this widget is always active.
     def handle_event(self, event: pg.event.Event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:

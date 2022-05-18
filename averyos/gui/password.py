@@ -3,14 +3,13 @@ import math
 import pygame as pg
 
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-COLOR_BOX = pg.Color(15, 15, 15)
-FONT = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+COLOR_OUT = Colors.TXT_OUT
+COLOR_BOX = Colors.PASS_BOX
+FONT = Fonts.PASSWORD
+FONT_HINT = Fonts.HINT
 TXT_W, TXT_H = FONT.size("O")
 HNT_H = FONT_HINT.get_height()
 

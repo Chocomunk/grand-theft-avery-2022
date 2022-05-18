@@ -5,20 +5,20 @@ from pygame.gfxdraw import aacircle, filled_circle, aapolygon, filled_polygon
 
 from shell.env import ENV
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 
 
-pg.init()
-COLOR_CURRENT = pg.Color("#EBD288")
-COLOR_VISITED = pg.Color("#183078")
-COLOR_VISIBLE = pg.Color("#9EAEDE")
-COLOR_INVISIBLE = pg.Color("#525663")
-COLOR_EDGE = pg.Color("#F1FFFA")
-# COLOR_ARROW = pg.Color("#464E47")
-COLOR_ARROW = COLOR_EDGE
+COLOR_CURRENT = Colors.CURR_NODE
+COLOR_VISITED = Colors.VISITED
+COLOR_VISIBLE = Colors.VISIBLE
+COLOR_INVISIBLE = Colors.INVISIBLE
+COLOR_EDGE = Colors.EDGE
+COLOR_ARROW = Colors.ARROW
 COLOR_TEXT = COLOR_EDGE
-COLOR_OUT = pg.Color('lightskyblue3')
-FONT = pg.font.SysFont('Consolas', 18)
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+COLOR_OUT = Colors.TXT_OUT
+
+FONT = Fonts.NODE_LABEL
+FONT_HINT = Fonts.HINT
 TXT_W, TXT_H = FONT.size("O")
 
 

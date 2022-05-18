@@ -2,14 +2,13 @@ import pygame as pg
 
 from shell.env import ENV
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_DIR = pg.Color("#BC6C25")
-COLOR_PROG = pg.Color("#DDA15E")
-COLOR_FILE = pg.Color("#FEFAE0")
-FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+COLOR_DIR = Colors.DIR
+COLOR_PROG = Colors.PROG
+COLOR_FILE = Colors.FILE
+FONT = Fonts.TERMINAL
 
 
 class DirectoryWidget(Widget):

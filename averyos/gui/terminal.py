@@ -3,16 +3,15 @@ from pygame import Surface
 from typing import Callable, List
 
 from gui.widget import Widget
+from gui.constants import Colors, Fonts
 from shell.copy_logger import LinesLog, LogType
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_CURSOR = pg.Color(230,230,230,100)
-COLOR_OUT = pg.Color('lightskyblue3')
-COLOR_ERR = pg.Color('firebrick1')
-COLOR_IN = pg.Color('darkolivegreen1')
-FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
+COLOR_CURSOR = Colors.CURSOR
+COLOR_OUT = Colors.TXT_OUT
+COLOR_ERR = Colors.TXT_ERR
+COLOR_IN = Colors.TXT_IN
+FONT = Fonts.TERMINAL
 TXT_W, TXT_H = FONT.size("O")
 
 
