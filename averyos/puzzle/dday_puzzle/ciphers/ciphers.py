@@ -67,10 +67,13 @@ def build_sub_graph(parents, lock_func):
     F1 = Node("F1", parents=[E])
     F2 = Node("F2", parents=[E])
 
-    # TODO: add dir files
+    add_dir_files(E, DIR+"/substitution")
+    sub_unlock = UnlockSubPassword(hidden=True)
+    E.directory.add_program(sub_unlock.NAME, sub_unlock)
 
     E.set_lock_func(lock_func)
-    # TODO: set passwords
+    F1.set_password("oeznmiujxywbkravtdcqhflsgp")
+    F2.set_password("jrhtywxvfcundmzkqgpboaiesl")
 
     def sub_locked(n: Node):
         return F1.passlocked or F2.passlocked
@@ -141,7 +144,5 @@ def build_cipher_graph():
 
     hist_prog = Histogram()
     ENV.path[hist_prog.NAME] = hist_prog
-    sub_unlock = UnlockSubPassword()
-    caesar_nodes[0].directory.add_program(sub_unlock.NAME, sub_unlock)
 
     return nodes, MeshPlotter(pts, ids, radius=75).transform(scale=60,angle=0)

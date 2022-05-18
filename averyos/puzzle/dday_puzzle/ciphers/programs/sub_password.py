@@ -5,9 +5,11 @@ import pygame as pg
 
 from string import ascii_lowercase
 
+from shell.env import ENV
 from gui.widget import Widget
 from gui.view import MainView
 from system.program import ExitCode
+from system.path_utils import get_file
 from system.usrbin_programs import UnlockPassword
 
 
@@ -16,10 +18,13 @@ pg.init()
 COLOR_OUT = pg.Color('lightskyblue3')
 COLOR_BOX = pg.Color(15, 15, 15)
 COLOR_ACTIVE = pg.Color(80, 80, 80)
-FONT = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
+
+FONT_CIPH = pg.font.SysFont('Consolas', 24)      # Must be a uniform-sized "terminal font"
+FONT_PASS = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
 FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
-TXT_W, TXT_H = FONT.size("O")
-HNT_H = FONT_HINT.get_height()
+CIPH_W, CIPH_H = FONT_CIPH.size("O")
+PASS_W, PASS_H = FONT_PASS.size("O")
+HINT_H = FONT_HINT.get_height()
 
 
 SHAKE_DUR = 0.25        # (sec)
@@ -34,7 +39,8 @@ ALPH_IND = {c: i for i, c in enumerate(ALPHABET)}
 
 def sub(s, sub_list):
     """ Substitutes characters in a string """
-    return "".join([sub_list[ALPH_IND[c]] for c in s])
+    return "".join([sub_list[ALPH_IND[c]] if c in ALPH_IND else c 
+                    for c in s])
 
 
 class UnlockSubPassword(UnlockPassword):
@@ -56,13 +62,21 @@ class UnlockSubPassword(UnlockPassword):
             return ExitCode.ERROR
         dirname, node = out
 
+        filename = node.directory.name + "_cipher.txt"
+        if not filename in ENV.curr_node.directory.files:
+            print("No cipher text file found for node {0}".format(
+                    node.directory.name), file=sys.stderr)
+            return ExitCode.ERROR
+        cipher_file = ENV.curr_node.directory.files[filename]
+
         def leave_window(passwd):
             if node.try_password(passwd):
                 print("Success! {0} is unlocked.".format(dirname))
             gui.pop_view()
             
-        subs = ALPHABET[-1] + ALPHABET[:-1]
-        passwd_widg = SubPasswordWidget(node.password, subs, leave_window)
+        cipher_text = cipher_file.get_data().lower()
+        subs = node.password
+        passwd_widg = SubPasswordWidget(cipher_text, subs, leave_window)
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("subpasswd", new_view)
@@ -71,14 +85,17 @@ class UnlockSubPassword(UnlockPassword):
 
 class SubPasswordWidget(Widget):
 
-    def __init__(self, password, sub_list, on_finished, pos=(20,20), spacing=20):
+    def __init__(self, cipher_text, sub_list, on_finished, pos=(20,20), spacing=20):
         self.pos = pos
         self.spacing = spacing
         self.finish_cb = on_finished
 
-        self.answer = password
-        self.pass_text = sub(password, sub_list)
+        self.sub_ans = "".join([c for c in sub_list])
         self.subs = [c for c in ALPHABET]
+        self.cipher_text = cipher_text.split('\n')
+
+        self.text_w = max(len(l) for l in self.cipher_text) * CIPH_W
+        self.text_h = len(self.cipher_text) * (CIPH_H + 5)
 
         self.anim_time = 0
         self.offset = 0
@@ -90,7 +107,7 @@ class SubPasswordWidget(Widget):
         if event.type == pg.KEYDOWN:
             # Leave
             if event.key == pg.K_ESCAPE:
-                self.finish_cb(self.pass_text)
+                self.finish_cb("")
 
             elif event.key == pg.K_RETURN:
                 self.attempt()
@@ -114,10 +131,9 @@ class SubPasswordWidget(Widget):
 
     def attempt(self):
         # Check attempt against answer
-        ans = "".join(self.answer.split())
-        passwd = sub(self.pass_text, self.subs)
-        if passwd == ans:
-            self.finish_cb(passwd)
+        sub_txt = "".join(self.subs)
+        if sub_txt == self.sub_ans:
+            self.finish_cb(sub_txt)
         else:
             self.anim_time = time.time()
             self.text = ""
@@ -131,31 +147,28 @@ class SubPasswordWidget(Widget):
         surf.blit(self.box_surf, (bx,by))
 
         # Draw cipher text
-        text = sub(self.pass_text, self.subs)
-        txt_surf = FONT.render(text, True, COLOR_OUT)
-        tw, th = txt_surf.get_size()
-        tx, ty = cx - tw // 2, cy - th // 2
+        tx, ty = cx - self.text_w // 2, cy - self.text_h // 2
         tx += self.offset
-        surf.blit(txt_surf, (tx,ty))
+        self.draw_cipher(surf, (tx, ty))
 
         # Draw substitutions
-        self.draw_subs(surf, (bx,by+TXT_H+self.spacing))
+        self.draw_subs(surf, (bx,by+PASS_H+self.spacing))
 
         # Draw hint
         surf.blit(FONT_HINT.render("Move with left/right arrows", True, COLOR_OUT), (20,20))
-        surf.blit(FONT_HINT.render("Press (enter) to submit", True, COLOR_OUT), (20,25+HNT_H))
-        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,30+2*HNT_H))
+        surf.blit(FONT_HINT.render("Press (enter) to submit", True, COLOR_OUT), (20,25+HINT_H))
+        surf.blit(FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT), (20,30+2*HINT_H))
 
     def draw_alph_boxes(self):
-        width = (TXT_W + self.spacing + 20) * ALPH_LEN
-        height = 2*TXT_H + self.spacing + 20
+        width = (PASS_W + self.spacing + 20) * ALPH_LEN
+        height = 2*PASS_H + self.spacing + 20
         surf = pg.Surface((width, height), pg.SRCALPHA, 32)
 
-        x, y = 0, TXT_H + self.spacing
+        x, y = 0, PASS_H + self.spacing
         for c in ALPHABET:
-            surf.blit(FONT.render(c, True, COLOR_OUT), (x+10, 0))
-            pg.draw.rect(surf, COLOR_BOX, pg.Rect(x, y, TXT_W + 20, TXT_H + 20))
-            x += TXT_W + self.spacing + 20
+            surf.blit(FONT_PASS.render(c, True, COLOR_OUT), (x+10, 0))
+            pg.draw.rect(surf, COLOR_BOX, pg.Rect(x, y, PASS_W + 20, PASS_H + 20))
+            x += PASS_W + self.spacing + 20
 
         return surf
 
@@ -163,6 +176,13 @@ class SubPasswordWidget(Widget):
         x, y = pos
         for i in range(ALPH_LEN):
             if i == self.cursor:
-                pg.draw.rect(surf, COLOR_ACTIVE, pg.Rect(x, y, TXT_W + 20, TXT_H + 20))
-            surf.blit(FONT.render(self.subs[i], True, COLOR_OUT), (x+10, y+10))
-            x += TXT_W + self.spacing + 20
+                pg.draw.rect(surf, COLOR_ACTIVE, pg.Rect(x, y, PASS_W + 20, PASS_H + 20))
+            surf.blit(FONT_PASS.render(self.subs[i], True, COLOR_OUT), (x+10, y+10))
+            x += PASS_W + self.spacing + 20
+
+    def draw_cipher(self, surf: pg.Surface, pos):
+        x, y = pos
+        for line in self.cipher_text:
+            text = sub(line, self.subs)
+            surf.blit(FONT_CIPH.render(text, True, COLOR_OUT), (x,y))
+            y += CIPH_H + 5

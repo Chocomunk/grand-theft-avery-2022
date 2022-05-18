@@ -37,7 +37,7 @@ class PasswordWidget(Widget):
         if event.type == pg.KEYDOWN:
             # Leave
             if event.key == pg.K_ESCAPE:
-                self.finish_cb(self.text)
+                self.finish_cb("")
 
             elif event.key == pg.K_RETURN:
                 self.attempt()
