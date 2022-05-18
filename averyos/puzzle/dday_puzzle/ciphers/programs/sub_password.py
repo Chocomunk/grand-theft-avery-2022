@@ -9,7 +9,7 @@ from shell.env import ENV
 from gui.widget import Widget
 from gui.view import MainView
 from system.program import ExitCode
-from system.path_utils import get_file
+from system.usrbin_programs import PASSWD_CMD
 from system.usrbin_programs import UnlockPassword
 
 
@@ -45,7 +45,7 @@ def sub(s, sub_list):
 
 class UnlockSubPassword(UnlockPassword):
 
-    NAME = "unlock"
+    NAME = PASSWD_CMD
 
     def cli_main(self, args) -> ExitCode:
         out = self.check_node(args)
@@ -142,14 +142,16 @@ class SubPasswordWidget(Widget):
     def draw(self, surf: pg.Surface):
         # Draw boxes centered
         cx, cy = surf.get_width() // 2, surf.get_height() // 3   
-        bw, bh = self.box_surf.get_size()
-        bx, by = cx - bw // 2, 2*cy - bh // 2
-        surf.blit(self.box_surf, (bx,by))
 
-        # Draw cipher text
+        # Draw cipher text at h/3
         tx, ty = cx - self.text_w // 2, cy - self.text_h // 2
         tx += self.offset
         self.draw_cipher(surf, (tx, ty))
+
+        # Draw boxes at h * (2/3)
+        bw, bh = self.box_surf.get_size()
+        bx, by = cx - bw // 2, 2*cy - bh // 2
+        surf.blit(self.box_surf, (bx,by))
 
         # Draw substitutions
         self.draw_subs(surf, (bx,by+PASS_H+self.spacing))

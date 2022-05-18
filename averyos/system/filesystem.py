@@ -84,6 +84,7 @@ class Node:
         self.lockfunc: Callable[[Node], bool] = always_false
         self.passlocked = False
         self.password = None
+        self.prompt =  ""
 
         # Node connections (children/parents)
         # Point to both children and parents for navigating.

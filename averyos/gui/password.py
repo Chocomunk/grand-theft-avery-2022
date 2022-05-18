@@ -69,7 +69,7 @@ class PasswordWidget(Widget):
     # TODO: set padding as constants
     def draw(self, surf: pg.Surface):
         # Draw boxes centered
-        cx, cy = surf.get_width() // 2, surf.get_height() // 2       
+        cx, cy = surf.get_width() // 2, surf.get_height() // 2
         bw, bh = self.box_surf.get_size()
         px, py = cx - bw // 2, cy - bh // 2
         x, y = px + self.offset, py
