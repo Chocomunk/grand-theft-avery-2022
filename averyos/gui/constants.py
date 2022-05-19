@@ -13,8 +13,8 @@ class Colors:
     TXT_IN = pg.Color('darkolivegreen1')
     CURSOR = pg.Color(230,230,230,100)
 
-    DIR = pg.Color("#BC6C25")
-    PROG = pg.Color("#DDA15E")
+    DIR = pg.Color("#E99E3D")
+    PROG = pg.Color("#BDCDDB")
     FILE = pg.Color("#FEFAE0")
 
     PASS_BOX = pg.Color(15, 15, 15)
@@ -30,9 +30,9 @@ class Colors:
 
 # NOTE: Must be a uniform-sized "terminal" fonts
 class Fonts:
-    TERMINAL = pg.font.SysFont('Consolas', 16)
+    TERMINAL = pg.font.SysFont('Consolas', 17)
     PASSWORD = pg.font.SysFont('Consolas', 54)
     PROMPT = pg.font.SysFont('Consolas', 24)
-    TEXT = pg.font.SysFont('Consolas', 18)
+    TEXT = TERMINAL
     HINT = pg.font.SysFont('Consolas', 14)
     NODE_LABEL = pg.font.SysFont('Consolas', 18)
