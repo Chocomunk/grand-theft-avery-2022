@@ -11,7 +11,6 @@ from gui.view import MainView
 from gui.constants import Colors, Fonts
 
 from system.program import ExitCode
-from system.usrbin_programs import PASSWD_CMD
 from system.usrbin_programs import UnlockPassword
 
 
@@ -44,8 +43,6 @@ def sub(s, sub_list):
 
 
 class UnlockSubPassword(UnlockPassword):
-
-    NAME = PASSWD_CMD
 
     def cli_main(self, args) -> ExitCode:
         out = self.check_node(args)

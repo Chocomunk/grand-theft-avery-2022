@@ -49,11 +49,15 @@ def usrbin_progs():
 
 class SendExit(CLIProgramBase):
 
+    NAME = EXIT_CMD
+
     def cli_main(self, args) -> ExitCode:
         return ExitCode.EXIT
 
 
 class Chdir(CLIProgramBase):
+
+    NAME = CHDIR_CMD
 
     def __init__(self, check_locked=True, hidden=False):
         super().__init__(hidden)
@@ -81,6 +85,8 @@ class Chdir(CLIProgramBase):
 
 class ChdirName(CLIProgramBase):
 
+    NAME = CHDIRN_CMD
+
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
             print("Error: {0} takes exactly 1 argument!".format(CHDIRN_CMD), 
@@ -103,6 +109,8 @@ class ChdirName(CLIProgramBase):
 
 
 class Chdirid(CLIProgramBase):
+
+    NAME = CHDIRID_CMD
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
@@ -133,6 +141,8 @@ class Chdirid(CLIProgramBase):
 
 class ChdirBack(CLIProgramBase):
     """ This program implements 'sheesh' back-navigating """
+
+    NAME = CDBACK_CMD
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
@@ -167,6 +177,7 @@ class ChdirBack(CLIProgramBase):
             for i in range(del_len):
                 print("E\t{0}/".format(ENV.node_history[-i-1].directory.name))
                 if ENV.node_history[-i-1].backnav_wall:
+                    print("BREAK")
                     break
             print("SH")
 
@@ -180,6 +191,8 @@ class ChdirBack(CLIProgramBase):
 
 
 class Render(ProgramBase):
+
+    NAME = RENDER_CMD
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 1:
@@ -207,6 +220,8 @@ class Render(ProgramBase):
 
 class ListNode(ProgramBase):
 
+    NAME = LIST_CMD
+
     # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
         if len(args) > 2:
@@ -225,9 +240,9 @@ class ListNode(ProgramBase):
         else:
             node = ENV.curr_node
 
+        children = node.list_children()
         files = node.directory.list_files()
         progs = node.directory.list_programs()
-        children = node.list_children()
         dirname = node.directory.name
         
         print("\nDirectory: {0}".format(dirname))
@@ -237,10 +252,10 @@ class ListNode(ProgramBase):
         print(STR_TMP.format("----", "----"))
         for child in children:
             print(STR_TMP.format("directory", child.directory.name))
-        for prog in progs:
-            print(STR_TMP.format("executable", prog))
         for file in files:
             print(STR_TMP.format("file", file))
+        for prog in progs:
+            print(STR_TMP.format("executable", prog))
         print()
 
         return ExitCode.OK
@@ -260,6 +275,8 @@ class ListNode(ProgramBase):
 
 
 class ReadFile(ProgramBase):
+
+    NAME = READFILE_CMD
 
     def parse_file(self, args) -> File | None:
         if len(args) != 2:
@@ -308,6 +325,8 @@ class ReadFile(ProgramBase):
 
 
 class ShowLog(CLIProgramBase):
+
+    NAME = SHOWLOG_CMD
     
     def cli_main(self, args) -> ExitCode:
         if len(args) > 2:
@@ -320,6 +339,8 @@ class ShowLog(CLIProgramBase):
 
 
 class ShowHistory(CLIProgramBase):
+
+    NAME = HISTORY_CMD
 
     def cli_main(self, args) -> ExitCode:
         if len(args) > 2:
@@ -345,6 +366,8 @@ class ShowHistory(CLIProgramBase):
 
 
 class UnlockPassword(ProgramBase):
+
+    NAME = PASSWD_CMD
 
     def check_node(self, args):
         if len(args) < 2:

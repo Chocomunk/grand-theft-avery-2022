@@ -26,8 +26,8 @@ class DirectoryWidget(Widget):
         self.last_node = None
 
         self.children = []
-        self.progs = []
         self.files = []
+        self.progs = []
 
         self.dir_img = pg.transform.smoothscale(
                             pg.image.load(DIR_BASE+"folder.png"),
@@ -48,8 +48,12 @@ class DirectoryWidget(Widget):
     def update(self):
         if ENV.curr_node is not self.last_node:
             self.children = ENV.curr_node.list_children()
-            self.progs = ENV.curr_node.directory.list_programs()
             self.files = ENV.curr_node.directory.list_files()
+            self.progs = set(ENV.curr_node.directory.list_programs())
+
+            # View all visible, callable programs.
+            # self.progs.update(ENV.visible_progs)
+
             self.last_node = ENV.curr_node
 
     def draw(self, surf: pg.Surface):
@@ -65,15 +69,15 @@ class DirectoryWidget(Widget):
             h += txt_surf.get_height() + self.line_spacing
 
         h += self.sec_spacing - self.line_spacing
-        for prog in self.progs:
-            txt_surf = FONT.render(prog, True, COLOR_PROG)
-            surf.blit(self.prog_img, (w, h))
+        for file in self.files:
+            txt_surf = FONT.render(file, True, COLOR_FILE)
+            surf.blit(self.file_img, (w, h))
             surf.blit(txt_surf, (w+IMG_SIZE+PADDING, h))
             h += txt_surf.get_height() + self.line_spacing
 
         h += self.sec_spacing - self.line_spacing
-        for file in self.files:
-            txt_surf = FONT.render(file, True, COLOR_FILE)
-            surf.blit(self.file_img, (w, h))
+        for prog in self.progs:
+            txt_surf = FONT.render(prog, True, COLOR_PROG)
+            surf.blit(self.prog_img, (w, h))
             surf.blit(txt_surf, (w+IMG_SIZE+PADDING, h))
             h += txt_surf.get_height() + self.line_spacing

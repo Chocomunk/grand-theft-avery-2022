@@ -1,4 +1,4 @@
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set
 
 from system.filesystem import Node
 from system.program import ProgramBase
@@ -10,6 +10,7 @@ class ENV:
 
     prompt_base = "[{pwd}]> "
     path: Dict[str, ProgramBase] = {}
+    visible_progs: Set[str] = set()
 
     log = None
 
@@ -25,6 +26,7 @@ class ENV:
     def reset(cls):
         cls.prompt_base = "[{pwd}]> "
         cls.path = {}
+        cls.visible_progs = set()
         cls.log = None
         cls.gui = None
         cls.curr_node = None

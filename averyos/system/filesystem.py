@@ -66,7 +66,7 @@ class Node:
     name_to_node: Dict[str, Node] = {}      # NOTE: NOT NAME-SAFE
 
     def __init__(self, dirname="New Folder", parents: List[Node]=[], 
-                directory: Directory=None, hidden=False, backnav_wall=True):
+                directory: Directory=None, hidden=False, backnav_wall=False):
         # Set unique id
         self.id = Node.next_id
         Node.next_id += 1

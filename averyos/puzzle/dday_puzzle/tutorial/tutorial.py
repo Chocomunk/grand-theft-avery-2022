@@ -5,8 +5,7 @@ from puzzle.util import add_dir_files
 
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
-from system.usrbin_programs import Chdir, Chdirid
-from system.usrbin_programs import ReadFile, READFILE_CMD, Render, RENDER_CMD
+from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode
 
 from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
 
@@ -28,16 +27,24 @@ def build_start():
     n1 = Node("Documents", parents=[root])
     n2 = Node("institution-files", parents=[n1])
 
-    read_prog = ReadFile()
-    root.directory.add_program(READFILE_CMD, read_prog)
-
     # Back nav
     n1.add_child(root)
     n2.add_child(n1)
 
+    # Programs
+    read_prog = ReadFile()
+    root.directory.add_program(read_prog.NAME, read_prog)
+
+    ENV.visible_progs.add(ReadFile.NAME)
+    ENV.visible_progs.add(ListNode.NAME)
+
+    # Files
     root.directory.add_file(File("OntoMe?.txt", 
         data="(WIP) {I changed the command names for security!} use 'cd' to navigate!"))
     n1.directory.add_file(File("some-doc.txt", "some text"))
+
+    # Callbacks
+    n1.add_entry_callback(lambda _: ENV.visible_progs.add(Chdir.NAME))
 
     return [root, n1, n2]
 
@@ -55,6 +62,9 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
 
     # Add files
     caught.directory.add_file(File("goodfilename.txt", data="(some hint). Type sheesh!"))
+
+    # Callbacks
+    sike.add_entry_callback(lambda _: ENV.visible_progs.add("`sheesh`"))
 
     # Setup trap callbacks:
     cdprog = Chdir()
@@ -123,6 +133,9 @@ def build_recaptcha(n: Node):
     prompt_unlock = UnlockPromptPassword()
     n.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
+    # Callbacks
+    n.add_entry_callback(lambda _: ENV.visible_progs.add(prompt_unlock.NAME))
+
     n1.set_password("Cat")
     n1.prompt = "What is the name of your favorite animal?"
 
@@ -130,10 +143,13 @@ def build_recaptcha(n: Node):
 
 
 def build_hidden(n: Node):
-    n1 = Node("Avery", parents=[n], backnav_wall=False, hidden=True)
+    n1 = Node("Avery", parents=[n], backnav_wall=True, hidden=True)
 
     render_prog = Render()
-    n.directory.add_program(RENDER_CMD, render_prog)
+    n.directory.add_program(render_prog.NAME, render_prog)
+
+    # Callbacks
+    n.add_entry_callback(lambda _: ENV.visible_progs.add(Render.NAME))
 
     n.directory.add_file(File("gameover.txt", 
         "You hackers are annoying! The only way to get past this one is hidden in my office. Good luck getting inside!"))

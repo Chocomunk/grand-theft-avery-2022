@@ -9,7 +9,6 @@ from gui.view import MainView
 from gui.constants import Colors, Fonts
 
 from system.program import ExitCode
-from system.usrbin_programs import PASSWD_CMD
 from system.usrbin_programs import UnlockPassword
 
 
@@ -29,8 +28,6 @@ SHAKE_SPEED = 16        # (hz / pi)
 
 
 class UnlockPromptPassword(UnlockPassword):
-
-    NAME = PASSWD_CMD
 
     def gui_main(self, gui, args) -> ExitCode:
         out = self.check_node(args)
