@@ -14,6 +14,9 @@ COLOR_IN = Colors.TXT_IN
 FONT = Fonts.TERMINAL
 TXT_W, TXT_H = FONT.size("O")
 
+LOGO_FILE = "gui/assets/avery_logo_grey.png"
+IMG_SIZE = 48
+
 
 # TODO: allow scrolling past the end. Snap to the end when typing
 class TerminalWidget(Widget):
@@ -40,6 +43,9 @@ class TerminalWidget(Widget):
 
         # Allow for holding down a key
         pg.key.set_repeat(400, 30)
+
+        self.logo = pg.transform.smoothscale(pg.image.load(LOGO_FILE), 
+                                            size=(IMG_SIZE, IMG_SIZE))
 
     def add_input_listener(self, func):
         self.input_cbs.append(func)
@@ -112,6 +118,8 @@ class TerminalWidget(Widget):
         self.rect.w = width
 
     def draw(self, surf: Surface):
+        w, h = surf.get_size()
+        surf.blit(self.logo, (w-IMG_SIZE-30, h-IMG_SIZE-30))
         surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
         
     # TODO: set text color based on logtype. BAD IMPLEMENTATION
