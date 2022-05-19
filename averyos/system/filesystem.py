@@ -11,8 +11,9 @@ IMG_EXTENSIONS = ["png", "jpg", "svg", "gif", "pdf"]
 # TODO: Check filepath extension to see if file is an image
 class File:
 
-    def __init__(self, filename, data=None, filepath=None):
+    def __init__(self, filename, data=None, filepath=None, hidden=False):
         self.name = filename
+        self.hidden = hidden
         self.data = data
         self.filepath = filepath
         if not filepath:
@@ -49,7 +50,7 @@ class Directory:
         self.programs[name] = prog
 
     def list_files(self):
-        return list(self.files.keys())
+        return [k for k,v in self.files.items() if not v.hidden]
 
     def list_programs(self):
         return [k for k,v in self.programs.items() if not v.hidden]
@@ -65,7 +66,7 @@ class Node:
     name_to_node: Dict[str, Node] = {}      # NOTE: NOT NAME-SAFE
 
     def __init__(self, dirname="New Folder", parents: List[Node]=[], 
-                directory: Directory=None):
+                directory: Directory=None, hidden=False, backnav_wall=True):
         # Set unique id
         self.id = Node.next_id
         Node.next_id += 1
@@ -94,6 +95,10 @@ class Node:
         self.parents: List[Node] = []
         for parent in parents:
             parent.add_child(self)
+
+        # Flags
+        self.hidden = hidden                # Whether this node is visible
+        self.backnav_wall = backnav_wall    # Whether back-nav will stop here first
 
         # Add node to id_to_node map
         Node.id_to_node.append(self)
@@ -124,11 +129,12 @@ class Node:
             return True
         return False
 
-    def add_child(self, child_node: Node):
+    def add_child(self, child_node: Node, ref_parent=False):
         self.children.append(child_node)
         self.navref[child_node.directory.name] = child_node
         child_node.parents.append(self)
-        child_node.navref[self.directory.name] = self
+        if ref_parent:
+            child_node.navref[self.directory.name] = self
 
     def find_neighbor(self, dirname) -> Optional[Node]:
         """ Returns a neighbor to this node if it exists. Else, return None """
@@ -155,5 +161,5 @@ class Node:
         return []
 
     def list_children(self):
-        return [c.directory.name for c in self.children]
+        return [c.directory.name for c in self.children if not c.hidden]
         

@@ -163,12 +163,17 @@ class ChdirBack(CLIProgramBase):
 
             print("SH\tDirectories")
             print("--\t-----------")
+            i = 0
             for i in range(del_len):
                 print("E\t{0}/".format(ENV.node_history[-i-1].directory.name))
+                if ENV.node_history[-i-1].backnav_wall:
+                    break
             print("SH")
 
-            ENV.curr_node = ENV.node_history[-del_len]
-            del ENV.node_history[-del_len:]
+            i += 1
+            print(del_len, i)
+            ENV.curr_node = ENV.node_history[-i]
+            del ENV.node_history[-i:]
             ENV.curr_node.call_entry_callbacks()
         
         return ExitCode.OK
