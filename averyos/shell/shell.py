@@ -23,6 +23,11 @@ def sheesh_split(s: str):
     return s
 
 
+def cmd_filter(s: str):
+    """ Filter to extract pure names of incoming commands """
+    return s.lstrip('.').lstrip('/')
+
+
 # TODO: Validate arg[i] values for every shell command
 class Shell:
 
@@ -56,6 +61,7 @@ class Shell:
         # -------------------- Preprocess inputs --------------------
         # TODO: Add callbacks for puzzles to take control
         inp = sheesh_split(inp)
+        inp = cmd_filter(inp)
         
         # Split and check input
         args = shlex.split(inp)
