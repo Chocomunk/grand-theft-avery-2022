@@ -61,7 +61,7 @@ class Chdir(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
-            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
+            print("Error: {0} takes exactly 1 argument!".format(CHDIR_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -83,7 +83,7 @@ class ChdirName(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
-            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
+            print("Error: {0} takes exactly 1 argument!".format(CHDIRN_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -106,7 +106,7 @@ class Chdirid(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
-            print("Error: {0} only accepts 1 argument!".format(CHDIRID_CMD), 
+            print("Error: {0} takes exactly 1 argument!".format(CHDIRID_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -210,7 +210,7 @@ class ListNode(ProgramBase):
     # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
         if len(args) > 2:
-            print("Error: {0} takes up to 2 arguments".format(LIST_CMD), 
+            print("Error: {0} takes up to 1 arguments".format(LIST_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -263,7 +263,7 @@ class ReadFile(ProgramBase):
 
     def parse_file(self, args) -> File | None:
         if len(args) != 2:
-            print("Error: {0} only accepts 1 argument!".format(READFILE_CMD), 
+            print("Error: {0} takes exactly 1 argument!".format(READFILE_CMD), 
                 file=sys.stderr)
             return None
 
