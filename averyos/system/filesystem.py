@@ -108,7 +108,7 @@ class Node:
     def locked(self):
         return self.passlocked or self.lockfunc(self)
 
-    def set_lock_func(self, lockfunc: Callable[..., bool]):
+    def set_lock_func(self, lockfunc: Callable[[Node], bool]):
         self.lockfunc = lockfunc
 
     def set_password(self, password):

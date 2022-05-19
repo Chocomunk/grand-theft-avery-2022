@@ -57,14 +57,14 @@ def build_emoji_graph():
     n12.set_password("Booty house is lit")
 
     # Locks
-    n6.set_lock_func(lambda: n1.passlocked or n2.passlocked)
-    n7.set_lock_func(lambda: n2.passlocked or n3.passlocked)
-    n8.set_lock_func(lambda: n2.passlocked or n4.passlocked)
-    n9.set_lock_func(lambda: n2.passlocked or n5.passlocked)
-    n10.set_lock_func(lambda: n3.passlocked or n5.passlocked)
+    n6.set_lock_func(lambda _: n1.passlocked or n2.passlocked)
+    n7.set_lock_func(lambda _: n2.passlocked or n3.passlocked)
+    n8.set_lock_func(lambda _: n2.passlocked or n4.passlocked)
+    n9.set_lock_func(lambda _: n2.passlocked or n5.passlocked)
+    n10.set_lock_func(lambda _: n3.passlocked or n5.passlocked)
 
-    n11.set_lock_func(lambda: n6.passlocked or n7.passlocked)
-    n12.set_lock_func(lambda: n6.passlocked or n10.passlocked)
+    n11.set_lock_func(lambda _: n6.passlocked or n7.passlocked)
+    n12.set_lock_func(lambda _: n6.passlocked or n10.passlocked)
 
     nodes = [root, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12]
     mesh_pts = emoji_pts()

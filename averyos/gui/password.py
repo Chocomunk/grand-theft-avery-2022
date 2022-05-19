@@ -44,7 +44,7 @@ class PasswordWidget(Widget):
             # Type or delete text
             elif event.key == pg.K_BACKSPACE:
                 self.text = self.text[:-1]
-            else:
+            elif event.key != pg.K_SPACE:
                 if len(self.text) < len(self.answer):
                     self.text += event.unicode
 

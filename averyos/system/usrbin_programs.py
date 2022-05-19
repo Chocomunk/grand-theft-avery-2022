@@ -139,6 +139,7 @@ class ChdirBack(CLIProgramBase):
 
             ENV.curr_node = ENV.node_history[-del_len]
             del ENV.node_history[-del_len:]
+            ENV.curr_node.call_entry_callbacks()
         
         return ExitCode.OK
 
