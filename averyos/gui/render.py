@@ -15,6 +15,7 @@ COLOR_INVISIBLE = Colors.INVISIBLE
 COLOR_EDGE = Colors.EDGE
 COLOR_ARROW = Colors.ARROW
 COLOR_TEXT = COLOR_EDGE
+COLOR_GRID = Colors.NAV_BACKGROUND
 COLOR_OUT = Colors.TXT_OUT
 
 FONT = Fonts.NODE_LABEL
@@ -22,11 +23,12 @@ FONT_HINT = Fonts.HINT
 TXT_W, TXT_H = FONT.size("O")
 
 
+GRID_SIZE = 100
 PADDING = 20
 PAN_SPEED = 30
 SCALE_SPEED = 0.05
 MIN_SCALE = 0.25
-MAX_SCALE = 3
+MAX_SCALE = 2
 
 
 class RenderWidget(Widget):
@@ -51,7 +53,6 @@ class RenderWidget(Widget):
         self.map_surf.blit(self.base_map, (0,0))
 
         # Scale by height
-        self.h = h
         self.scale = 1.
 
         # Compute start position. Center on the current node then find top-left corner
@@ -74,12 +75,16 @@ class RenderWidget(Widget):
             if event.key == pg.K_RIGHT:
                 self.x -= PAN_SPEED
         elif event.type == pg.MOUSEWHEEL:
+            self.x /= self.scale
+            self.y /= self.scale
             self.scale += event.y * SCALE_SPEED
+            self.x *= self.scale
+            self.y *= self.scale
 
     def update(self):
         # Scale map if needed
         self.scale = min(max(self.scale, MIN_SCALE), MAX_SCALE)
-        h = self.scale * self.h
+        h = self.scale * self.base_map.get_height()
         if int(h) != self.map_surf.get_height():
             w = int(self.base_map.get_width() * self.scale)
             self.map_surf = pg.transform.smoothscale(self.base_map, (w,int(h)))
@@ -112,7 +117,14 @@ class RenderWidget(Widget):
         hint = FONT_HINT.render("Press (esc) to exit...", True, COLOR_OUT)
         surf.blit(hint, (w - hint.get_width() - 10, 15 + hint.get_height()))
 
-    def draw_map(self, surf):
+    def draw_map(self, surf: pg.Surface):
+        # Draw grid lines 
+        w, h = surf.get_size()
+        for i in range(w//GRID_SIZE):
+            pg.draw.line(surf, COLOR_GRID, (i*GRID_SIZE,0), (i*GRID_SIZE,h), 2)
+        for i in range(h//GRID_SIZE):
+            pg.draw.line(surf, COLOR_GRID, (0,i*GRID_SIZE), (w,i*GRID_SIZE), 2)
+
         # Draw connections between nodes
         for child in ENV.curr_node.children:
             if child in self.nodes:
@@ -125,7 +137,7 @@ class RenderWidget(Widget):
         for node in self.nodes:
             self.draw_node(surf, node)
 
-    def draw_line(self, surf, node1, node2):
+    def draw_line(self, surf: pg.Surface, node1, node2):
         x1, y1 = ENV.plotter.get_pos(node1)
         x2, y2 = ENV.plotter.get_pos(node2)
 
@@ -149,7 +161,7 @@ class RenderWidget(Widget):
         aapolygon(surf, (point1, point2, point3), COLOR_ARROW)
         filled_polygon(surf, (point1, point2, point3), COLOR_ARROW)
 
-    def draw_node(self,surf, node):
+    def draw_node(self,surf: pg.Surface, node):
         pos = ENV.plotter.get_pos(node)
         if not pos:
             return
