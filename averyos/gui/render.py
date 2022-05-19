@@ -109,7 +109,7 @@ class RenderWidget(Widget):
 
         # Draw map
         # pg.draw.rect(surf, (255,0,0), pg.Rect(x, y, mw, mh))      # NOTE: Debugging rect
-        surf.blit(self.map_surf, (x, y))
+        surf.blit(self.map_surf, (0,0), pg.Rect(-x, -y, w, h))
 
         # Draw hints
         hint = FONT_HINT.render("Move with arrow keys, zoom with scroll", True, COLOR_OUT)
