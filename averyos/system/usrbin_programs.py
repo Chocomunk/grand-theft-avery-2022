@@ -19,6 +19,7 @@ from gui.imageviewer import ImageViewerWidget
 
 EXIT_CMD = "exit"
 CHDIR_CMD = "cd"
+CHDIRN_CMD = "cdn"
 CHDIRID_CMD = "cdid"
 CDBACK_CMD = "sh"
 LIST_CMD = "ls"
@@ -32,9 +33,10 @@ RENDER_CMD = "render"
 # TODO: remove showlog
 def usrbin_progs():
     return {
-        EXIT_CMD: SendExit(),
+        EXIT_CMD: SendExit(hidden=True),
         CHDIR_CMD: Chdir(),
-        CHDIRID_CMD: Chdirid(),
+        CHDIRN_CMD: ChdirName(hidden=True),
+        CHDIRID_CMD: Chdirid(hidden=True),
         CDBACK_CMD: ChdirBack(),
         LIST_CMD: ListNode(),
         READFILE_CMD: ReadFile(),
@@ -53,13 +55,17 @@ class SendExit(CLIProgramBase):
 
 class Chdir(CLIProgramBase):
 
+    def __init__(self, check_locked=True, hidden=False):
+        super().__init__(hidden)
+        self.check_locked = check_locked
+
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
             print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
-        path = path_subdirs(args[1])
+        path = path_subdirs(args[1], self.check_locked)
 
         if not path:
             return ExitCode.ERROR
@@ -68,6 +74,29 @@ class Chdir(CLIProgramBase):
         new_node = path[-1]
         ENV.node_history.extend(path[:-1])
         ENV.visited_nodes.update(path)
+        ENV.curr_node = new_node
+        new_node.call_entry_callbacks()
+        return ExitCode.OK
+
+
+class ChdirName(CLIProgramBase):
+
+    def cli_main(self, args) -> ExitCode:
+        if len(args) != 2:
+            print("Error: {0} only accepts 1 argument!".format(CHDIR_CMD), 
+                file=sys.stderr)
+            return ExitCode.ERROR
+
+        name = args[1]
+        if name not in Node.name_to_node:
+            print("Error: could not find node {0}".format(name), file=sys.stderr)
+            return ExitCode.ERROR
+
+        new_node = Node.name_to_node[name]
+
+        # Ignore locks and just chdir to new_node
+        ENV.node_history.append(ENV.curr_node)
+        ENV.visited_nodes.add(new_node)
         ENV.curr_node = new_node
         new_node.call_entry_callbacks()
         return ExitCode.OK
@@ -132,9 +161,10 @@ class ChdirBack(CLIProgramBase):
                 print("No space to 'sheesh'. This is so sad...")
                 return ExitCode.OK
 
-            print("SH")
+            print("SH\tDirectories")
+            print("--\t-----------")
             for i in range(del_len):
-                print("E\t{0}".format(ENV.node_history[-i-1].directory.name))
+                print("E\t{0}/".format(ENV.node_history[-i-1].directory.name))
             print("SH")
 
             ENV.curr_node = ENV.node_history[-del_len]

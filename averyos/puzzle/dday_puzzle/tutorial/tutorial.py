@@ -6,8 +6,6 @@ from puzzle.util import add_dir_files
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
 from system.usrbin_programs import Chdir, Chdirid
-
-# TODO: Do this better
 from system.usrbin_programs import ReadFile, READFILE_CMD, Render, RENDER_CMD
 
 from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
@@ -47,11 +45,11 @@ def build_start():
 # TODO: Better names
 # TODO: better sheesh hint
 # TODO: better "strong" pun
-EXIT_NAME = "safe-directory/"
-TRAP_NAME = lambda i: "trap-directory-{}/".format(i)
+EXIT_NAME = "safe-directory"
+TRAP_NAME = lambda i: "trap-directory-{}".format(i)
 
 def build_trap(entry_node: Node, num_exit=100, num_trap=7):
-    sike = Node("Get trolled omegalul")
+    sike = Node("Get rolled omegalul")
     caught = Node("Caught you!", parents=[sike])
     exit_node = Node("Security Check")
 
@@ -64,7 +62,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
 
     def sheesh_fail_cb(n: Node):
         """ A callback which prints the 'sheesh attempt' message """
-        print("A solid try, but not STRONG enough!", file=sys.stderr)
+        print("A good try, unfortunately it was too WEAK.", file=sys.stderr)
 
     def cdid_cb(i):
         """ A wrapper for `cdid` which navigates to the exit node """
@@ -87,6 +85,8 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
             path += "/{0}".format(sike.directory.name)
             if to_end:
                 path += "/{0}".format(caught.directory.name)
+            else:
+                print("\nNavigating back to: {0}".format(path), file=sys.stderr)
             cdprog.cli_main(["", path])
         return _func
 

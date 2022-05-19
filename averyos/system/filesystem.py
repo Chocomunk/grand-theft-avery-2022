@@ -62,6 +62,7 @@ class Node:
     # Static variables
     next_id = 0         # Keeps track of the next available unique-id
     id_to_node: List[Node] = []
+    name_to_node: Dict[str, Node] = {}      # NOTE: NOT NAME-SAFE
 
     def __init__(self, dirname="New Folder", parents: List[Node]=[], 
                 directory: Directory=None):
@@ -96,6 +97,7 @@ class Node:
 
         # Add node to id_to_node map
         Node.id_to_node.append(self)
+        Node.name_to_node[self.directory.name] = self
 
     def call_entry_callbacks(self):
         """ Must be called when entering this node """

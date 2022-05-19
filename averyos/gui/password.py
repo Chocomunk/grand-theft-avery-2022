@@ -2,6 +2,8 @@ import time
 import math
 import pygame as pg
 
+from string import ascii_letters
+
 from gui.widget import Widget
 from gui.constants import Colors, Fonts
 
@@ -44,7 +46,8 @@ class PasswordWidget(Widget):
             # Type or delete text
             elif event.key == pg.K_BACKSPACE:
                 self.text = self.text[:-1]
-            elif event.key != pg.K_SPACE:
+            # elif event.key != pg.K_SPACE:
+            elif event.unicode in ascii_letters:
                 if len(self.text) < len(self.answer):
                     self.text += event.unicode
 

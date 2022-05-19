@@ -2,6 +2,7 @@ import time
 import math
 import pygame as pg
 
+from string import ascii_letters
 
 from gui.widget import Widget
 from gui.view import MainView
@@ -80,7 +81,8 @@ class PromptPasswordWidget(Widget):
             # Type or delete text
             elif event.key == pg.K_BACKSPACE:
                 self.text = self.text[:-1]
-            else:
+            # else:
+            elif event.unicode in ascii_letters:
                 if len(self.text) < len(self.answer):
                     self.text += event.unicode
 

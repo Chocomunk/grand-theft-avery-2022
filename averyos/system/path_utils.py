@@ -9,7 +9,7 @@ def clean_path(s):
     return re.sub('//+', '/', s).strip('/')
 
 
-def path_subdirs(dirname):
+def path_subdirs(dirname, check_locked=True):
     dirname = clean_path(dirname)
     path = ENV.curr_node.find_node(dirname)
 
@@ -19,10 +19,11 @@ def path_subdirs(dirname):
             dirname, pwd), file=sys.stderr)
         return None
 
-    for node in path:
-        if node.locked():
-            print("Error: {0} is locked!".format(node.directory.name))
-            return None
+    if check_locked:
+        for node in path:
+            if node.locked():
+                print("Error: {0} is locked!".format(node.directory.name))
+                return None
 
     return path
 
