@@ -23,6 +23,8 @@ class DirectoryWidget(Widget):
         self.line_spacing = line_spacing
         self.sec_spacing = sec_spacing
 
+        self.last_node = None
+
         self.children = []
         self.progs = []
         self.files = []
@@ -44,14 +46,11 @@ class DirectoryWidget(Widget):
         pass
 
     def update(self):
-        if ENV.curr_node:
-            self.children = ENV.curr_node.children
+        if ENV.curr_node is not self.last_node:
+            self.children = ENV.curr_node.list_children()
             self.progs = ENV.curr_node.directory.list_programs()
             self.files = ENV.curr_node.directory.list_files()
-        else:
-            self.children = []
-            self.progs = []
-            self.files = []
+            self.last_node = ENV.curr_node
 
     def draw(self, surf: pg.Surface):
         h = self.y

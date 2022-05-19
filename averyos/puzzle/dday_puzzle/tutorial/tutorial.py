@@ -130,8 +130,7 @@ def build_recaptcha(n: Node):
 
 
 def build_hidden(n: Node):
-    n1 = Node("Avery", backnav_wall=False)
-    n1.add_child(n, ref_parent=True)
+    n1 = Node("Avery", parents=[n], backnav_wall=False, hidden=True)
 
     render_prog = Render()
     n.directory.add_program(RENDER_CMD, render_prog)

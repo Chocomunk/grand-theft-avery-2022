@@ -172,7 +172,7 @@ class RenderWidget(Widget):
             color = COLOR_CURRENT
         elif node in ENV.visited_nodes:
             color = COLOR_VISITED
-        elif node in self.visible:
+        elif node in self.visible and not node.hidden:
             color = COLOR_VISIBLE
         else:
             color = COLOR_INVISIBLE             # Default to 'invisible' color

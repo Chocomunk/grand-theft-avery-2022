@@ -227,7 +227,7 @@ class ListNode(ProgramBase):
 
         files = node.directory.list_files()
         progs = node.directory.list_programs()
-        dirs = node.list_children()
+        children = node.list_children()
         dirname = node.directory.name
         
         print("\nDirectory: {0}".format(dirname))
@@ -235,8 +235,8 @@ class ListNode(ProgramBase):
         STR_TMP = "{0:>12}    {1:<}"
         print(STR_TMP.format("Type", "Name"))
         print(STR_TMP.format("----", "----"))
-        for direc in dirs:
-            print(STR_TMP.format("directory", direc))
+        for child in children:
+            print(STR_TMP.format("directory", child.directory.name))
         for prog in progs:
             print(STR_TMP.format("executable", prog))
         for file in files:

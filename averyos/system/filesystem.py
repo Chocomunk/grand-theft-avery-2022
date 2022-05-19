@@ -160,6 +160,6 @@ class Node:
             return self.navref[dname].find_node_recurse(nodes, dirnames)
         return []
 
-    def list_children(self):
-        return [c.directory.name for c in self.children if not c.hidden]
+    def list_children(self) -> List[Node]:
+        return [c for c in self.children if not c.hidden]
         
