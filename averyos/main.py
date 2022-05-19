@@ -1,3 +1,5 @@
+import traceback
+
 import pygame as pg
 
 from shell.shell import Shell
@@ -26,9 +28,13 @@ if __name__ == '__main__':
 
     running = True
     while running:
-        running = gui.update()
-        if running:
-            gui.draw()
+        try:
+            running = gui.update()
+            if running:
+                gui.draw()
 
-            pg.display.flip()
-            clock.tick(30)
+                pg.display.flip()
+                clock.tick(30)
+        except Exception:               # Catch program errors then continue
+            traceback.print_exc()
+            gui.pop_view()
