@@ -8,20 +8,20 @@ from string import ascii_lowercase
 from shell.env import ENV
 from gui.widget import Widget
 from gui.view import MainView
+from gui.constants import Colors, Fonts
+
 from system.program import ExitCode
 from system.usrbin_programs import PASSWD_CMD
 from system.usrbin_programs import UnlockPassword
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-COLOR_BOX = pg.Color(15, 15, 15)
-COLOR_ACTIVE = pg.Color(80, 80, 80)
+COLOR_OUT = Colors.TXT_OUT
+COLOR_BOX = Colors.PASS_BOX
+COLOR_ACTIVE = Colors.CURSOR
 
-FONT_CIPH = pg.font.SysFont('Consolas', 24)      # Must be a uniform-sized "terminal font"
-FONT_PASS = pg.font.SysFont('Consolas', 54)      # Must be a uniform-sized "terminal font"
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
+FONT_CIPH = Fonts.PROMPT
+FONT_PASS = Fonts.PASSWORD
+FONT_HINT = Fonts.HINT
 CIPH_W, CIPH_H = FONT_CIPH.size("O")
 PASS_W, PASS_H = FONT_PASS.size("O")
 HINT_H = FONT_HINT.get_height()
@@ -62,7 +62,7 @@ class UnlockSubPassword(UnlockPassword):
             return ExitCode.ERROR
         dirname, node = out
 
-        filename = node.directory.name + "_cipher.txt"
+        filename = node.directory.name.lower() + "-cipher.txt"
         if not filename in ENV.curr_node.directory.files:
             print("No cipher text file found for node {0}".format(
                     node.directory.name), file=sys.stderr)

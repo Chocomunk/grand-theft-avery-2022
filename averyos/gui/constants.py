@@ -32,6 +32,7 @@ class Colors:
 class Fonts:
     TERMINAL = pg.font.SysFont('Consolas', 16)
     PASSWORD = pg.font.SysFont('Consolas', 54)
+    PROMPT = pg.font.SysFont('Consolas', 24)
     TEXT = pg.font.SysFont('Consolas', 18)
     HINT = pg.font.SysFont('Consolas', 14)
     NODE_LABEL = pg.font.SysFont('Consolas', 18)

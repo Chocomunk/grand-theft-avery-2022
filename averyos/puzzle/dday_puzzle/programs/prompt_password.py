@@ -3,22 +3,21 @@ import math
 import pygame as pg
 
 
-from shell.env import ENV
 from gui.widget import Widget
 from gui.view import MainView
+from gui.constants import Colors, Fonts
+
 from system.program import ExitCode
 from system.usrbin_programs import PASSWD_CMD
 from system.usrbin_programs import UnlockPassword
 
 
-# TODO: Clean up color and font handling
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-COLOR_BOX = pg.Color(15, 15, 15)
+COLOR_OUT = Colors.TXT_OUT
+COLOR_BOX = Colors.PASS_BOX
 
-FONT_PRMPT = pg.font.SysFont('Consolas', 24)     # Must be a uniform-sized "terminal font"
-FONT = pg.font.SysFont('Consolas', 54)          # Must be a uniform-sized "terminal font"
-FONT_HINT = pg.font.SysFont('Consolas', 14)     # Must be a uniform-sized "terminal font"
+FONT_PRMPT = Fonts.PROMPT
+FONT = Fonts.PASSWORD
+FONT_HINT = Fonts.HINT
 PMT_W, PMT_H = FONT_PRMPT.size("O")
 TXT_W, TXT_H = FONT.size("O")
 HNT_H = FONT_HINT.get_height()

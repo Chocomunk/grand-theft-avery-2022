@@ -11,16 +11,15 @@ import matplotlib.pyplot as plt
 
 from gui.widget import Widget
 from gui.view import MainView
+from gui.constants import Colors, Fonts
+
 from system.filesystem import File
 from system.path_utils import get_file
 from system.program import ProgramBase, ExitCode
 
 
-pg.init()
-COLOR_OUT = pg.Color('lightskyblue3')
-FONT = pg.font.SysFont('Consolas', 16)      # Must be a uniform-sized "terminal font"
-FONT_HINT = pg.font.SysFont('Consolas', 14)      # Must be a uniform-sized "terminal font"
-TXT_W, TXT_H = FONT.size("O")
+COLOR_OUT = Colors.TXT_OUT
+FONT_HINT = Fonts.HINT
 
 
 def plot_hist(counts: Dict, size, title: str) -> Tuple[Image.Image, io.BytesIO]:

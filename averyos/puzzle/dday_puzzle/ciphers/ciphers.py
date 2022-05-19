@@ -4,9 +4,9 @@ An example puzzle design
 from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.filesystem import Node
-from .programs.histogram import Histogram
-from .programs.sub_password import UnlockSubPassword
-from .programs.prompt_password import UnlockPromptPassword
+from puzzle.dday_puzzle.programs.histogram import Histogram
+from puzzle.dday_puzzle.programs.sub_password import UnlockSubPassword
+from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
 
 from puzzle.util import add_dir_files
 
