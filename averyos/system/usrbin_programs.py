@@ -296,7 +296,7 @@ class ReadFile(ProgramBase):
 
     def gui_main(self, gui, args) -> ExitCode:
         file = self.parse_file(args)
-        if not file :
+        if not file:
             return ExitCode.ERROR
             
         if file.is_image:

@@ -1,5 +1,83 @@
 from system.filesystem import File
 
+
+# These variables contain the ASCII art and text that appear when landing on
+# certain nodes.
+
+surprised_pikachu = \
+""" 
+⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⢰⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣀⣀⣾⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⡏⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿
+⣿⣿⣿⣿⣿⣿⠀⠀⠀⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠁⠀⣿
+⣿⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠙⠿⠿⠿⠻⠿⠿⠟⠿⠛⠉⠀⠀⠀⠀⠀⣸⣿
+⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⢰⣹⡆⠀⠀⠀⠀⠀⠀⣭⣷⠀⠀⠀⠸⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠈⠉⠀⠀⠤⠄⠀⠀⠀⠉⠁⠀⠀⠀⠀⢿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⢾⣿⣷⠀⠀⠀⠀⡠⠤⢄⠀⠀⠀⠠⣿⣿⣷⠀⢸⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⡀⠉⠀⠀⠀⠀⠀⢄⠀⢀⠀⠀⠀⠀⠉⠉⠁⠀⠀⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
+"""
+
+shitpost_face = \
+""" 
+⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝
+⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇
+⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀
+⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
+⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
+⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀
+"""
+
+chalk_text = \
+""" 
+Looks like you sickos actually want to go through with this…
+"""
+
+drop_knees_text = \
+""" 
+I guess Katz’s heavenly presence really touched you, huh?
+"""
+
+expose_text = \
+""" 
+The fuck’s your obsession with Dinakar exposing himself, you creep?
+"""
+
+flirt_text = \
+""" 
+You sly dog ;)
+"""
+
+lets_begin_text = \
+""" 
+You might want to loosen your belt and untuck your shirt for what’s to come. It’s going to get hot in here…
+"""
+
+return_favor_text = \
+""" 
+Congratulations you pervert! You explored all possible paths in this godforsaken story, so here’s a little epilogue to satisfy you.
+"""
+
+last_thought_text = \
+""" 
+“Thank god men can’t get pregnant.”
+"""
+
+
+# FILES
+
+
 disclaimer = File("DO_NOT_OPEN.txt",
 """
 Andrew Ho brings you…Forbidden Mathematical Relations - A Caltech Story…
@@ -143,8 +221,7 @@ But the call was too much. Dinakar could feel his will to resist faltering. His 
 """
 )
 
-expose_1 = (
-"DINAKARS_PACKAGE.txt",
+dinakars_package = File("DINAKARS_PACKAGE.txt",
 """
 The emotion overcame Dinakar, and he sought to display his love physically. With an impressively quick flick of the wrist, 
 Dinakar’s undid his zipper and retrieved his manhood. From his pants tumbled out a cock of considerable proportions. For 
@@ -157,17 +234,14 @@ diminished. He returned to his previous reserved demeanor, stood still, and wait
 """
 )
 
-expose_2 = (
-"YOU_DID_IT_AGAIN.txt",
+did_it_again = File("YOU_DID_IT_AGAIN.txt",
 """
 Dinakar knew Nets disapproved the last time, but he couldn’t help but follow his heart. Once more the dragon was freed 
 so that Nets could look upon it in all its soft glory. Yet Nets grew impatient. “No!” he insisted, “I will let you know 
 when the time is right Di-Di.” The dragon turned into a lizard as it shrunk back into its lair, and Dinakar understood 
 this was a delicate affair not to be rushed.
-"""
+""", hidden=True
 )
-
-expose_file = File(expose_1[0], expose_1[1])
 
 attempted_retreat = File("AN_ATTEMPTED_RETREAT.txt",
 """
