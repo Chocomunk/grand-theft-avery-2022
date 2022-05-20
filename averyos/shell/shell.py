@@ -70,14 +70,15 @@ class Shell:
         
         # -------------------- Parse commands --------------------
         prog = self.unknown_program     # Default to unknown
+        prog_name = args[0].lower()
 
         # Check programs in CWD
-        if args[0] in ENV.curr_node.directory.programs:
-            prog = ENV.curr_node.directory.programs[args[0]]
+        if prog_name in ENV.curr_node.directory.programs:
+            prog = ENV.curr_node.directory.programs[prog_name]
 
         # Check programs in path
-        elif args[0] in ENV.path:
-            prog = ENV.path[args[0]]
+        elif prog_name in ENV.path:
+            prog = ENV.path[prog_name]
 
         # -------------------- Execute --------------------
         try:

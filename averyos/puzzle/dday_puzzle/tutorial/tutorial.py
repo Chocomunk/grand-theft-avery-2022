@@ -1,33 +1,21 @@
 import sys
 
 from shell.env import ENV
-from puzzle.util import add_dir_files
 
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
 from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode, UnlockPassword
 
-
-START_MSG = \
-"""
-Welcome to AveryOS!
-
-There will be some kind of hint in the room or here or smth to tell the user to type:
-    > ls
-Maybe also have a "locked" screen that they need a password for?
-(entertaining shell message)
-"""
+from .tutorial_files import *
 
 
 # TODO: Add fake files/dirs
 def build_start():
     root = Node("tutorial-root")
     n1 = Node("Documents", parents=[root])
-    n2 = Node("institution-files", parents=[n1])
 
     # Back nav
     n1.add_child(root)
-    n2.add_child(n1)
 
     # Programs
     read_prog = ReadFile()
@@ -37,19 +25,31 @@ def build_start():
     ENV.visible_progs.add(ListNode.NAME)
 
     # Files
-    root.directory.add_file(File("onto_me.txt", 
-        data="(WIP) {I changed the command names for security!} use 'cd' to navigate!"))
-    n1.directory.add_file(File("some-doc.txt", "some text"))
+    root.directory.add_file(security)
+    n1.directory.add_file(doc_notes)
 
     # Callbacks
     n1.add_entry_callback(lambda _: ENV.visible_progs.add(Chdir.NAME))
 
-    return [root, n1, n2]
+    return [root, n1]
 
 
-# TODO: Better names
-# TODO: better sheesh hint
-# TODO: better "strong" pun
+def build_documents(start_node):
+    n2 = Node("institution-files", parents=[start_node])
+    n3 = Node("avery-files", parents=[start_node])
+    n4 =Node("misc", parents=[start_node])
+
+    # Back nav
+    n3.add_child(start_node)
+    n4.add_child(start_node)
+
+    # Files
+    n3.directory.add_file(avery_desc1)
+    n3.directory.add_file(avery_desc2)
+
+    return [n2,n3,n4]
+
+
 EXIT_NAME = "safe-directory"
 TRAP_NAME = lambda i: "trap-directory-{}".format(i)
 
@@ -59,7 +59,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
     exit_node = Node("Security-Check")
 
     # Add files
-    caught.directory.add_file(File("goodfilename.txt", data="(some hint). Type 'sheesh'"))
+    caught.directory.add_file(caught_file)
 
     # Callbacks
     sike.add_entry_callback(lambda _: ENV.visible_progs.add("`sheesh`"))
@@ -70,7 +70,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
 
     def sheesh_fail_cb(n: Node):
         """ A callback which prints the 'sheesh attempt' message """
-        print("A good try, unfortunately it was too WEAK.", file=sys.stderr)
+        print("A good try, unfortunately it was too WEEEAK.", file=sys.stderr)
 
     def cdid_cb(i):
         """ A wrapper for `cdid` which navigates to the exit node """
@@ -95,8 +95,8 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
                 path += "/{0}".format(caught.directory.name)
             else:
                 curr, path = path.split('/', 1)
-                print("\nLanded on: '{0}'".format(curr))
-                print("Navigating back to: '{0}'\n".format(path), file=sys.stderr)
+                print("\nNavigated backwards to: '{0}'".format(curr))
+                print("SIKE Pulling you into: '{0}'\n".format(path), file=sys.stderr)
             cdprog.cli_main(["", path])
         return _func
 
@@ -151,10 +151,8 @@ def build_hidden(n: Node):
     # Callbacks
     n.add_entry_callback(lambda _: ENV.visible_progs.add(Render.NAME))
 
-    n.directory.add_file(File("gameover.txt", 
-        "You hackers are annoying! The only way to get past this one is hidden in my office. Good luck getting inside!"))
-    n1.directory.add_file(File("game-is-on.txt",
-        "Looks like an institution spy broke into my office... Now the real game is on!\nI've secured everything I have, good luck getting through!"))
+    n.directory.add_file(gameover)
+    n1.directory.add_file(gameon)
 
     return [n1]
 
@@ -162,11 +160,12 @@ def build_hidden(n: Node):
 # TODO: Make files
 def build_tutorial_graph():
     start_nodes = build_start()
-    trap_nodes = build_trap(start_nodes[-1])
+    documents_nodes = build_documents(start_nodes[-1])
+    trap_nodes = build_trap(documents_nodes[0])
     captcha_nodes = build_security_question(trap_nodes[-1])
     hidden_nodes = build_hidden(captcha_nodes[-1])
 
-    nodes = start_nodes + trap_nodes + captcha_nodes + hidden_nodes
+    nodes = start_nodes + documents_nodes + trap_nodes + captcha_nodes + hidden_nodes
     mesh_pts = [(0, i*5) for i in range(len(nodes))]
     ids = [n.id for n in nodes]
 

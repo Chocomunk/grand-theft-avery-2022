@@ -6,37 +6,89 @@ from system.filesystem import File
 
 surprised_pikachu = \
 """ 
-⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⢰⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣀⣀⣾⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⡏⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿
-⣿⣿⣿⣿⣿⣿⠀⠀⠀⠈⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠁⠀⣿
-⣿⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠙⠿⠿⠿⠻⠿⠿⠟⠿⠛⠉⠀⠀⠀⠀⠀⣸⣿
-⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣴⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⢰⣹⡆⠀⠀⠀⠀⠀⠀⣭⣷⠀⠀⠀⠸⣿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠈⠉⠀⠀⠤⠄⠀⠀⠀⠉⠁⠀⠀⠀⠀⢿⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⢾⣿⣷⠀⠀⠀⠀⡠⠤⢄⠀⠀⠀⠠⣿⣿⣷⠀⢸⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⡀⠉⠀⠀⠀⠀⠀⢄⠀⢀⠀⠀⠀⠀⠉⠉⠁⠀⠀⣿⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿
-⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿
+CCCCCCCLt;;iiiiiiii;:;11111i:;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii:;tffLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+CCCCCLti;;iiiiiiiii:;111iii1;:;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii;;1ffLLLLLLLLfffffftttttttttfffLL
+LLft1i;;iiiiiiiiii;:1t1iiiiii;:iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii;iffLLLLfffffftttttt11111111ttff
+;;;;;;iiiiiiiiiii;:;1t1iiiiiii:;iiiiiiiiiiiiii1ttttiiitttt1ii1ttt1ii;;tfffffffftttt111111111111111tt
+iiiiiiiiiiiiiiiii::i11iiiiiiii;:;iiiiiiiiiiiiiL@@@01it0@@8fi10@@@Cii;;1ffffftttt11111111111111111111
+iiiiiiiiiiiiiiii;:;11iiiiiiiiii:;iiiiiiiiiiiiiL@@@01it0@@8fi1G@8@Liii;iffftttt1111111111111111111111
+iiiiiiiiiiiiiii;:;11iiiiiiiiiii;:;iiiiiiiiiiiiL@@@01it0@@8fi1G@8@Liii;;tfttt1111111111111111111111ii
+iiiiiiiiiii:,,,,,;11iiiiiiiiiii;:;iiiiiiiiiiiiL@@@01it0@@8fi1G@@@Liiii:ift11111111111111111111111iii
+iiiiiiiiiii;:,,,,,;iiiiiiii;;;i;::iiiiiiiiiiiif888G1it0880fi1G888Liiii::1t11111111111111111111111iii
+iiiiiiiiiiii;:,,,,,;;;;;;;;;;;;;::;iiiiiiiiiii1LCCfii1fCCL1iitCCL1iiii;:i11111111111111111111111iiii
+iiiiiiiiiiii;:,,,,;fLt1i;::::;;;;:;iiiiiiiiiiiL@@@0tit8@@8fi10@@@Ciiiii:;111111111111111111111111iii
+iiiiiiiiiiii;;i;,,:tLLLLft1;::::;::;iiiiiiiiiitG00L1i1C00CtiiL00Gtiiiii;:1111111111111111111111ii;;;
+iiiiiiiiiii;;111i,,ifLLLLLLft1;::::;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii;:it111111111111111iiiiiiii1i
+iiiiiiiiii;:i1111;,:tLLLLLLLLLff1;::;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii:;11111111111iii;;i1ttfffLLt
+iiiiiiiii;:;111111;:;fLLLLLLLLLLLLf1;;;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii;:i111111ii;;i11tfLLLLLffff1
+iiiiiiiii:;11111111i:ifLLLLLLLLLLLLLfti;;;iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii::i1iiii11tfLLLLLLLLLLLfLf;
+iiiiiiii;:;iii;;;ii1i;itLLLLLLLLLLLLLLLf1i;;iiiiiiiiiiiiiiiiiiiiiiiiiii;;::;ii1tfLLLLLLLLLLLLLLLLL1:
+iiiiiii;::;;;;;;;;;i1i:;1fLLLLLLLLLLLLLLLft1;;;;;;;;;;;;;;;;;;;;;;;;;;iii11tfLLLLLLLLLLLLfLLLLLLLt;:
+iiiiiii::;;;;;;;;:;;;;;;;itfLLLLLLLLLLLLLLLLfttt1ttttttffffffffffffffLLLLLLLLLLLffLLLLLLLLLLLLLfti;:
+iiiiii:,;;;;;;;;;;;;;;;;;::ifLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLfLfffLLLLffLLLLLLLLft1iiii
+iiiii;::;;;;;;;;;;;;;;;;;;::;1fLLLLLLLLLLLLLLLffffffffffffffffffffffffLLLLfLLfLLLLLfLLLLLLft1i;;;iii
+iiiii:,;;;;;;;;;;;;;;;;;;;;;::itfftffLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLfLLLLLLLfti;;;;;;;;;
+iiii;::;;;;;;;;;;;;;;;;;;;;;;;::;itfLLLLLLLLLLLLLLLLLLLffLfLLLLLLLLLLLLLLLLLLfLLLfffLft1i;;;;;;;;;;;
+iiii::;;;;::::::::;;;:::::::;;;::1LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLfffLLLLLLLLfLLLLft1ii;;;;;;;;;;;;;;
+iii;,:::::::::;;;;:::::::,,::;::ifLLLLLLLLLLLLLLLLLLLLLLLLLLLLLfLLLLLLLLLLLLLLLLLLft;;;;;;;;;;;;;;;;
+ii;,:::::;;::::;;;;;:::,,,,:;::;tLLLLLLfftttfLLLLLLLLLLfffffLfLLLLfftt1tffLLLLLLLLLft;;;;;;;;;;;;;;;
+ii:,:;;:;;;;;;;;;;;;:::::::;;::1fLfLLft1tt;:itfLLLLLLLLffffffffLLft1ff;:;1fLLfLLLLfLL1;;;;;;;iii;;;;
+i;,:;;;::::::::::;;;;;;;;;;i;:;fLfLLfft;i1:,:ifLLLLLLLfffLffffffLft;ii:,,itLLfLLLLfLLfi:;iiiiiiiiiii
+i:,:;::::,,,,,,,,::;;;;;;;;i;:ifLLLffLf1;:,,:1fLLLLLLLLLfffffLffLLf1;:,,:1fLfLLLLLfLLLt;;iiiiiiiiiii
+:,,::::,,,,,,,,,,,,:;;;;;;;;:;tLLLLLLLLLfttttffLLffffffffLLLLLLLLLLLfftttfLLLLLLLLLLLLfi;iiiiiiiiiii
+,,;;:::,,,,,,,,,,,,:;;;;;;;;:iffLLLLLLLLLLLLLLLLfff1;:;itfffLLLLffLLLLLLLLLLLLLLLLLLLLL1;iiiiiiiiiii
+,;;;;::::,,,,,,,,,:;;;;ii;;:,:;;i1tfLLLLLLLLLLLLLLLfftttfLLLLLLLLLLLLfLLLLft1111ttfLLLLfi;iiiiiiiiii
+:;;;;;;;;;;;;;;;;;iiiiiii;;,:iiiiii1fLLLLLLLLLLLLLLLLLLLLLLLLLLLfLLLLffLLf1iiiiiii1fLLLf1;iiiiiiiiii
+:;;;;;;;;;;;;;;;iiiiiii;;;:,;11111iitLLLLLLLLLLLLLLLfffffffLLLLffLLLffLLftii11111ii1fLLLfi;iiiiiiiii
+:;;;;;;;;;;;;;;:;;iiiiiii:,,;i111ii1fLLLLLLLLLLLfti;;;ii1111tfLLLLLLffLLLtii11111ii1fLffft;;;;;;;;;;
+;;;;;;;;:::::::::;;;;;;;;::i1iiiii1fLLLLLLLLLLLLf1::itfffft11tfLfLLLLLLLLf1iiiiiii1fLLLfLfi:;;;;;;;;
+ii;;;;;;:::::::::::::::::::1LLtttffLLLLLLfLLLLLLL1;ifLffffff11fLfLLLLLLLLLfttttttffLLLfLLLt;;iiiiii;
+i;;;;;:::::::::::::::::::::;fLLLLLLLLLLLLLLLLLLLLf1i1ffffff11tfLfLLLLLLLLLLLLLLLLLLLLLLfLLfi;11iiii;
+ii;;;;;;;::;;;;;;;;;;;;;;;;:;fLLLLLLLLLLLLLLLLLLLLft1i11111i1ffLfffLLLLLLLLLLfffffffLLLLLLLt;;iii;;;
+;;;;;iiiiiiiiiiiiiiiiiiiiiii:itLLLLLLLLLLLLLfLLLLLLLLfffttfffLLfLLLLLLLLLLLLLfffffffffLLLLLfi;;;;;;;
+:::::;iiiiii1iiiiiiiiiiiiii;;:ifLLLLLLLLLLffffLLLLLLLLLLLLLLLfffffLLLLffffffffffffffLffLffLf1:;;;;;;
+::::::::::;;;;iiiiiiiiiii;;;;;;1fLLLLLLLLffLLLLfLLLLLffffffffffLffLLLLLfffLLLLLLLLLLLLfffffLt;;;;;;;
+;;::::::::::::;;iiiiiiiiiiiiii;1fLLLLLLfLfLLLfffffLLffLLLLffLfLLLLLLLLffffLLLLLLLLLLLfLfffLLfi:;;;;;
+iii;;;;;;;;;;;;iiiiiiiiiiiiii;;tfLLLLLLLLLLLLLLLLLLLffLLffffLLLLLLLffffffLLLLLLLLLLLLLLffffLf1;;;;;;
+
 """
 
 shitpost_face = \
 """ 
-⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝
-⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇
-⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀
-⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
-⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
-⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+QQQQQQQQQQQQQQQQQQQWQQQQQWWWBBBHHHHHHHHHBWWWQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+QQQQQQQQQQQQQQQD!`__ssaaaaaaaaaass_ass_s____.  -~""??9VWQQQQQQQQQQQQQQQQQQQ
+QQQQQQQQQQQQQP'_wmQQQWWBWV?GwwwmmWQmwwwwwgmZUVVHAqwaaaac,"?9$QQQQQQQQQQQQQQ
+QQQQQQQQQQQW! aQWQQQQW?qw#TTSgwawwggywawwpY?T?TYTYTXmwwgZ$ma/-?4QQQQQQQQQQQ
+QQQQQQQQQQW' jQQQQWTqwDYauT9mmwwawww?WWWWQQQQQ@TT?TVTT9HQQQQQQw,-4QQQQQQQQQ
+QQQQQQQQQQ[ jQQQQQyWVw2$wWWQQQWWQWWWW7WQQQQQQQQPWWQQQWQQw7WQQQWWc)WWQQQQQQQ
+QQQQQQQQQf jQQQQQWWmWmmQWU???????9WWQmWQQQQQQQWjWQQQQQQQWQmQQQQWL 4QQQQQQQQ
+QQQQQQQP'.yQQQQQQQQQQQP"       <wa,.!4WQQQQQQQWdWP??!"??4WWQQQWQQc ?QWQQQQQ
+QQQQQP'_a.<aamQQQW!<yF "!` ..  "??$Qa "WQQQWTVP'    "??' =QQmWWV?46/ ?QQQQQ
+QQQP'sdyWQP?!`.-"?46mQQQQQQT!mQQgaa. <wWQQWQaa _aawmWWQQQQQQQQQWP4a7g -WWQQ
+QQ[ j@mQP'adQQP4ga, -????" <jQQQQQWQQQQQQQQQWW;)WQWWWW9QQP?"`  -?QzQ7L ]QQQ
+QW jQkQ@ jWQQD'-?$QQQQQQQQQQQQQQQQQWWQWQQQWQQQc "4QQQQa   .QP4QQQQfWkl jQQQ
+QE ]QkQk $D?`  waa "?9WWQQQP??T?47`_aamQQQQQQWWQw,-?QWWQQQQQ`"QQQD\Qf(.QWQQ
+QQ,-Qm4Q/-QmQ6 "WWQma/  "??QQQQQQL 4W"- -?$QQQQWP`s,awT$QQQ@  "QW@?$:.yQQQQ
+QQm/-4wTQgQWQQ,  ?4WWk 4waac -???$waQQQQQQQQF??'<mWWWWWQW?^  ` ]6QQ' yQQQQQ
+QQQQw,-?QmWQQQQw  a,    ?QWWQQQw _.  "????9VWaamQWV???"  a j/  ]QQf jQQQQQQ
+QQQQQQw,"4QQQQQQm,-$Qa     ???4F jQQQQQwc <aaas _aaaaa 4QW ]E  )WQ`=QQQQQQQ
+QQQQQQWQ/ $QQQQQQQa ?H ]Wwa,     ???9WWWh dQWWW,=QWWU?  ?!     )WQ ]QQQQQQQ
+QQQQQQQQQc-QWQQQQQW6,  QWQWQQQk <c                             jWQ ]QQQQQQQ
+QQQQQQQQQQ,"$WQQWQQQQg,."?QQQQ'.mQQQmaa,.,                . .; QWQ.]QQQQQQQ
+QQQQQQQQQWQa ?$WQQWQQQQQa,."?( mQQQQQQW[:QQQQm[ ammF jy! j( } jQQQ(:QQQQQQQ
+QQQQQQQQQQWWma "9gw?9gdB?QQwa, -??T$WQQ;:QQQWQ ]WWD _Qf +?! _jQQQWf QQQQQQQ
+QQQQQQQQQQQQQQQws "Tqau?9maZ?WQmaas,,    --~-- ---  . _ssawmQQQQQQk 3QQQQWQ
+QQQQQQQQQQQQQQQQWQga,-?9mwad?1wdT9WQQQQQWVVTTYY?YTVWQQQQWWD5mQQPQQQ ]QQQQQQ
+QQQQQQQWQQQQQQQQQQQWQQwa,-??$QwadV}<wBHHVHWWBHHUWWBVTTTV5awBQQD6QQQ ]QQQQQQ
+QQQQQQQQQQQQQQQQQQQQQQWWQQga,-"9$WQQmmwwmBUUHTTVWBWQQQQWVT?96aQWQQQ ]QQQQQQ
+QQQQQQQQQQWQQQQWQQQQQQQQQQQWQQma,-?9$QQWWQQQQQQQWmQmmmmmQWQQQQWQQW(.yQQQQQW
+QQQQQQQQQQQQQWQQQQQQWQQQQQQQQQQQQQga%,.  -??9$QQQQQQQQQQQWQQWQQV? sWQQQQQQQ
+QQQQQQQQQWQQQQQQQQQQQQQQWQQQQQQQQQQQWQQQQmywaa,;~^"!???????!^`_saQWWQQQQQQQ
+QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQWWWWQQQQQmwywwwwwwmQQWQQQQQQQQQQQ
+QQQQQQQWQQQWQQQQQQWQQQWQQQQQWQQQQQQQQQQQQQQQQWQQQQQWQQQWWWQQQQQQQQQQQQQQQWQ
 """
 
 chalk_text = \

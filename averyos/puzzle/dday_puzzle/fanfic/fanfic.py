@@ -125,9 +125,7 @@ def build_fanfic_graph():
     expose.directory.add_file(dinakars_package)
     expose.directory.add_file(did_it_again)
     def _expose_file_toggle(_: Node):
-        print(expose_i, FanficState.visited[expose_i])
         if FanficState.visited[expose_i]:
-            print(expose_text)
             dinakars_package.hidden = True
             did_it_again.hidden = False
         else:

@@ -17,17 +17,17 @@ from gui.imageviewer import ImageViewerWidget
 # TODO: Documentation
 
 
-EXIT_CMD = "exit"
-CHDIR_CMD = "cd"
+EXIT_CMD = "brexit"
+CHDIR_CMD = "do"
 CHDIRN_CMD = "cdn"
 CHDIRID_CMD = "cdid"
 CDBACK_CMD = "sh"
-LIST_CMD = "ls"
-READFILE_CMD = "cat"
+LIST_CMD = "pepelaugh"
+READFILE_CMD = "yoink"
 SHOWLOG_CMD = "showlog"
 HISTORY_CMD = "history"
-PASSWD_CMD = "unlock"
-RENDER_CMD = "render"
+PASSWD_CMD = "boom"
+RENDER_CMD = "yourmom"
 
 
 # TODO: remove showlog
@@ -65,7 +65,7 @@ class Chdir(CLIProgramBase):
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
-            print("Error: {0} takes exactly 1 argument!".format(CHDIR_CMD), 
+            print("Error: Must specify a directory to '{0}' into".format(CHDIR_CMD), 
                 file=sys.stderr)
             return ExitCode.ERROR
 
@@ -279,7 +279,7 @@ class ReadFile(ProgramBase):
 
     def parse_file(self, args) -> File | None:
         if len(args) != 2:
-            print("Error: {0} takes exactly 1 argument!".format(READFILE_CMD), 
+            print("Error: Must specify a file to '{0}'".format(READFILE_CMD), 
                 file=sys.stderr)
             return None
 

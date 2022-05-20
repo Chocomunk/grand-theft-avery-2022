@@ -15,7 +15,7 @@ def path_subdirs(dirname, check_locked=True):
 
     if not path:
         pwd = ENV.curr_node.directory.name
-        print("Error: could not find '{0}' under '{1}'".format(
+        print("Error: could not find directory '{0}' under '{1}'".format(
             dirname, pwd), file=sys.stderr)
         return None
 
