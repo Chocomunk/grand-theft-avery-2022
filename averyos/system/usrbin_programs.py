@@ -382,12 +382,17 @@ class UnlockPassword(ProgramBase):
                 dirname, pwd), file=sys.stderr)
             return None
 
-        if not node.passlocked:
-            if node.locked():
-                print("Error: directory {0} is locked by the system (some other action is required)".format(
+        if node.lockfunc(node):
+            if node.passlocked:
+                print("Error: directory {0} is both system-locked and password-locked\n\t(some other action is required first)".format(
                     dirname), file=sys.stderr)
             else:
-                print("Directory '{0}' is not locked".format(dirname), file=sys.stderr)
+                print("Error: directory {0} is locked by the system (some other action is required)".format(
+                    dirname), file=sys.stderr)
+            return None
+
+        if not node.passlocked:
+            print("Directory '{0}' is not locked".format(dirname), file=sys.stderr)
             return None
 
         return dirname, node

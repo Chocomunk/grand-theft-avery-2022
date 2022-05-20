@@ -21,12 +21,16 @@ def path_subdirs(dirname, check_locked=True):
 
     if check_locked:
         for node in path[1:]:
-            if node.passlocked:
-                print("Error: '{0}' is password locked!".format(node.directory.name), 
-                    file=sys.stderr)
+            if node.lockfunc(node):
+                if node.passlocked:
+                    print("Error: directory {0} is both system-locked and password-locked\n\t(some other action is required first)".format(
+                        dirname), file=sys.stderr)
+                else:
+                    print("Error: directory {0} is locked by the system (some other action is required)".format(
+                        dirname), file=sys.stderr)
                 return None
-            elif node.locked():
-                print("Error: '{0}' is system locked! (some other action is required)".format(node.directory.name),
+            elif node.passlocked:
+                print("Error: '{0}' is password locked!".format(node.directory.name), 
                     file=sys.stderr)
                 return None
 
