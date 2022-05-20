@@ -95,7 +95,7 @@ class ChdirName(CLIProgramBase):
 
         name = args[1]
         if name not in Node.name_to_node:
-            print("Error: could not find node {0}".format(name), file=sys.stderr)
+            print("Error: could not find node '{0}'".format(name), file=sys.stderr)
             return ExitCode.ERROR
 
         new_node = Node.name_to_node[name]
@@ -121,12 +121,12 @@ class Chdirid(CLIProgramBase):
         try:
             node_id = int(args[1])
         except ValueError as e:
-            print("Error: node id must be an integer, {0} is invalid.".format(
+            print("Error: node id must be an integer, '{0}' is invalid.".format(
                 args[1]), file=sys.stderr)
             return ExitCode.ERROR
 
         if node_id >= len(Node.id_to_node):
-            print("Error: invalid node id {0}".format(args[1]), file=sys.stderr)
+            print("Error: invalid node id '{0}'".format(args[1]), file=sys.stderr)
             return ExitCode.ERROR
 
         new_node = Node.id_to_node[node_id]
@@ -385,10 +385,10 @@ class UnlockPassword(ProgramBase):
 
         if not node.passlocked:
             if node.locked():
-                print("Error: directory {0} is not password-locked (something else?)".format(
+                print("Error: directory {0} is locked by the system (a secret action is required)".format(
                     dirname), file=sys.stderr)
             else:
-                print("Directory {0} is not locked".format(dirname), file=sys.stderr)
+                print("Directory '{0}' is not locked".format(dirname), file=sys.stderr)
             return None
 
         return dirname, node
@@ -402,12 +402,12 @@ class UnlockPassword(ProgramBase):
         if len(args) == 3:
             passwd = args[2]
         else:
-            passwd = input("Enter password for {0}: ".format(node.directory.name))
+            passwd = input("Enter password for '{0}': ".format(node.directory.name))
 
         if node.try_password(passwd):
-            print("Success! {0} is unlocked.".format(dirname))
+            print("Success! '{0}' is unlocked.".format(dirname))
         else:
-            print("Incorrect password for {0}".format(dirname), file=sys.stderr)
+            print("Incorrect password for '{0}'".format(dirname), file=sys.stderr)
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:

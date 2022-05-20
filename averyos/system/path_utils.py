@@ -15,14 +15,19 @@ def path_subdirs(dirname, check_locked=True):
 
     if not path:
         pwd = ENV.curr_node.directory.name
-        print("Error: could not find {0} under {1}".format(
+        print("Error: could not find '{0}' under '{1}'".format(
             dirname, pwd), file=sys.stderr)
         return None
 
     if check_locked:
-        for node in path:
-            if node.locked():
-                print("Error: {0} is locked!".format(node.directory.name))
+        for node in path[1:]:
+            if node.passlocked:
+                print("Error: '{0}' is password locked!".format(node.directory.name), 
+                    file=sys.stderr)
+                return None
+            elif node.locked():
+                print("Error: '{0}' is system locked! (a secret action is required)".format(node.directory.name),
+                    file=sys.stderr)
                 return None
 
     return path
@@ -41,7 +46,7 @@ def get_file(filepath) -> File | None:
         node = ENV.curr_node       # Default search in curr_node
 
     if filename not in node.directory.files:
-        print("Error: no file named {0} in {1}".format(
+        print("Error: no file named '{0}' in '{1}'".format(
             filename, node.directory.name), file=sys.stderr)
         return None
 

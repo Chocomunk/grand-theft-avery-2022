@@ -61,7 +61,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
     exit_node = Node("Security Check")
 
     # Add files
-    caught.directory.add_file(File("goodfilename.txt", data="(some hint). Type sheesh!"))
+    caught.directory.add_file(File("goodfilename.txt", data="(some hint). Type 'sheesh'"))
 
     # Callbacks
     sike.add_entry_callback(lambda _: ENV.visible_progs.add("`sheesh`"))
@@ -96,7 +96,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
             if to_end:
                 path += "/{0}".format(caught.directory.name)
             else:
-                print("\nNavigating back to: {0}\n".format(path), file=sys.stderr)
+                print("\nNavigating back to: '{0}'\n".format(path), file=sys.stderr)
             cdprog.cli_main(["", path])
         return _func
 
