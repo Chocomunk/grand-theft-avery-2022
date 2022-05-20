@@ -9,7 +9,7 @@ BASE_DIR = "puzzle/dday_puzzle/wordplay"
 
 def emoji_pts():
     H = 6
-    W = 7
+    W = 5
 
     pts = [(0,0)]
     for i in range(1,3):

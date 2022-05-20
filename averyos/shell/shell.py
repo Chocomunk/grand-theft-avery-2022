@@ -25,7 +25,7 @@ def sheesh_split(s: str):
 
 def cmd_filter(s: str):
     """ Filter to extract pure names of incoming commands """
-    return s.lstrip('.').lstrip('/')
+    return s.strip('`').lstrip('.').lstrip('/')
 
 
 # TODO: Validate arg[i] values for every shell command

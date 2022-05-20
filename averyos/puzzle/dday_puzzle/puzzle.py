@@ -37,14 +37,15 @@ def build_graph():
     mesh = MeshPlotter([],[],radius=75)
 
     # TODO: fanfic mesh
-    # TODO: physical mesh
-    tutorial_mesh = tutorial_mesh.transform(scale=50, shift=(0,-1900))
+    tutorial_mesh = tutorial_mesh.transform(scale=50, shift=(0,1300), angle=180)
     # cipher_mesh = cipher_mesh.transform(scale=50, shift=(300,0), angle=60)
     word_mesh = word_mesh.transform(scale=50, shift=(-300,0), angle=-60)
+    physical_mesh = physical_mesh.transform(scale=50, shift=(300,0), angle=60)
 
     mesh.extend(tutorial_mesh)
     # mesh.extend(cipher_mesh)
     mesh.extend(word_mesh)
+    mesh.extend(physical_mesh)
 
     ENV.plotter = mesh
     

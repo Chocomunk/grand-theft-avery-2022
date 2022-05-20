@@ -1,3 +1,4 @@
+from gui.plotter import MeshPlotter
 from system.filesystem import Node
 
 
@@ -36,4 +37,14 @@ This is why 6/10 means so much to me! Find the letter on the puzzle."""
 """Remember all the passwords for the previous 4 nodes. If it’s a number, look 
 under the table and use the table. Combine and case-sensitive!"""
 
-    return [root, n1, n2, n3, n4, n5], None
+    H = 6
+    W = 4
+    pts = [(0,0)]
+    for i in range(-1,3):
+        pts.append((i*W - W/2, H))
+    pts.append((0,2*H))
+
+    nodes = [root, n1, n2, n3, n4, n5]
+    ids = [n.id for n in nodes]
+
+    return nodes, MeshPlotter(pts, ids)

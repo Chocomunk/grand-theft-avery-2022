@@ -5,9 +5,14 @@ from shell.env import ENV
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
 from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode, \
-                                    UnlockPassword, Help
+                                    UnlockPassword, Help, ChdirBack
 
 from .tutorial_files import *
+
+
+class SheeshProg:
+    NAME = "`sheesh`"
+    DESC = ChdirBack.DESC
 
 
 # TODO: Add fake files/dirs
@@ -64,7 +69,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
     caught.directory.add_file(caught_file)
 
     # Callbacks
-    sike.add_entry_callback(lambda _: ENV.visible_progs.add("`sheesh`"))
+    sike.add_entry_callback(lambda _: ENV.visible_progs.add(SheeshProg))
 
     # Setup trap callbacks:
     cdprog = Chdir()
@@ -170,8 +175,26 @@ def build_tutorial_graph():
     captcha_nodes = build_security_question(trap_nodes[-1])
     hidden_nodes = build_hidden(captcha_nodes[-1])
 
-    nodes = start_nodes + documents_nodes + trap_nodes + captcha_nodes + hidden_nodes
-    mesh_pts = [(0, i*5) for i in range(len(nodes))]
-    ids = [n.id for n in nodes]
+    pts = []
+    H = 5
+    W = 4
+    h = 0
+    for _ in range(len(start_nodes)):
+        pts.append((0,h))
+        h += H
+    for i in range(-1,2):
+        pts.append((W*i,h))
+    h += H
+    for i in range(2):
+        pts.append((W*(i-0.5), h))
+    h += H
+    for i in range(3):
+        pts.append((0,h))
+        h += H
 
-    return nodes, MeshPlotter(mesh_pts, ids), START_MSG
+    nodes = start_nodes + documents_nodes + trap_nodes + captcha_nodes + hidden_nodes
+    ids = [n.id for n in nodes]
+    # ids = [n.id for n in nodes[-3:]]
+    # pts = pts[-3:]
+
+    return nodes, MeshPlotter(pts, ids), START_MSG

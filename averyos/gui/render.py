@@ -58,7 +58,8 @@ class RenderWidget(Widget):
         # Compute start position. Center on the current node then find top-left corner
         sw, sh = size
         cx, cy = sw // 2, sh // 2
-        nx, ny = ENV.plotter.get_pos(ENV.curr_node)
+        p = ENV.plotter.get_pos(ENV.curr_node)
+        nx, ny = (0, 0) if not p else p
         self.x = max(min(PADDING, cx-nx), sw-w-PADDING)
         self.y = max(min(PADDING, cy-ny), sh-h-PADDING)
 
@@ -138,8 +139,12 @@ class RenderWidget(Widget):
             self.draw_node(surf, node)
 
     def draw_line(self, surf: pg.Surface, node1, node2):
-        x1, y1 = ENV.plotter.get_pos(node1)
-        x2, y2 = ENV.plotter.get_pos(node2)
+        p1 = ENV.plotter.get_pos(node1)
+        p2 = ENV.plotter.get_pos(node2)
+        if not p1 or not p2:
+            return
+        x1, y1 = p1
+        x2, y2 = p2
 
         # Draw line
         pg.draw.line(surf, COLOR_EDGE, (x2, y2), (x1, y1), 5)
