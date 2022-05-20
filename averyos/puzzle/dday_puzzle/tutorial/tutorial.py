@@ -128,17 +128,17 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
 
 
 # TODO: Pic of dog named cat 
-def build_recaptcha(n: Node):
+def build_security_question(n: Node):
     n1 = Node("Continue", parents=[n])
 
-    n.directory.add_file(File("captcha.txt", "Ask Alvin"))
+    n.directory.add_file(File("RIP.png", filepath="puzzle/dday_puzzle/tutorial/ripdog.png"))
     prompt_unlock = UnlockPromptPassword()
     n.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
     # Callbacks
     n.add_entry_callback(lambda _: ENV.visible_progs.add(prompt_unlock.NAME))
 
-    n1.set_password("Cat")
+    n1.set_password("Bofa")
     n1.prompt = "What is the name of your favorite animal?"
 
     return [n1]
@@ -165,7 +165,7 @@ def build_hidden(n: Node):
 def build_tutorial_graph():
     start_nodes = build_start()
     trap_nodes = build_trap(start_nodes[-1])
-    captcha_nodes = build_recaptcha(trap_nodes[-1])
+    captcha_nodes = build_security_question(trap_nodes[-1])
     hidden_nodes = build_hidden(captcha_nodes[-1])
 
     nodes = start_nodes + trap_nodes + captcha_nodes + hidden_nodes
