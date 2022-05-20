@@ -9,7 +9,7 @@ START_MSG = \
 AveryOS is an Institution-designed internal operating system. To support our goal of deceiving the general populace,
 AveryOS operates on a graph-based filesystem where nodes may or may not be connected and may or may not have loops... :).
 
-To get started, type `pepelaugh`. Folder icons indicate directories/nodes, file icons indicate... files..., and gear 
+Once you open the directory pane, folder icons indicate directories/nodes, file icons indicate... files..., and gear 
 icons indicate programs. All programs you encounter will stay with you over the entire filesystem.
 """
 

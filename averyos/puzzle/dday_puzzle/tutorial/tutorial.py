@@ -4,7 +4,8 @@ from shell.env import ENV
 
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
-from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode, UnlockPassword
+from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode, \
+                                    UnlockPassword, Help
 
 from .tutorial_files import *
 
@@ -21,15 +22,16 @@ def build_start():
     read_prog = ReadFile()
     root.directory.add_program(read_prog.NAME, read_prog)
 
-    ENV.visible_progs.add(ReadFile.NAME)
-    ENV.visible_progs.add(ListNode.NAME)
+    ENV.visible_progs.add(Help)
+    ENV.visible_progs.add(ReadFile)
+    ENV.visible_progs.add(ListNode)
 
     # Files
     root.directory.add_file(security)
     n1.directory.add_file(doc_notes)
 
     # Callbacks
-    n1.add_entry_callback(lambda _: ENV.visible_progs.add(Chdir.NAME))
+    n1.add_entry_callback(lambda _: ENV.visible_progs.add(Chdir))
 
     return [root, n1]
 
@@ -134,7 +136,7 @@ def build_security_question(n: Node):
     # Callbacks
     unlock = UnlockPassword()
     n.directory.add_program(unlock.NAME, unlock)
-    n.add_entry_callback(lambda _: ENV.visible_progs.add(unlock.NAME))
+    n.add_entry_callback(lambda _: ENV.visible_progs.add(UnlockPassword))
 
     n1.set_password("Bofa")
     n1.prompt = "What is the name of your favorite animal?"
@@ -148,8 +150,11 @@ def build_hidden(n: Node):
     render_prog = Render()
     n.directory.add_program(render_prog.NAME, render_prog)
 
+    n1.directory.add_file(
+        File("note.txt", "We strongly recommend you take advantage of your numbers and complete these puzzles in parallel"))
+
     # Callbacks
-    n.add_entry_callback(lambda _: ENV.visible_progs.add(Render.NAME))
+    n.add_entry_callback(lambda _: ENV.visible_progs.add(Render))
 
     n.directory.add_file(gameover)
     n1.directory.add_file(gameon)

@@ -28,6 +28,7 @@ SHOWLOG_CMD = "showlog"
 HISTORY_CMD = "history"
 PASSWD_CMD = "boom"
 RENDER_CMD = "yourmom"
+HELP_CMD = "help"
 
 
 # TODO: remove showlog
@@ -43,7 +44,8 @@ def usrbin_progs():
         # SHOWLOG_CMD: ShowLog(),
         HISTORY_CMD: ShowHistory(),
         PASSWD_CMD: UnlockPassword(),
-        RENDER_CMD: Render()
+        RENDER_CMD: Render(),
+        HELP_CMD: Help()
     }
 
 
@@ -58,6 +60,7 @@ class SendExit(CLIProgramBase):
 class Chdir(CLIProgramBase):
 
     NAME = CHDIR_CMD
+    DESC = "Change Directory. Navigates into child node paths. Cannot navigate backwards."
 
     def __init__(self, check_locked=True, hidden=False):
         super().__init__(hidden)
@@ -143,6 +146,7 @@ class ChdirBack(CLIProgramBase):
     """ This program implements 'sheesh' back-navigating """
 
     NAME = CDBACK_CMD
+    DESC = "Backwards Navigation. Every 'e' moves back by 1 directory."
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
@@ -192,6 +196,7 @@ class ChdirBack(CLIProgramBase):
 class Render(ProgramBase):
 
     NAME = RENDER_CMD
+    DESC = "Displays the map of the explored filesystem."
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 1:
@@ -200,7 +205,7 @@ class Render(ProgramBase):
             return ExitCode.ERROR
 
         print("Map is only available in the GUI!", file=sys.stderr)
-        
+
         return ExitCode.OK
 
     def gui_main(self, gui, args) -> ExitCode:
@@ -220,6 +225,7 @@ class Render(ProgramBase):
 class ListNode(ProgramBase):
 
     NAME = LIST_CMD
+    DESC = "Displays the directory view."
 
     # TODO: allow ls for subdirs
     def cli_main(self, args) -> ExitCode:
@@ -276,6 +282,7 @@ class ListNode(ProgramBase):
 class ReadFile(ProgramBase):
 
     NAME = READFILE_CMD
+    DESC = "Open and view a file."
 
     def parse_file(self, args) -> File | None:
         if len(args) != 2:
@@ -367,6 +374,7 @@ class ShowHistory(CLIProgramBase):
 class UnlockPassword(ProgramBase):
 
     NAME = PASSWD_CMD
+    DESC = "Unlocks a directory."
 
     def check_node(self, args):
         if len(args) < 2:
@@ -429,4 +437,20 @@ class UnlockPassword(ProgramBase):
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)
+        return ExitCode.OK
+
+class Help(CLIProgramBase):
+
+    NAME = HELP_CMD
+    DESC = "Displays a description for each encountered command"
+
+    def cli_main(self, args) -> ExitCode:
+        if len(args) != 1:
+            print("Error: {0} does not take any arguments".format(HELP_CMD), 
+                  file=sys.stderr)
+            return ExitCode.ERROR
+
+        for prog in ENV.visible_progs:
+            print("{0}:\t{1}".format(prog.NAME, prog.DESC))
+
         return ExitCode.OK

@@ -41,6 +41,7 @@ def plot_hist(counts: Dict, size, title: str) -> Tuple[Image.Image, io.BytesIO]:
 class Histogram(ProgramBase):
 
     NAME = "count"
+    DESC = "Displays a histogram of character counts for a text file."
 
     def parse_file(self, args) -> File | None:
         if len(args) != 2:

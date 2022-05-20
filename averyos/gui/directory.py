@@ -52,7 +52,7 @@ class DirectoryWidget(Widget):
             self.progs = set(ENV.curr_node.directory.list_programs())
 
             # View all visible, callable programs.
-            # self.progs.update(ENV.visible_progs)
+            self.progs.update({p.NAME for p in ENV.visible_progs})
 
             self.last_node = ENV.curr_node
 
