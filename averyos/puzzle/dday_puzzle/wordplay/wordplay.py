@@ -45,7 +45,7 @@ def build_emoji_graph():
     for n in nodes:
         add_dir_files(n, BASE_DIR+"/wordgraph")
 
-    lit_file = File("emojis.png", filepath=(BASE_DIR+"/emojis/lit_emoji.png"), hidden=True)
+    lit_file = File("emoji_10.png", filepath=(BASE_DIR+"/emojis/lit_emoji.png"), hidden=True)
     n3.directory.add_file(lit_file)
     n5.directory.add_file(lit_file)
 
