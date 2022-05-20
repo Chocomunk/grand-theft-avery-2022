@@ -1,7 +1,9 @@
-from system.filesystem import Node
+from system.filesystem import File, Node
 from gui.plotter import MeshPlotter
 from puzzle.util import add_dir_files
 
+
+BASE_DIR = "puzzle/dday_puzzle/wordplay"
 
 # TODO: add exit
 
@@ -41,7 +43,11 @@ def build_emoji_graph():
 
     # Files
     for n in nodes:
-        add_dir_files(n, "puzzle/dday_puzzle/wordplay/wordgraph")
+        add_dir_files(n, BASE_DIR+"/wordgraph")
+
+    lit_file = File("emojis.png", filepath=(BASE_DIR+"/emojis/lit_emoji.png"), hidden=True)
+    n3.directory.add_file(lit_file)
+    n5.directory.add_file(lit_file)
 
     # Passwords
     n1.set_password("Booty")
@@ -63,6 +69,14 @@ def build_emoji_graph():
 
     n11.set_lock_func(lambda _: n6.passlocked or n7.passlocked)
     n12.set_lock_func(lambda _: n6.passlocked or n10.passlocked)
+
+    # Callbacks
+    def _update_lit(_: Node):
+        if not n3.locked() and not n5.locked():
+            lit_file.hidden = False
+    
+    n3.add_entry_callback(_update_lit)
+    n5.add_entry_callback(_update_lit)
 
     mesh_pts = emoji_pts()
     ids = [n.id for n in nodes]
