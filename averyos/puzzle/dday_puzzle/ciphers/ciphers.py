@@ -6,7 +6,6 @@ from gui.plotter import MeshPlotter
 from system.filesystem import Node
 from puzzle.dday_puzzle.programs.histogram import Histogram
 from puzzle.dday_puzzle.programs.sub_password import UnlockSubPassword
-from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
 
 from puzzle.util import add_dir_files
 
@@ -33,8 +32,6 @@ def build_caesar_graph():
     B3 = Node("B3", parents=[A])
 
     add_dir_files(A, DIR+"/caesar")
-    prompt_unlock = UnlockPromptPassword(hidden=True)
-    A.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
     B1.prompt = "envysrapr"
     B2.prompt = "mwsnufy"
@@ -57,8 +54,6 @@ def build_trans_graph(parents, lock_func):
     D3 = Node("D3", parents=[C])
 
     add_dir_files(C, DIR+"/transposition")
-    prompt_unlock = UnlockPromptPassword(hidden=True)
-    C.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
     D1.prompt = "TTGNS RIATH IYNHA DGTOA CPRLH NELOI OTHNR MLNAO UGEQA FENSA IOGPI LMPIS UBEVN RSRS"
     D2.prompt = "TFIEP HFMXR EOATE FRGES AMERE CISNN UNOAT LGRLT TNCOO YEOBT OWNJH RICEE ADECS CEPTE TATSE ISSNS OOOOE NRFTS O"
@@ -102,8 +97,6 @@ def build_poly_graph(parents, lock_func):
     H4 = Node("H4", parents=[G])
 
     add_dir_files(G, DIR+"/polyalphabetic")
-    prompt_unlock = UnlockPromptPassword(hidden=True)
-    G.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
     H1.prompt = "ptucpcdzlywluvv zs wbt"
     H2.prompt = "tlicmmbcdhuzmf hliuu"

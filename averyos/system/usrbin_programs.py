@@ -425,7 +425,7 @@ class UnlockPassword(ProgramBase):
                 print("Success! {0} is unlocked.".format(dirname))
             gui.pop_view()
             
-        passwd_widg = PasswordWidget(node.password, leave_window)
+        passwd_widg = PasswordWidget(node.password, leave_window, node.prompt)
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)

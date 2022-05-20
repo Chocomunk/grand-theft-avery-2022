@@ -5,9 +5,7 @@ from puzzle.util import add_dir_files
 
 from gui.plotter import MeshPlotter
 from system.filesystem import File, Node
-from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode
-
-from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
+from system.usrbin_programs import Chdir, Chdirid, ReadFile, Render, ListNode, UnlockPassword
 
 
 START_MSG = \
@@ -132,11 +130,11 @@ def build_security_question(n: Node):
     n1 = Node("Continue", parents=[n])
 
     n.directory.add_file(File("RIP.png", filepath="puzzle/dday_puzzle/tutorial/ripdog.png"))
-    prompt_unlock = UnlockPromptPassword()
-    n.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
     # Callbacks
-    n.add_entry_callback(lambda _: ENV.visible_progs.add(prompt_unlock.NAME))
+    unlock = UnlockPassword()
+    n.directory.add_program(unlock.NAME, unlock)
+    n.add_entry_callback(lambda _: ENV.visible_progs.add(unlock.NAME))
 
     n1.set_password("Bofa")
     n1.prompt = "What is the name of your favorite animal?"

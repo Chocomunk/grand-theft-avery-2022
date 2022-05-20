@@ -1,13 +1,5 @@
-import sys
-
-from shell.env import ENV
-from puzzle.util import add_dir_files
-
 from gui.plotter import MeshPlotter
-from system.filesystem import File, Node
-from system.usrbin_programs import ReadFile
-
-from puzzle.dday_puzzle.programs.prompt_password import UnlockPromptPassword
+from system.filesystem import Node
 
 from .fanfic_files import *
 
