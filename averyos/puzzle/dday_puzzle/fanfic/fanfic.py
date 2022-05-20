@@ -39,6 +39,8 @@ def build_fanfic_graph():
     # Entry
     root = Node("forbidden-mathematical-relations")
     root.directory.add_file(disclaimer)
+    root.directory.add_file(
+        File("note.txt", "It is not possible to do this puzzle in parallel, it will be fun in a group though }:)."))
     def _disclaimer_open():
         FanficState.disclaimer_opened = True
     disclaimer.add_open_callback(_disclaimer_open)
