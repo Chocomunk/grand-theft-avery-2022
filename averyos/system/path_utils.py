@@ -26,7 +26,7 @@ def path_subdirs(dirname, check_locked=True):
                     file=sys.stderr)
                 return None
             elif node.locked():
-                print("Error: '{0}' is system locked! (a secret action is required)".format(node.directory.name),
+                print("Error: '{0}' is system locked! (some other action is required)".format(node.directory.name),
                     file=sys.stderr)
                 return None
 

@@ -384,7 +384,7 @@ class UnlockPassword(ProgramBase):
 
         if not node.passlocked:
             if node.locked():
-                print("Error: directory {0} is locked by the system (a secret action is required)".format(
+                print("Error: directory {0} is locked by the system (some other action is required)".format(
                     dirname), file=sys.stderr)
             else:
                 print("Directory '{0}' is not locked".format(dirname), file=sys.stderr)

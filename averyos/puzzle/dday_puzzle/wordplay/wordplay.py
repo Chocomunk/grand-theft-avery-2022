@@ -37,20 +37,18 @@ def build_emoji_graph():
     n11 = Node("11", parents=[n6,n7])
     n12 = Node("12", parents=[n6,n10])
 
+    nodes = [root, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12]
+
     # Files
-    add_dir_files(root, "puzzle/dday_puzzle/wordplay/wordgraph")
+    for n in nodes:
+        add_dir_files(n, "puzzle/dday_puzzle/wordplay/wordgraph")
 
     # Passwords
     n1.set_password("Booty")
     n2.set_password("House")
-    n3.set_password("Best")
-    n4.set_password("Fine")
     n5.set_password("Fire")
 
-    n6.set_password("Booty House")
     n7.set_password("Best house")
-    n8.set_password("All houses are fine houses")
-    n9.set_password("This is fine")
     n10.set_password("Its lit")
 
     n11.set_password("Booty house is best house")
@@ -66,7 +64,6 @@ def build_emoji_graph():
     n11.set_lock_func(lambda _: n6.passlocked or n7.passlocked)
     n12.set_lock_func(lambda _: n6.passlocked or n10.passlocked)
 
-    nodes = [root, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12]
     mesh_pts = emoji_pts()
     ids = [n.id for n in nodes]
 
