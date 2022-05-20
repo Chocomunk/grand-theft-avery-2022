@@ -120,9 +120,9 @@ class RenderWidget(Widget):
     def draw_map(self, surf: pg.Surface):
         # Draw grid lines 
         w, h = surf.get_size()
-        for i in range(w//GRID_SIZE):
+        for i in range(w//GRID_SIZE + 1):
             pg.draw.line(surf, COLOR_GRID, (i*GRID_SIZE,0), (i*GRID_SIZE,h), 2)
-        for i in range(h//GRID_SIZE):
+        for i in range(h//GRID_SIZE + 1):
             pg.draw.line(surf, COLOR_GRID, (0,i*GRID_SIZE), (w,i*GRID_SIZE), 2)
 
         # Draw connections between nodes

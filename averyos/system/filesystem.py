@@ -95,6 +95,7 @@ class Node:
         self.passlocked = False
         self.password = None
         self.prompt =  ""
+        self.ignore_caps = True
 
         # Node connections (children/parents)
         # Point to both children and parents for navigating.
@@ -126,9 +127,10 @@ class Node:
     def set_lock_func(self, lockfunc: Callable[[Node], bool]):
         self.lockfunc = lockfunc
 
-    def set_password(self, password):
+    def set_password(self, password, ignore_caps=True):
         self.passlocked = True
-        self.password = password.lower()
+        self.ignore_caps = ignore_caps
+        self.password = password
 
     def try_password(self, password):
         if not self.password or password == self.password:

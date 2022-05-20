@@ -146,7 +146,7 @@ class ChdirBack(CLIProgramBase):
     """ This program implements 'sheesh' back-navigating """
 
     NAME = CDBACK_CMD
-    DESC = "Backwards Navigation. Every 'e' moves back by 1 directory."
+    DESC = "Backwards Navigation. Every 'e' moves back by 1 directory. Will stop on BREAK nodes."
 
     def cli_main(self, args) -> ExitCode:
         if len(args) != 2:
@@ -433,7 +433,8 @@ class UnlockPassword(ProgramBase):
                 print("Success! {0} is unlocked.".format(dirname))
             gui.pop_view()
             
-        passwd_widg = PasswordWidget(node.password, leave_window, node.prompt)
+        passwd_widg = PasswordWidget(node.password, leave_window, node.prompt, 
+                                    ignore_caps=node.ignore_caps)
         new_view = MainView(gui.size)
         new_view.add_widget(passwd_widg)
         gui.push_view("passwd", new_view)
