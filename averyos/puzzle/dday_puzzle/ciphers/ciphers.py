@@ -33,6 +33,12 @@ def build_caesar_graph():
     B3 = Node("B3", parents=[A])
 
     add_dir_files(A, DIR+"/caesar")
+    prompt_unlock = UnlockPromptPassword(hidden=True)
+    A.directory.add_program(prompt_unlock.NAME, prompt_unlock)
+
+    B1.prompt = "envysrapr"
+    B2.prompt = "mwsnufy"
+    B3.prompt = "pbyhzane"
 
     B1.set_password("railfence")
     B2.set_password("scytale")
