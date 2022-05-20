@@ -85,18 +85,19 @@ but also help me determine the encrypted password by putting them together apply
         n12.directory.add_file(f)
 
     # Passwords
-    n2.set_password("Booty")
-    n3.set_password("House")
-    n4.set_password("Avery")
-    n6.set_password("Fire")
+    n2.set_password("Jwwbg")
+    n3.set_password("Lsywi")
+    n4.set_password("Dyhub")
+    n6.set_password("Mpyl")
 
-    n7.set_password("Best house")
-    n9.set_password("Avery house")
+    n7.set_password("Psgh vcigs")
+    n9.set_password("Idmzg pwcam")
 
-    n12.set_password("Booty house is best house")
-    n13.set_password("Avery house is a fine house")
+    n12.set_password("Reejo xekiu yi jxu ruij xekiu")
+    n13.set_password("Gbkxe nuayk oy g lotk nuayk")
 
-    n14.set_password("Avery house is booty house")
+    n14.set_password("Kfobi Ryeco sc Lyydi Ryeco")
+    n14.prompt = "Red is greater than pink"
 
     # Locks
     n7.set_lock_func(lambda _: n1.passlocked or n3.passlocked)
