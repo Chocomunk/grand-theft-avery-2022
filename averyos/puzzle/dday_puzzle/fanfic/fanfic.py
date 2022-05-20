@@ -29,10 +29,21 @@ class SkipTo(CLIProgramBase):
 
 class FanficState:
 
+    expose_par = None
     disclaimer_opened = False
     contract_opened = False
     # Unique integer index for each node and whether it has been visited
     visited = {i: False for i in range(24)}
+
+
+# Step = (30,0), Drag = (40, -8), Climax = (53.75, -3)
+def gen_mesh():
+    return [
+        (0,0), (5,0), (10,0), (10,5), (15,0), (15,5), (20,0), (20,5), (25,0),
+        (30,0), (35,0), (30,5), (35,5), (40,5), (35,-5), (40,0), (40,-5), (37.5, -8),
+        (40, -12), (45, -12), (42.5, -16), (47.5, -16), (50, -12), (53.75, -8),
+        (53.75, -3), (57.5, 0), (50, 0), (50, 5), (57.5, 5)
+    ]
 
 
 def build_fanfic_graph():
@@ -53,6 +64,11 @@ def build_fanfic_graph():
 
     def view_text(text):
         return lambda _: print(text)
+
+    def set_expose_parent(n: Node):
+        def _func(_):
+            FanficState.expose_par = n
+        return _func
 
     # Keep track of visited node index (as ordered in this file)
     nodes: List[Node] = []
@@ -108,6 +124,7 @@ def build_fanfic_graph():
     # shock
     shock = Node("stand-in-shock", parents=[respond, drop_knees])
     shock.directory.add_file(katzs_admonishment)
+    shock.add_entry_callback(set_expose_parent(shock))
     shock.add_entry_callback(visit(i))
     nodes.append(shock)
     i += 1
@@ -118,12 +135,14 @@ def build_fanfic_graph():
     continue_standing.directory.add_file(legend_inquires)
     continue_standing.directory.add_file(dinakars_feelings)
     continue_standing.add_entry_callback(visit(i))
+    continue_standing.add_entry_callback(set_expose_parent(continue_standing))
     nodes.append(continue_standing)
     i += 1
 
     # expose
     expose_i = i
     expose = Node("expose-yourself", parents=[shock, continue_standing])
+    expose.add_child(continue_standing)
     expose.directory.add_file(dinakars_package)
     expose.directory.add_file(did_it_again)
     def _expose_file_toggle(_: Node):
@@ -138,7 +157,7 @@ def build_fanfic_graph():
     i += 1
 
     # step_back
-    step_back = Node("step-back", parents=[continue_standing])
+    step_back = Node("step-back", parents=[continue_standing, expose])
     step_back.directory.add_file(attempted_retreat)
     step_back.add_entry_callback(visit(i))
     nodes.append(step_back)
@@ -274,9 +293,15 @@ def build_fanfic_graph():
 
     # end 
     end = Node("end-story", parents=[finish, last_thought])
+    nodes.append(end)
 
     skip_prog = SkipTo(end)
     for n in nodes:
         n.directory.add_program(skip_prog.NAME, skip_prog)
 
-    return [root] + nodes, None
+    pts = gen_mesh()
+
+    nodes = [root] + nodes
+    ids = [n.id for n in nodes]
+
+    return nodes, MeshPlotter(pts, ids)

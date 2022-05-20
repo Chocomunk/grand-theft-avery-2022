@@ -37,11 +37,13 @@ def build_graph():
     # TODO: fanfic mesh
     tutorial_mesh = tutorial_mesh.transform(scale=50, shift=(0,1500), angle=180)
     word_mesh = word_mesh.transform(scale=50, shift=(-400,0), angle=-90)
-    physical_mesh = physical_mesh.transform(scale=50, shift=(400,0), angle=90)
+    physical_mesh = physical_mesh.transform(scale=50, shift=(0,-300), angle=180)
+    fanfic_mesh = fanfic_mesh.transform(scale=50, shift=(400,0), angle=0)
 
     mesh.extend(tutorial_mesh)
     mesh.extend(word_mesh)
     mesh.extend(physical_mesh)
+    mesh.extend(fanfic_mesh)
 
     ENV.plotter = mesh
     
