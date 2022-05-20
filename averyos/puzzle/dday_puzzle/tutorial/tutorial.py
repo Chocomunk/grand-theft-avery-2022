@@ -177,7 +177,7 @@ def build_tutorial_graph():
 
     pts = []
     H = 5
-    W = 4
+    W = 6
     h = 0
     for _ in range(len(start_nodes)):
         pts.append((0,h))
