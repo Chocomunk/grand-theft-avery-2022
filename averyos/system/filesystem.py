@@ -21,6 +21,8 @@ class File:
         else:
             self.is_image = filepath.split('.')[1] in IMG_EXTENSIONS
 
+        self.open_cbs = []
+
     def get_data(self):
         if self.is_image:
             return "(this is an image...)"
@@ -31,9 +33,15 @@ class File:
             with open(self.filepath, 'r') as f:
                 data = f.read()
 
+        for cb in self.open_cbs:
+            cb()
+
         if not data:
             return "(empty file...)"
         return data
+
+    def add_open_callback(self, cb):
+        self.open_cbs.append(cb)
 
 
 class Directory:
