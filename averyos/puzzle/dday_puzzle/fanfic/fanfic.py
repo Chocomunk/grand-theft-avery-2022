@@ -227,5 +227,4 @@ def build_fanfic_graph():
     # end 
     end = Node("end-story", parents=[finish, last_thought])
 
-
-    return [root], None
+    return [root, end], None

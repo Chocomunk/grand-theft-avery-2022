@@ -23,7 +23,7 @@ Maybe also have a "locked" screen that they need a password for?
 
 # TODO: Add fake files/dirs
 def build_start():
-    root = Node("root (tutorial)")
+    root = Node("tutorial-root")
     n1 = Node("Documents", parents=[root])
     n2 = Node("institution-files", parents=[n1])
 
@@ -39,7 +39,7 @@ def build_start():
     ENV.visible_progs.add(ListNode.NAME)
 
     # Files
-    root.directory.add_file(File("OntoMe?.txt", 
+    root.directory.add_file(File("onto_me.txt", 
         data="(WIP) {I changed the command names for security!} use 'cd' to navigate!"))
     n1.directory.add_file(File("some-doc.txt", "some text"))
 
@@ -56,9 +56,9 @@ EXIT_NAME = "safe-directory"
 TRAP_NAME = lambda i: "trap-directory-{}".format(i)
 
 def build_trap(entry_node: Node, num_exit=100, num_trap=7):
-    sike = Node("Get rolled omegalul")
-    caught = Node("Caught you!", parents=[sike])
-    exit_node = Node("Security Check")
+    sike = Node("nice-try")
+    caught = Node("caught-you!", parents=[sike])
+    exit_node = Node("Security-Check")
 
     # Add files
     caught.directory.add_file(File("goodfilename.txt", data="(some hint). Type 'sheesh'"))

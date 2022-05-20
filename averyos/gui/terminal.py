@@ -15,7 +15,7 @@ FONT = Fonts.TERMINAL
 TXT_W, TXT_H = FONT.size("O")
 
 LOGO_FILE = "gui/assets/avery_logo_grey.png"
-IMG_SIZE = 48
+IMG_SIZE = 64
 
 
 # TODO: allow scrolling past the end. Snap to the end when typing
@@ -116,7 +116,7 @@ class TerminalWidget(Widget):
 
     def draw(self, surf: Surface):
         w, h = surf.get_size()
-        surf.blit(self.logo, (w-IMG_SIZE-30, h-IMG_SIZE-30))
+        surf.blit(self.logo, (w-IMG_SIZE-50, h-IMG_SIZE-50))
         surf.blit(self.txt_surf, (self.rect.x+5, self.rect.y+5))
         
     # TODO: set text color based on logtype. BAD IMPLEMENTATION
