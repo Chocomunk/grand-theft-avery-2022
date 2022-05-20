@@ -39,7 +39,6 @@ class TerminalWidget(Widget):
 
         self.cursor = len(self.text)
 
-        self.active = False
 
         # Allow for holding down a key
         pg.key.set_repeat(400, 30)
@@ -51,65 +50,63 @@ class TerminalWidget(Widget):
         self.input_cbs.append(func)
 
     def handle_event(self, event: pg.event.Event):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
-            self.active = self.rect.collidepoint(event.pos)
-
         if event.type == pg.MOUSEWHEEL:
             self.offset = max(0, self.offset + event.y)
 
         if event.type == pg.KEYDOWN:
-            if self.active:
-
-                # Scroll command history
-                if event.key == pg.K_UP:
-                    if len(self.cmd_hist) > 0:  # (this 'if' must be inside for cursor to work)
-                        self.hist_idx = max(0, self.hist_idx-1)
+            # Scroll command history
+            if event.key == pg.K_UP:
+                if len(self.cmd_hist) > 0:  # (this 'if' must be inside for cursor to work)
+                    self.hist_idx = max(0, self.hist_idx-1)
+                    self.text = self.cmd_hist[self.hist_idx]
+                    self.cursor = len(self.text)
+            elif event.key == pg.K_DOWN:
+                if len(self.cmd_hist) > 0:
+                    if self.hist_idx < len(self.cmd_hist) - 1:
+                        self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
                         self.text = self.cmd_hist[self.hist_idx]
-                        self.cursor = len(self.text)
-                elif event.key == pg.K_DOWN:
-                    if len(self.cmd_hist) > 0:
-                        if self.hist_idx < len(self.cmd_hist) - 1:
-                            self.hist_idx = min(len(self.cmd_hist) - 1, self.hist_idx+1)
-                            self.text = self.cmd_hist[self.hist_idx]
-                        else:
-                            self.text = ""      # Went past the newest history
-                        self.cursor = len(self.text)
+                    else:
+                        self.text = ""      # Went past the newest history
+                    self.cursor = len(self.text)
 
-                # Move cursor
-                elif event.key == pg.K_LEFT:
+            # Move cursor
+            elif event.key == pg.K_LEFT:
+                self.cursor = max(0, self.cursor - 1)
+            elif event.key == pg.K_RIGHT:
+                self.cursor = min(len(self.text), self.cursor + 1)
+
+            # Send input
+            elif event.key == pg.K_RETURN:
+                self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
+                if self.text.strip():
+                    self.cmd_hist.append(self.text)
+                    self.hist_idx = len(self.cmd_hist)
+
+                # If input handler returns False, then quit
+                for cb in self.input_cbs:
+                    if cb(self.text) == False:
+                        quit_event = pg.event.Event(pg.QUIT)
+                        pg.event.post(quit_event)
+
+                self.text = ''
+                self.cursor = 0
+
+            # Communicate no tabs
+            elif event.key == pg.K_TAB:
+                self.file.write("Tab completion not implemented!\n", LogType.ERR)
+
+            # Type or delete text
+            elif event.key == pg.K_BACKSPACE:
+                if self.cursor > 0:
+                    self.text = self.text[:self.cursor-1] + self.text[self.cursor:]
                     self.cursor = max(0, self.cursor - 1)
-                elif event.key == pg.K_RIGHT:
-                    self.cursor = min(len(self.text), self.cursor + 1)
+            elif event.key != pg.K_ESCAPE:
+                c = event.unicode
+                self.text = self.text[:self.cursor] + c + self.text[self.cursor:]
+                self.cursor += len(c)
 
-                # Send input
-                elif event.key == pg.K_RETURN:
-                    self.file.write(self.prompt_func() + self.text + '\n', LogType.IN)
-                    if self.text.strip():
-                        self.cmd_hist.append(self.text)
-                        self.hist_idx = len(self.cmd_hist)
-
-                    # If input handler returns False, then quit
-                    for cb in self.input_cbs:
-                        if cb(self.text) == False:
-                            quit_event = pg.event.Event(pg.QUIT)
-                            pg.event.post(quit_event)
-
-                    self.text = ''
-                    self.cursor = 0
-
-                # Type or delete text
-                elif event.key == pg.K_BACKSPACE:
-                    if self.cursor > 0:
-                        self.text = self.text[:self.cursor-1] + self.text[self.cursor:]
-                        self.cursor = max(0, self.cursor - 1)
-                else:
-                    c = event.unicode
-                    self.text = self.text[:self.cursor] + c + self.text[self.cursor:]
-                    self.cursor += len(c)
-
-                # Return to look at current line
-                self.offset = 0
+            # Return to look at current line
+            self.offset = 0
 
     def update(self):
         # Resize the box if the text is too long.

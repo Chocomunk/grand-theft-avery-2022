@@ -32,9 +32,6 @@ class Window:
             if event.type == pg.QUIT:
                 pg.quit()
                 return False
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_RCTRL:
-                    return False
 
             # Event callbacks
             for cb in self.event_cbs:

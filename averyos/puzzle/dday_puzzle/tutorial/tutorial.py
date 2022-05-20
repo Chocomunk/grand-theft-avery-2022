@@ -96,7 +96,9 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
             if to_end:
                 path += "/{0}".format(caught.directory.name)
             else:
-                print("\nNavigating back to: '{0}'\n".format(path), file=sys.stderr)
+                curr, path = path.split('/', 1)
+                print("\nLanded on: '{0}'".format(curr))
+                print("Navigating back to: '{0}'\n".format(path), file=sys.stderr)
             cdprog.cli_main(["", path])
         return _func
 
@@ -111,7 +113,7 @@ def build_trap(entry_node: Node, num_exit=100, num_trap=7):
         curr.password = "\n-norender-\n"
     for i in range(num_trap):
         curr = Node(TRAP_NAME(i), parents=[curr])
-        curr.add_entry_callback(trap_cb(num_exit+i+1))      # Fall into sink
+        curr.add_entry_callback(trap_cb(num_exit+i))        # Fall into sink
         curr.password = "\n-norender-\n"
     
     # Connect trap to "sink" nodes

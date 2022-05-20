@@ -18,14 +18,6 @@ if __name__ == '__main__':
     clock = pg.time.Clock()
     gui = OSWindow(shell)
 
-    # NOTE: Can also show nav by calling "ls"
-    def show_nav(event):
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_RALT:
-                shell.handle_input("ls")
-
-    gui.add_event_listener(show_nav)
-
     running = True
     while running:
         try:

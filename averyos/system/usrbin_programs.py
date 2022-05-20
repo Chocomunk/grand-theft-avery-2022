@@ -182,7 +182,6 @@ class ChdirBack(CLIProgramBase):
             print("SH")
 
             i += 1
-            print(del_len, i)
             ENV.curr_node = ENV.node_history[-i]
             del ENV.node_history[-i:]
             ENV.curr_node.call_entry_callbacks()
