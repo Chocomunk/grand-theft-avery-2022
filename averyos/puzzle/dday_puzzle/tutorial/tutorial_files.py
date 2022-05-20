@@ -8,6 +8,7 @@ START_MSG = \
 
 AveryOS is an Institution-designed internal operating system. To support our goal of deceiving the general populace,
 AveryOS operates on a graph-based filesystem where nodes may or may not be connected and may or may not have loops... :).
+This is a TEXT-ONLY interface, no mouse inputs are read.
 
 Once you open the directory pane, folder icons indicate directories/nodes, file icons indicate... files..., and gear 
 icons indicate programs. All programs you encounter will stay with you over the entire filesystem.
@@ -17,7 +18,7 @@ icons indicate programs. All programs you encounter will stay with you over the 
 security = File("security_update.txt", 
 """
 Note to self: I’ve changed all my command names to stump weebs and Institution invaders alike.\n\
-        Nobody will catch on. -DO-n't even try, nothing is getting through
+        Nobody will catch on. go-n't even try, nothing is getting through
 """
 )
 

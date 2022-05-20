@@ -2,6 +2,8 @@ from system.filesystem import File, Node
 from gui.plotter import MeshPlotter
 from puzzle.util import add_dir_files
 
+from .wordplay_files import *
+
 
 BASE_DIR = "puzzle/dday_puzzle/wordplay"
 
@@ -56,6 +58,31 @@ def build_emoji_graph():
         n.directory.add_file(graph_pic)
     root.directory.add_file(
         File("note.txt", "We highly recommend trying to do this puzzle in parallel."))
+    root.directory.add_file(
+        File("instructions.txt", 
+"""
+I secured this cluster of nodes by giving them interrelated passwords, then encrypting them with a caesar cipher. However,
+I soon realized that it was way to hard to remember how to get through all that security. To make it easier to break the
+security system I made, I added `wordgraph.png` to represent the nodes.
+
+Each square is a single emoji, and each like space is a single word. The emojis not only help me figure out the words,
+but also help me determine the encrypted password by putting them together applying my secret code.
+"""))
+
+    for f in ch1:
+        n2.directory.add_file(f)
+    for f in ch2:
+        n3.directory.add_file(f)
+    for f in ch3:
+        n4.directory.add_file(f)
+    for f in ch4:
+        n6.directory.add_file(f)
+    for f in ch5:
+        n7.directory.add_file(f)
+    for f in ch6:
+        n9.directory.add_file(f)
+    for f in ch7:
+        n12.directory.add_file(f)
 
     # Passwords
     n2.set_password("Booty")

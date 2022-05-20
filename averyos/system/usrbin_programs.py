@@ -18,7 +18,7 @@ from gui.imageviewer import ImageViewerWidget
 
 
 EXIT_CMD = "brexit"
-CHDIR_CMD = "do"
+CHDIR_CMD = "go"
 CHDIRN_CMD = "cdn"
 CHDIRID_CMD = "cdid"
 CDBACK_CMD = "sh"

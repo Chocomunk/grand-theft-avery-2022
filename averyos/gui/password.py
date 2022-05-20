@@ -78,9 +78,7 @@ class PasswordWidget(Widget):
         # Check attempt against answer
         true = self.answer.replace(" ", "")
         text = self.text[:len(true)]
-        print(true, text, file=sys.__stdout__)
         if self.ignore_caps:
-            print("LOWERING", file=sys.__stdout__)
             true = true.lower()
             text = text.lower()
 
