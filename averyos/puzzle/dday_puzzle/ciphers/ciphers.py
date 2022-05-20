@@ -60,13 +60,9 @@ def build_trans_graph(parents, lock_func):
     prompt_unlock = UnlockPromptPassword(hidden=True)
     C.directory.add_program(prompt_unlock.NAME, prompt_unlock)
 
-    D1_prompt = "TTGNS RIATH IYNHA DGTOA CPRLH NELOI OTHNR MLNAO UGEQA FENSA IOGPI LMPIS UBEVN RSRS"
-    D2_prompt = "TFIEP HFMXR EOATE FRGES AMERE CISNN UNOAT LGRLT TNCOO YEOBT OWNJH RICEE ADECS CEPTE TATSE ISSNS OOOOE NRFTS O"
-    D3_prompt = "TAOTI LTMNM HLRON RIEGL EIFFG TPTFY QTABA OSHIU YCEBG OIR"
-
-    D1.prompt = "\n".join(D1_prompt.split(" "))
-    D2.prompt = "\n".join(D2_prompt.split(" "))
-    D3.prompt = "\n".join(D3_prompt.split(" "))
+    D1.prompt = "TTGNS RIATH IYNHA DGTOA CPRLH NELOI OTHNR MLNAO UGEQA FENSA IOGPI LMPIS UBEVN RSRS"
+    D2.prompt = "TFIEP HFMXR EOATE FRGES AMERE CISNN UNOAT LGRLT TNCOO YEOBT OWNJH RICEE ADECS CEPTE TATSE ISSNS OOOOE NRFTS O"
+    D3.prompt = "TAOTI LTMNM HLRON RIEGL EIFFG TPTFY QTABA OSHIU YCEBG OIR"
 
     C.set_lock_func(lock_func)
     D1.set_password("integrity")
