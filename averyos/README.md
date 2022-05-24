@@ -1,13 +1,30 @@
 # Avery OS
 
+## Setup/Installation
+
+Make sure you have python3/pip installed and ideally a fresh virtual environment.
+In the `averyos/` directory, run:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+**NOTE:** the `python` command in the line above must point to the correct python 
+interpreter.
+
 ## Usage
 
-To run locally, simply call `python main.py`, and a shell instance and example
-file system will be started.
+To run locally, simply call `python main.py`. This will run the puzzle/filesystem
+for the *Grand Theft Avery* Ditch Day 2022 stack.
+
+**NOTE:** Physical hints for this puzzle are stored in `puzzle/dday_puzzle/room-objects/`.
+
+Not all physical aspects are added to the repository yet. Specifically, the `Office`
+puzzles and final puzzle do not have the full hints.
 
 You can define your own filesystem (`puzzle/` folder for examples) and run a 
 shell on it as shown in `main.py`
-
+<!-- 
 ## Development
 
 ### General coding philosophy
@@ -40,4 +57,4 @@ allows the OS to be decoupled from any specific puzzle designs.
     - [ ] Multiple passwords for a node
     - [ ] Make it pretty
 - Shell
-  - [ ] Add input pre-processing callbacks
+  - [ ] Add input pre-processing callbacks -->

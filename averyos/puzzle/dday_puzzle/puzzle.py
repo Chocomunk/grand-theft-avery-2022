@@ -70,7 +70,6 @@ def build_final_nodes(word, phys, fan):
     sub_cont.add_entry_callback(lambda _: ENV.visible_progs.add(Histogram))
     ENV.path[hist_prog.NAME] = hist_prog
 
-    sub_cont.directory.add_file(File("tenacity-cipher.txt", SUB_CIPHER))
     sub_cont.directory.add_file(File("frequency.pdf", filepath=(CIPHER_DIR+"/substitution/frequency.pdf")))
     sub_cont.directory.add_file(File("substitution.pdf", filepath=(CIPHER_DIR+"/substitution/substitution.pdf")))
 
